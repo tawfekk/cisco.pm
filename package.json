@@ -1,6 +1,6 @@
 {
   "name": "cisco.pm",
-  "version": "development",
+  "version": "1.0",
   "title": "Konfiguration af Cisco udstyr",
   "description": "Cisco configuration generator",
   "author": {
