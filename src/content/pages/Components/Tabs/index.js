@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+ import { Helmet } from 'react-helmet-async';
 import PageTitle from 'src/components/PageTitle';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { TextareaAutosize, Paper, IconButton, FormControlLabel, Checkbox, Dialog, DialogTitle, Alert, Button, Container, Grid, Card, CardHeader, CardContent, Divider } from '@mui/material';
@@ -83,8 +83,6 @@ function TabsDemo() {
 //    setValue(newValue);
 //  };
 
-  const [Hostname, setHostname] = useState(localStorage.router_initial_hostname);
-  const [Motd, setMotd] = useState(localStorage.router_initial_motd);
 //  const [Hostname, setHostname] = useState(localStorage.router_initial_hostname_input);
 //  const [Hostname, setHostname] = useState(localStorage.router_initial_hostname_input);
 //  const [Hostname, setHostname] = useState(localStorage.router_initial_hostname_input);
@@ -128,6 +126,7 @@ const styles = {
 
 
 
+//const Initial_hostname = () => {try{return JSON.parse(localStorage.router_array)[0]['initial'].hostname}catch(error){}}
 
 
 
@@ -135,16 +134,21 @@ const styles = {
 
 
 
-
-
-const [formFields, setFormFields] = useState([{interfaces_porte: [], dhcp_porte: []}])
-//const [formFields, setFormFields] = useState(localStorage.router_interfaces_array)
+const [formFields, setFormFields] = useState(
+  [
+  {
+    interfaces: [ { porte:[] } ],
+    initial:[ {} ]
+  }
+  ]
+)
 
 const handleFormChange = (event, index) => {
   let data = [...formFields]
-  data[index][event.target.name] = event.target.value;
+  //if (data[0][event.target.id][index] == undefined) {data[0][event.target.id] = {}}
+  data[0][event.target.id][index][event.target.name] = event.target.value;
   setFormFields(data);
-  localStorage.router_interfaces_array = JSON.stringify(data)
+  localStorage.router_array = JSON.stringify(data)
 }
 
 const submit = (e) => {
@@ -153,19 +157,22 @@ const submit = (e) => {
 }
 
 const addFields = () => {
+  let data = [...formFields]
   let object = {
-    interfaces_porte: [],
-    dhcp_porte: []
+    porte:[]
   }
+  data[0]['interfaces'].push(object)
+  //workingarray = formFields
+  setFormFields(data)
+  //localStorage.router_array = JSON.stringify(data)
 
-  setFormFields([...formFields, object])
 }
 
-const removeFields = (index) => {
-  let data = [...formFields];
-  data.splice(index, 1)
-  setFormFields(data)
-  localStorage.router_interfaces_array = JSON.stringify(data)
+const removeFields = (id, index) => {
+    let data = [...formFields];
+    data[0][id].splice(index, 1);
+    setFormFields(data);
+    localStorage.router_array = JSON.stringify(data)
 }
 
 
@@ -192,42 +199,56 @@ const MenuProps = {
 
 
 const DHCP = () => {
+
+  try{
+
   var workingvar = ""
-  if (localStorage.getItem('router_interfaces_array')){
-  for (const element of JSON.parse(localStorage.router_interfaces_array)){
-  workingvar += "\nservice dhcp \nip dhcp pool \"" + element.dhcp_navn+"\""+"\nnetwork "+element.dhcp_ip +" "+element.dhcp_subnet+"\ndefault-router "+element.dhcp_gateway
-  	if (element.dhcp_domæne != "") {workingvar +=  "\ndomain-name "+element.dhcp_domæne}
-  	if (element.dhcp_DNS != "") {workingvar +=  "\ndns-server "+element.dhcp_DNS}
+  if (localStorage.getItem('router_array')){
+  for (const element of JSON.parse(localStorage.router_array)[0]['dhcp']){
+  workingvar += "\nservice dhcp \nip dhcp pool \"" + element.navn+"\""+"\nnetwork "+element.ip +" "+element.subnet+"\ndefault-router "+element.gateway
+  	if (element.domæne != "") {workingvar +=  "\ndomain-name "+element.domæne}
+  	if (element.DNS != "") {workingvar +=  "\ndns-server "+element.DNS}
   	workingvar += "\nexit"
   	//for (const elem of Input29.text.replace("-", " ").split("+")){workingvar += "\nip dhcp excluded-address "+elem}
 }}
     localStorage.router_DHCP_final = workingvar ; return workingvar
+      }catch(error){}
   }
 
-
-
-
-
 const Interfaces = () => {
+
+  try{
+
   var workingvar = ""
-  if (localStorage.getItem('router_interfaces_array')){
-  for (const element of JSON.parse(localStorage.router_interfaces_array)){
-    workingvar += "\ninterface range "+element.interfaces_porte.toString()+"\nip address "+element.ip +" "+element.interfaces_subnet
-  		if(element.interfaces_description != "" && element.interfaces_description != undefined) {workingvar += "\ndescription "+element.interfaces_description}
+  if (localStorage.getItem('router_array')){
+  for (const element of JSON.parse(localStorage.router_array[0]['interfaces'])){
+      workingvar += "\ninterface range "+element.porte.toString()+"\nip address "+element.ip +" "+element.subnet
+  		if(element.description != "" && element.description != undefined) {workingvar += "\ndescription "+element.description}
   		workingvar += "\nexit"
   }}
     localStorage.router_interfaces_final = workingvar ; return workingvar
+
+  }catch(error){}
 }
 
 
 const Start = () => {
+
+try{
+
+if (localStorage.getItem('router_array')) {
+
 		var today = new Date()
 		var workingvar = ""
+    var workingarr = JSON.parse(localStorage.router_array)[0]['initial'][0]
     if (true == true) {workingvar += "clock set " + today.getHours()+":"+today.getMinutes()+":"+today.getSeconds()+" "+today.getDate()+" "+today.toLocaleString('en-us', { month: 'short' })+" "+today.getFullYear()}
     workingvar +=  "\nconfigure terminal"
-    workingvar += "\nset hostname " + localStorage.router_initial_hostname_input
+    workingvar += "\nset hostname " + workingarr.hostname
     localStorage.router_initial_final = workingvar; return workingvar
-  }
+}
+}catch(error){}
+}
+
 
 
   return (
@@ -254,7 +275,7 @@ const Start = () => {
                   <Tabs variant="scrollable"
                     scrollButtons="auto"
                     textColor="primary"
-                    indicatorColor="primary" value={value} onChange={(event, newValue) => {setValue(newValue); if (localStorage.getItem('router_interfaces_array')){setFormFields(JSON.parse(localStorage.router_interfaces_array))} }} aria-label="basic tabs example">
+                    indicatorColor="primary" value={value} onChange={(event, newValue) => {setValue(newValue); if (localStorage.getItem('router_array')){setFormFields(JSON.parse(localStorage.router_array))} }} aria-label="basic tabs example">
                     <Tab label="Initial settings" {...a11yProps(0)} />
                     <Tab label="Interfaces" {...a11yProps(1)} />
                     <Tab label="Item Three" {...a11yProps(2)} />
@@ -273,53 +294,64 @@ const Start = () => {
                     noValidate
                     autoComplete="off"
                   >
-                    <div>
+                  {formFields[0]['initial'].map((form, index) => {
+                    return (
+                    <div key={0}>
                       <TextField
                         required
+                        id="initial"
+                        name="hostname"
                         label="Hostname"
-                        value = {Hostname}
+                        value = {form.hostname}
                         placeholder="R1"
-                        onChange={(event) => {localStorage.router_initial_hostname= event.target.value; setHostname(event.target.value)}}
+                        onChange={(event) => handleFormChange(event, 0)}
+
                       />
                       <TextField
-                        id="router_initial_motd_input"
+                        id="initial"
+                        name="motd"
                         label="MOTD"
-                        value = {Motd}
-                        defaultValue={localStorage.router_initial_motd}
+                        value = {form.motd}
                         placeholder="Authorized access only!"
-                        onChange={(event) => {localStorage.router_initial_motd = event.target.value; setMotd(event.target.value)}}
+                        onChange={(event) => handleFormChange(event, 0)}
                       />
                       <TextField
-                        id="router.initial.domæne.input"
+                        id="initial"
                         label="Domæne"
-                        //defaultValue="R1"
+                        name="domæne"
+                        value = {form.domæne}
                         placeholder="domain.internal"
+                        onChange={(event) => handleFormChange(event, 0)}
                       />
                       <TextField
-                        id="router.initial.secret.input"
+                        id="initial"
+                        name="secret"
                         label="Enable secret"
-                        //defaultValue="R1"
-                        placeholder="domain.internal"
+                        value = {form.secret}
+                        placeholder="class"
+                        onChange={(event) => handleFormChange(event, 0)}
                       />
                       <TextField
-                        id="router.initial.con0pass.input"
+                        id="initial"
+                        value = {form.con0pass}
+                        name="con0pass"
                         label="Con 0 password"
-                        //defaultValue="R1"
-                        placeholder="domain.internal"
+                        placeholder="cisco"
+                        onChange={(event) => handleFormChange(event, 0)}
                       />
                       <TextField
-                        id="router.initial.vtypass.input"
+                        id="initial"
+                        name="vtypass"
+                        value = {form.vtypass}
                         label="Vty 0-15 password"
-                        //defaultValue="R1"
-                        placeholder="domain.internal"
+                        placeholder="cisco"
+                        onChange={(event) => handleFormChange(event, 0)}
                       />
                     </div>
+                  )
+                })}
                         <Divider sx={{m: 2}} />
-                        <Button variant="outlined" color="error" sx={{ margin: 1 }} size="medium" onClick={() =>{
-                        localStorage.router_initial_motd_input = "" ; setMotd("")
-                        localStorage.router_initial_hostname_input = "" ; setHostname("")
-                      //  alert(Hostname)
-                      }}
+                        <Button variant="outlined" color="error" sx={{ margin: 1 }} size="medium" onClick={() => {removeFields('initial', 0); window.location.reload()}}
                         >
                           Ryd felter
                         </Button>
@@ -359,7 +391,7 @@ const Start = () => {
                                         <CardHeader title="Interfaces" />
                                         <Divider />
                                         <CardContent>
-                                                        {formFields.map((form, index) => {
+                                                        {formFields[0]['interfaces'].map((form, index) => {
                                                           return (
                                                             <div key={index}>
                                                               <Box// sx={{ width: '100%' }}
@@ -368,36 +400,38 @@ const Start = () => {
                                                               }}
                                                               autoComplete="off">
                                                               <TextField
-                                                                name='interfaces_ip'
+                                                                name='ip'
                                                                 label="IP"
+                                                                id="interfaces"
                                                                 placeholder="192.168.1.1"
                                                                 onChange={event => handleFormChange(event, index)}
-                                                                value={form.interfaces_ip}
+                                                                value={form.ip}
                                                               />
                                                               <TextField
-                                                                name='interfaces_subnet'
+                                                                name='subnet'
+                                                                id="interfaces"
                                                                 label="Subnet"
                                                                 placeholder='255.255.255.0'
                                                                 onChange={event => handleFormChange(event, index)}
-                                                                value={form.interfaces_subnet}
+                                                                value={form.subnet}
                                                               />
                                                               <TextField
-                                                                name='interfaces_description'
+                                                                name='description'
+                                                                id="interfaces"
                                                                 label="Description"
                                                                 placeholder='portbeskrivelse'
                                                                 onChange={event => handleFormChange(event, index)}
-                                                                value={form.interfaces_description}
+                                                                value={form.description}
                                                               />
                                                               <FormControl sx={{ m: 1, width: 220 }}>
-                                                                                                <InputLabel id="demo-multiple-chip-label">
+                                                                                                <InputLabel id="interfaces">
                                                                                                   Porte
                                                                                                 </InputLabel>
                                                                                                 <Select
-                                                                                                  name='interfaces_porte'
-                                                                                                  labelId="demo-multiple-chip-label"
-                                                                                                  id="demo-multiple-chip"
+                                                                                                  name='porte'
+                                                                                                  id="interfaces"
                                                                                                   multiple
-                                                                                                  value={form.interfaces_porte}
+                                                                                                  value={form.porte}
                                                                                                   onChange={(event) =>
                                                                                                     handleFormChange(event, index)
                                                                                                   }
@@ -432,13 +466,14 @@ const Start = () => {
                                                                                               <FormControlLabel control={<Checkbox sx={{ margin: 1.7, left: '10%'}}
                                                                                                   color="warning"
                                                                                                   name='shutdown'
+                                                                                                  id="interfaces"
                                                                                                   checked={form.shutdown}
                                                                                                   onChange={(event) =>
                                                                                                     handleFormChange(event, index)
                                                                                                   }
                                                                                                 />} label="Shutdown" />
-                                                                                                  <IconButton>
-                                                                                                  <DeleteIcon color="secondary" onClick={() => removeFields(index)} />
+                                                                                                  <IconButton onClick={() => removeFields('interfaces',index)}>
+                                                                                                  <DeleteIcon color="secondary"  />
                                                                                                   </IconButton>
                                                               <Divider sx={{m: 2}} />
                                                               </Box>
@@ -490,49 +525,55 @@ const Start = () => {
                                         }}
                                         autoComplete="off">
                                         <TextField
-                                          name='dhcp_navn'
+                                          name='navn'
+                                          id="dhcp"
                                           label="Pool navn"
                                           placeholder='pool1'
                                           onChange={event => handleFormChange(event, index)}
-                                          value={form.dhcp_navn}
+                                          value={form.navn}
                                         />
                                         <TextField
-                                          name='dhcp_ip'
+                                          name='ip'
+                                          id='dhcp'
                                           label="Netværk"
                                           placeholder="192.168.1.0"
                                           onChange={event => handleFormChange(event, index)}
-                                          value={form.dhcp_ip}
+                                          value={form.ip}
                                         />
                                         <TextField
-                                          name='dhcp_subnet'
+                                          name='subnet'
+                                          id='dhcp'
                                           label="Subnet"
                                           placeholder='255.255.255.0'
                                           onChange={event => handleFormChange(event, index)}
-                                          value={form.dhcp_subnet}
+                                          value={form.subnet}
                                         />
                                         <TextField
-                                          name='dhcp_gateway'
+                                          name='gateway'
                                           label="Gateway"
+                                          id='dhcp'
                                           placeholder='192.168.1.1'
                                           onChange={event => handleFormChange(event, index)}
-                                          value={form.dhcp_gateway}
+                                          value={form.gateway}
                                         />
                                         <TextField
-                                          name='dhcp_domæne'
+                                          name='domæne'
                                           label="Domæne"
+                                          id='dhcp'
                                           placeholder='domain.internal'
                                           onChange={event => handleFormChange(event, index)}
-                                          value={form.dhcp_domæne}
+                                          value={form.domæne}
                                         />
                                         <TextField
-                                          name='dhcp_DNS'
+                                          name='DNS'
+                                          id='dhcp'
                                           label="DNS"
                                           placeholder='1.1.1.1'
                                           onChange={event => handleFormChange(event, index)}
-                                          value={form.dhcp_DNS}
+                                          value={form.DNS}
                                         />
-                                        <IconButton>
-                                        <DeleteIcon color="secondary"  sx={{ m: 1.7}} onClick={() => removeFields(index)} />
+                                        <IconButton onClick={() => removeFields(index, 'dhcp')}>
+                                        <DeleteIcon color="secondary" />
                                         </IconButton>
                                         <Divider sx={{m: 2}} />
                                         </Box>
