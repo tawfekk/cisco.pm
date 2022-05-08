@@ -83,15 +83,16 @@ function TabsDemo() {
 
   const [value, setValue] = useState(0);
 
-  //  const handleChange = (event, newValue) => {
-  //    setValue(newValue);
-  //  };
+  function sleep(ms) {
+    setValue(99);
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
-  //  const [Hostname, setHostname] = useState(localStorage.router_initial_hostname_input);
-  //  const [Hostname, setHostname] = useState(localStorage.router_initial_hostname_input);
-  //  const [Hostname, setHostname] = useState(localStorage.router_initial_hostname_input);
-  //  const [Hostname, setHostname] = useState(localStorage.router_initial_hostname_input);
-  //  const [Hostname, setHostname] = useState(localStorage.router_initial_hostname_input);
+  async function run(value) {
+    // Pause execution of this async function for 2 seconds
+    await sleep(250);
+    setValue(value);
+  }
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -119,7 +120,7 @@ function TabsDemo() {
   const [formFields, setFormFields] = useState({
     interfaces: [{ porte: [] }],
     dhcp: [{ ip: "" }],
-    initial: [{hostname: "" }]
+    initial: [{ hostname: "" }],
   });
 
   const handleFormChange = (event, index) => {
@@ -223,7 +224,6 @@ function TabsDemo() {
   window.onload = function () {
     if (localStorage.getItem("router_data")) {
       setFormFields(JSON.parse(localStorage.router_data));
-      setFormFields({ ...formFields })
     }
   };
 
@@ -378,7 +378,8 @@ function TabsDemo() {
                         size="medium"
                         onClick={() => {
                           removeFields("initial", 0);
-                          window.location.reload()
+                          addFields("initial");
+                          run(0);
                         }}
                       >
                         Ryd felter
