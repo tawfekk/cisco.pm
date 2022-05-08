@@ -6,6 +6,15 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import ThemeProvider from './theme/ThemeProvider';
 import { CssBaseline } from '@mui/material';
 
+
+window.onload = function () {
+  if (!localStorage.getItem("router_data")){localStorage.router_data = JSON.stringify({
+    interfaces: [{ porte: [] }],
+    dhcp: [{ ip: "" }],
+    initial: [{ hostname: "" }],
+  })}
+};
+
 const App = () => {
 
   const content = useRoutes(routes);

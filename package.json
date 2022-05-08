@@ -11,17 +11,20 @@
   "dependencies": {
     "@emotion/react": "11.4.1",
     "@emotion/styled": "11.3.0",
-    "@mui/material": "5.0.3",
     "@mui/icons-material": "5.0.3",
     "@mui/lab": "5.0.0-alpha.50",
+    "@mui/material": "5.0.3",
     "@mui/styles": "5.0.1",
-    "history": "5.0.1",
+    "chart.js": "2.9.4",
     "clsx": "1.1.1",
     "date-fns": "2.25.0",
+    "firebase": "^9.8.0",
+    "history": "5.0.1",
     "nprogress": "0.2.0",
     "numeral": "2.0.6",
     "prop-types": "15.7.2",
     "react": "17.0.2",
+    "react-chartjs-2": "2.11.1",
     "react-custom-scrollbars-2": "4.4.0",
     "react-dom": "17.0.2",
     "react-helmet-async": "1.1.2",
@@ -30,9 +33,7 @@
     "react-scripts": "4.0.3",
     "stylis": "4.0.10",
     "stylis-plugin-rtl": "2.1.0",
-    "web-vitals": "2.1.2",
-    "react-chartjs-2": "2.11.1",
-    "chart.js": "2.9.4"
+    "web-vitals": "2.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -67,7 +68,7 @@
     "eslint-plugin-prettier": "4.0.0",
     "eslint-plugin-react": "7.26.1",
     "eslint-plugin-react-hooks": "4.2.0",
-    "prettier": "2.4.1",
-    "node-sass": "6.0.1"
+    "node-sass": "6.0.1",
+    "prettier": "2.4.1"
   }
 }

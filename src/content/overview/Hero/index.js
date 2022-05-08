@@ -84,7 +84,7 @@ function Hero() {
         <Grid item md={10} lg={8} mx="auto">
           <LabelWrapper color="success">development branch</LabelWrapper>
           <TypographyH1 sx={{ mb: 2 }} variant="h1">
-            Siden er et development preview & er derfor meget ustabil
+            Siden er stadig under opbygning
           </TypographyH1>
           <TypographyH2
             sx={{ lineHeight: 1.5, pb: 4 }}
@@ -92,7 +92,7 @@ function Hero() {
             color="text.secondary"
             fontWeight="normal"
           >
-            Jeg forstår dette når jeg tilgår siden
+            & er derfor meget ustabil
           </TypographyH2>
           <Button
             component={RouterLink}
@@ -108,7 +108,7 @@ function Hero() {
                 <img src="/static/images/logo/material-ui.svg" alt="Material-UI" />
               </MuiAvatar>
               <Typography variant="h4">
-                <Box sx={{ pb: 2 }}><b>Bygget på Material-UI</b></Box><Typography component="span" variant="subtitle2"> - Material-UI er det primære library i koden</Typography>
+                <Box sx={{ pb: 2 }}><b>Bygget på Material-UI</b></Box>
               </Typography>
             </Grid>
             <Grid item md={6}>
@@ -116,7 +116,7 @@ function Hero() {
                 <img src="/static/images/logo/javascript.svg" alt="javascript" />
               </JsAvatar>
               <Typography variant="h4">
-                <Box sx={{ pb: 2 }}><b>Kodet i Javascript</b></Box><Typography component="span" variant="subtitle2"> - Koden er baseret på React + Javascript.</Typography>
+                <Box sx={{ pb: 2 }}><b>Kodet i Javascript</b></Box>
               </Typography>
             </Grid>
           </Grid>

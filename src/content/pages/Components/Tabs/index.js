@@ -36,7 +36,34 @@ import * as React from "react";
 import Modal from "@mui/material/Modal";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import {
+  doc,
+  getFirestore,
+  collection,
+  getDoc,
+  addDoc,
+  setDoc,
+} from "firebase/firestore";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
 import TextField from "@mui/material/TextField";
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyD3npySkxT-_E2ZESGzzftE6JZagBf-UHQ",
+  authDomain: "cisco-pm.firebaseapp.com",
+  projectId: "cisco-pm",
+  storageBucket: "cisco-pm.appspot.com",
+  messagingSenderId: "727036040743",
+  appId: "1:727036040743:web:a7c5f4382c0f5ab1ada002",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 function Forms() {
   const [currency, setCurrency] = useState("EUR");
 
@@ -85,10 +112,11 @@ function TabsDemo() {
 
   function sleep(ms) {
     setValue(99);
+    syncupdate();
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  async function run(value) {
+  async function run() {
     // Pause execution of this async function for 2 seconds
     await sleep(250);
     setValue(value);
@@ -115,20 +143,16 @@ function TabsDemo() {
     },
   };
 
-  //const Initial_hostname = () => {try{return JSON.parse(localStorage.router_data)[0]['initial'].hostname}catch(error){}}
-
-  const [formFields, setFormFields] = useState({
-    interfaces: [{ porte: [] }],
-    dhcp: [{ ip: "" }],
-    initial: [{ hostname: "" }],
-  });
-
+  const [formFields, setFormFields] = useState(
+    JSON.parse(localStorage.router_data)
+  );
   const handleFormChange = (event, index) => {
     let data = { ...formFields };
     //if (data[0][event.target.id][index] == undefined) {data[0][event.target.id] = {}}
     data[event.target.id][index][event.target.name] = event.target.value;
     setFormFields(data);
     localStorage.router_data = JSON.stringify(data);
+    syncupdate();
   };
 
   const submit = (e) => {
@@ -223,7 +247,8 @@ function TabsDemo() {
 
   window.onload = function () {
     if (localStorage.getItem("router_data")) {
-      setFormFields(JSON.parse(localStorage.router_data));
+      //setFormFields(JSON.parse(localStorage.router_data));
+      sync();
     }
   };
 
@@ -258,6 +283,32 @@ function TabsDemo() {
       }
     } catch (error) {}
   };
+
+  async function syncupdate() {
+    if (
+      sessionStorage.getItem("sessionid") != undefined ||
+      sessionStorage.sessionstate == true
+    ) {
+      try {
+        await setDoc(doc(db, sessionStorage.sessionid, "router"), {
+          data: { ...formFields },
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
+  async function sync() {
+    if (sessionStorage.getItem("sessionid")) {
+      const docRef = doc(db, sessionStorage.sessionid, "router");
+      const docSnap = await getDoc(docRef);
+      setFormFields(docSnap.data()["data"]);
+      localStorage.router_data = JSON.stringify(docSnap.data()["data"]);
+    } else {
+      setFormFields(JSON.parse(localStorage.router_data));
+    }
+  }
 
   return (
     <>
@@ -379,7 +430,7 @@ function TabsDemo() {
                         onClick={() => {
                           removeFields("initial", 0);
                           addFields("initial");
-                          run(0);
+                          run();
                         }}
                       >
                         Ryd felter
@@ -599,7 +650,22 @@ function TabsDemo() {
                 </Card>
               </TabPanel>
               <TabPanel value={value} index={2}>
-                Item Three
+                <Button
+                  variant="outlined"
+                  sx={{ margin: 1 }}
+                  size="medium"
+                  onClick={() => {}}
+                >
+                  Ryd felter
+                </Button>
+                <Button
+                  variant="outlined"
+                  sx={{ margin: 1 }}
+                  size="medium"
+                  onClick={() => {}}
+                >
+                  Ryd felter
+                </Button>
               </TabPanel>
               <TabPanel value={value} index={3}>
                 <Card sx={{ width: "100%" }}>

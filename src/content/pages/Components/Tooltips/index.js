@@ -1,22 +1,35 @@
 import { Helmet } from 'react-helmet-async';
 import PageTitle from 'src/components/PageTitle';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import { Container, Grid, Card, CardHeader, CardContent, Divider } from '@mui/material';
+import { Switch, Typography, TextField, Container, Grid, Card, CardHeader, CardContent, Divider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Footer from 'src/components/Footer';
 
+
+
+const handleFormChange = (event) => {
+  sessionStorage.sessionstate = event.target.checked;
+  if (event.target.checked){
+  if (!sessionStorage.getItem('sessionid')){sessionStorage.sessionid = Math.floor(Math.random()*90000) + 10000}
+}
+};
+
+const handleFormChange2 = (event) => {
+  sessionStorage.sessionid = event.target.value
+}
+
 function Tooltips() {
   return (
     <>
       <Helmet>
-        <title>Tooltips - Components</title>
+        <title>Fælles session</title>
       </Helmet>
       <PageTitleWrapper>
         <PageTitle
-          heading="Tooltips"
-          subHeading="gemmes til senere brug"
+          heading="Fælles session"
+          subHeading="Arbejd sammen med så mange du har lyst til, de skal bare insætte din sesssionskode ind på"
           docs="https://material-ui.com/components/tooltips/" />
       </PageTitleWrapper>
       <Container maxWidth="lg">
@@ -33,64 +46,36 @@ function Tooltips() {
               <Divider />
               <CardContent sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Box sx={{ width: 500 }}>
-                  <Grid container justifyContent="center">
-                    <Grid item>
-                      <Tooltip arrow title="Add" placement="top-start">
-                        <Button>top-start</Button>
-                      </Tooltip>
-                      <Tooltip arrow title="Add" placement="top">
-                        <Button>top</Button>
-                      </Tooltip>
-                      <Tooltip arrow title="Add" placement="top-end">
-                        <Button>top-end</Button>
-                      </Tooltip>
-                    </Grid>
-                  </Grid>
-                  <Grid container justifyContent="center">
-                    <Grid item xs={6}>
-                      <Tooltip arrow title="Add" placement="left-start">
-                        <Button>left-start</Button>
-                      </Tooltip>
-                      <br />
-                      <Tooltip arrow title="Add" placement="left">
-                        <Button>left</Button>
-                      </Tooltip>
-                      <br />
-                      <Tooltip arrow title="Add" placement="left-end">
-                        <Button>left-end</Button>
-                      </Tooltip>
-                    </Grid>
-                    <Grid item container xs={6} alignItems="flex-end" direction="column">
-                      <Grid item>
-                        <Tooltip arrow title="Add" placement="right-start">
-                          <Button>right-start</Button>
-                        </Tooltip>
-                      </Grid>
-                      <Grid item>
-                        <Tooltip arrow title="Add" placement="right">
-                          <Button>right</Button>
-                        </Tooltip>
-                      </Grid>
-                      <Grid item>
-                        <Tooltip arrow title="Add" placement="right-end">
-                          <Button>right-end</Button>
-                        </Tooltip>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid container justifyContent="center">
-                    <Grid item>
-                      <Tooltip arrow title="Add" placement="bottom-start">
-                        <Button>bottom-start</Button>
-                      </Tooltip>
-                      <Tooltip arrow title="Add" placement="bottom">
-                        <Button>bottom</Button>
-                      </Tooltip>
-                      <Tooltip arrow title="Add" placement="bottom-end">
-                        <Button>bottom-end</Button>
-                      </Tooltip>
-                    </Grid>
-                  </Grid>
+                <Typography
+                  id="modal-modal-title"
+                  variant="h4"
+                  component="h2"
+                >
+                  Sessionskode
+                </Typography>
+                <TextField
+                  multiline
+                  sx={{ mt: 2 }}
+                  inputProps={{ style: { color: "#FFC13D" } }}
+                  style={{ width: "15%" }}
+                  id="modal-modal-description"
+                  defaultValue={sessionStorage.sessionid}
+                  onChange={(event) => handleFormChange2(event)}
+                ></TextField>
+                <Button
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      localStorage.router_initial_final
+                    );
+                  }}
+                  variant="contained"
+                  sx={{ right: "20%", left: "20%", margin: 2 }}
+                  size="big"
+                  onChange={(event) => handleFormChange(event)}
+                  color="primary"
+                >
+                  Start ny session
+                </Button>
                 </Box>
               </CardContent>
             </Card>
