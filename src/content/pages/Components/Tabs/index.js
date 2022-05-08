@@ -177,6 +177,7 @@ function TabsDemo() {
     data[id].splice(index, 1);
     setFormFields(data);
     localStorage.router_data = JSON.stringify(data);
+    syncupdate();
   };
 
   const ITEM_HEIGHT = 48;
@@ -190,7 +191,7 @@ function TabsDemo() {
     },
   };
 
-  const DHCP = () => {
+  function DHCP() {
     try {
       var workingvar = "";
       if (localStorage.getItem("router_data")) {
@@ -215,12 +216,17 @@ function TabsDemo() {
           //for (const elem of Input29.text.replace("-", " ").split("+")){workingvar += "\nip dhcp excluded-address "+elem}
         }
       }
-      localStorage.router_final = JSON.stringify({ dhcp: workingvar });
+      if (!localStorage.getItem("router_final")) {
+        localStorage.router_final = JSON.stringify({});
+      }
+      let workingdata = JSON.parse(localStorage.router_final);
+      workingdata["dhcp"] = workingvar;
+      localStorage.router_final = JSON.stringify(workingdata);
       return workingvar;
     } catch (error) {}
-  };
+  }
 
-  const Interfaces = () => {
+  function Interfaces() {
     try {
       var workingvar = "";
       if (localStorage.getItem("router_data")) {
@@ -240,10 +246,15 @@ function TabsDemo() {
           workingvar += "\nexit";
         }
       }
-      localStorage.router_final = JSON.stringify({ interfaces: workingvar });
+      if (!localStorage.getItem("router_final")) {
+        localStorage.router_final = JSON.stringify({});
+      }
+      let workingdata = JSON.parse(localStorage.router_final);
+      workingdata["interfaces"] = workingvar;
+      localStorage.router_final = JSON.stringify(workingdata);
       return workingvar;
     } catch (error) {}
-  };
+  }
 
   window.onload = function () {
     if (localStorage.getItem("router_data")) {
@@ -252,11 +263,12 @@ function TabsDemo() {
     }
   };
 
-  const Start = () => {
+
+  function Start() {
     try {
       if (localStorage.getItem("router_data")) {
         var today = new Date();
-        var workingvar = "";
+        var workingvar = "\n";
         var workingarr = JSON.parse(localStorage.router_data)["initial"][0];
         if (true == true) {
           workingvar +=
@@ -278,11 +290,16 @@ function TabsDemo() {
         if (workingarr.motd != "") {
           workingvar += "\nbanner motd #" + workingarr.motd + "#";
         }
-        localStorage.router_final = JSON.stringify({ initial: workingvar });
+        if (!localStorage.getItem("router_final")) {
+          localStorage.router_final = JSON.stringify({});
+        }
+        let workingdata = JSON.parse(localStorage.router_final);
+        workingdata["initial"] = workingvar;
+        localStorage.router_final = JSON.stringify(workingdata);
         return workingvar;
       }
     } catch (error) {}
-  };
+  }
 
   async function syncupdate() {
     if (
@@ -339,6 +356,7 @@ function TabsDemo() {
                 value={value}
                 onChange={(event, newValue) => {
                   setValue(newValue);
+                  sync()
                 }}
               >
                 <Tab label="Initial settings" {...a11yProps(0)} />
@@ -436,7 +454,10 @@ function TabsDemo() {
                         Ryd felter
                       </Button>
                       <Button
-                        onClick={handleOpen}
+                        onClick={() => {
+                          Start();
+                          handleOpen();
+                        }}
                         variant="outlined"
                         sx={{ margin: 1 }}
                         size="medium"
@@ -467,7 +488,11 @@ function TabsDemo() {
                             rows={5}
                             style={{ width: "100%" }}
                             id="modal-modal-description"
-                            value={Start()}
+                            value={
+                              "conf t" +
+                              JSON.parse(localStorage.router_final)["initial"] +
+                              "\nend"
+                            }
                           ></TextField>
                           <Button
                             onClick={() => {
@@ -604,7 +629,13 @@ function TabsDemo() {
                     >
                       Tilføj interface
                     </Button>
-                    <Button variant="outlined" onClick={handleOpen}>
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        Interfaces();
+                        handleOpen();
+                      }}
+                    >
                       Vis config
                     </Button>
                     <Modal
@@ -629,12 +660,18 @@ function TabsDemo() {
                           rows={5}
                           style={{ width: "100%" }}
                           id="modal-modal-description"
-                          value={"conf terminal" + Interfaces() + "\nend"}
+                          value={
+                            "conf terminal" +
+                            JSON.parse(localStorage.router_final)[
+                              "interfaces"
+                            ] +
+                            "\nend"
+                          }
                         ></TextField>
                         <Button
                           onClick={() => {
                             navigator.clipboard.writeText(
-                              localStorage.router_interfaces_final
+                              localStorage.router_final.interfaces
                             );
                           }}
                           variant="contained"
@@ -760,7 +797,13 @@ function TabsDemo() {
                     >
                       Tilføj pool
                     </Button>
-                    <Button variant="contained" onClick={handleOpen}>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        DHCP();
+                        handleOpen();
+                      }}
+                    >
                       Vis config
                     </Button>
                     <Modal
@@ -785,7 +828,11 @@ function TabsDemo() {
                           rows={5}
                           style={{ width: "100%" }}
                           id="modal-modal-description"
-                          value={"conf terminal" + DHCP() + "\nend"}
+                          value={
+                            "conf terminal" +
+                            JSON.parse(localStorage.router_final)["DHCP"] +
+                            "\nend"
+                          }
                         ></TextField>
                         <Button
                           onClick={() => {
