@@ -12,7 +12,11 @@ window.onload = function () {
     interfaces: [{ porte: [] }],
     dhcp: [{ ip: "" }],
     initial: [{ hostname: "" }],
-  })}
+  })
+  localStorage.router_final = JSON.stringify({
+    interfaces: "",
+  })
+}
 };
 
 const App = () => {

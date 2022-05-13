@@ -109,6 +109,7 @@ function TabsDemo() {
   const porte = ["gi0/0", "gi0/1", "port-channel 1"];
 
   const [value, setValue] = useState(0);
+  const [value2, setValue2] = useState(0);
 
   function sleep(ms) {
     setValue(99);
@@ -347,7 +348,24 @@ function TabsDemo() {
           spacing={3}
         >
           <Grid item xs={12}>
-            <Box sx={{ width: "100%" }}>
+            <Box sx={{ width: "100%"}}>
+            <Tabs
+              variant="scrollable"
+              scrollButtons="auto"
+              textColor="primary"
+              sx={{ mb: 2}}
+              indicatorColor="secondary"
+              value={value2}
+              onChange={(event, newValue) => {
+                setValue2(newValue);
+                sync()
+              }}
+            >
+              <Tab label="Initial settings" {...a11yProps(0)} />
+              <Tab label="Interfaces" {...a11yProps(1)} />
+              <Tab label="Subinterfaces" {...a11yProps(2)} />
+              <Tab label="DHCP" {...a11yProps(3)} />
+            </Tabs>
               <Tabs
                 variant="scrollable"
                 scrollButtons="auto"
@@ -363,6 +381,7 @@ function TabsDemo() {
                 <Tab label="Interfaces" {...a11yProps(1)} />
                 <Tab label="Subinterfaces" {...a11yProps(2)} />
                 <Tab label="DHCP" {...a11yProps(3)} />
+
               </Tabs>
               <TabPanel value={value} index={0}>
                 <Card>
