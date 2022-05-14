@@ -118,8 +118,12 @@ if (!localStorage.getItem("router_data")) {
   ]);
 }
 
-if (!localStorage.getItem("router_tabs")) {
-  localStorage.router_tabs = JSON.stringify([]);
+if (!localStorage.getItem("router_final")) {
+  localStorage.router_final = JSON.stringify([
+    {
+      initial: ""
+    },
+  ]);
 }
 
 localStorage.router_tabid = 0;
@@ -157,6 +161,9 @@ function TabsDemo() {
       data.push(object);
       setformFields(data);
       localStorage.router_data = JSON.stringify(data);
+      let data2 = JSON.parse(localStorage.router_final)
+      data2.push({initial:""})
+      localStorage.router_final = JSON.stringify(data2)
       handleAddTab();
     } else {
       localStorage.router_tabid = newtabid;
@@ -175,7 +182,6 @@ function TabsDemo() {
         tabdata.push(<Tab label={tablabel(maxTabIndex)} key={maxTabIndex} />);
       }
       setAddTab(tabdata);
-      localStorage.router_tabs = JSON.stringify(tabdata);
     }
   };
   const handleAddTab = () => {
@@ -183,7 +189,6 @@ function TabsDemo() {
     maxTabIndex = maxTabIndex + 1;
     tabdata.push(<Tab label={tablabel(maxTabIndex)} key={maxTabIndex} />);
     setAddTab(tabdata);
-    localStorage.router_tabs = JSON.stringify(tabdata);
   };
 
   const [value, setValue] = useState(0);
@@ -299,11 +304,8 @@ function TabsDemo() {
           //for (const elem of Input29.text.replace("-", " ").split("+")){workingvar += "\nip dhcp excluded-address "+elem}
         }
       }
-      if (!localStorage.getItem("router_final")) {
-        localStorage.router_final = JSON.stringify({});
-      }
       let workingdata = JSON.parse(localStorage.router_final);
-      workingdata["dhcp"] = workingvar;
+      workingdata[localStorage.router_tabid]["dhcp"] = workingvar;
       localStorage.router_final = JSON.stringify(workingdata);
       return workingvar;
     } catch (error) {}
@@ -313,9 +315,7 @@ function TabsDemo() {
     try {
       var workingvar = "";
       if (localStorage.getItem("router_data")) {
-        for (const element of JSON.parse(localStorage.router_data)[
-          localStorage.router_tabid
-        ]["interfaces"]) {
+        for (const element of JSON.parse(localStorage.router_data)[localStorage.router_tabid]["interfaces"]) {
           workingvar +=
             "\ninterface range " +
             element.porte.toString() +
@@ -329,11 +329,8 @@ function TabsDemo() {
           workingvar += "\nexit";
         }
       }
-      if (!localStorage.getItem("router_final")) {
-        localStorage.router_final = JSON.stringify({});
-      }
       let workingdata = JSON.parse(localStorage.router_final);
-      workingdata["interfaces"] = workingvar;
+      workingdata[localStorage.router_tabid]["interfaces"] = workingvar;
       localStorage.router_final = JSON.stringify(workingdata);
       return workingvar;
     } catch (error) {}
@@ -352,13 +349,8 @@ function TabsDemo() {
       if (localStorage.getItem("router_data")) {
         var today = new Date();
         var workingvar = "\n";
-        var workingarr = JSON.parse(localStorage.router_data)[
-          localStorage.router_tabid
-        ]["initial"][0];
-        if (true == true) {
-          workingvar +=
-            "clock set " +
-            today.getHours() +
+        var workingarr = JSON.parse(localStorage.router_data)[localStorage.router_tabid]["initial"][0];
+        if (true == true) {workingvar += "clock set " + today.getHours() +
             ":" +
             today.getMinutes() +
             ":" +
@@ -375,11 +367,8 @@ function TabsDemo() {
         if (workingarr.motd != "") {
           workingvar += "\nbanner motd #" + workingarr.motd + "#";
         }
-        if (!localStorage.getItem("router_final")) {
-          localStorage.router_final = JSON.stringify({});
-        }
         let workingdata = JSON.parse(localStorage.router_final);
-        workingdata["initial"] = workingvar;
+        workingdata[localStorage.router_tabid]["initial"] = workingvar;
         localStorage.router_final = JSON.stringify(workingdata);
         return workingvar;
       }
@@ -556,7 +545,7 @@ function TabsDemo() {
                       id="modal-modal-description"
                       value={
                         "conf t" +
-                        JSON.parse(localStorage.router_final)["initial"] +
+                        JSON.parse(localStorage.router_final)[localStorage.router_tabid]["initial"] +
                         "\nend"
                       }
                     ></TextField>
@@ -718,7 +707,7 @@ function TabsDemo() {
                     id="modal-modal-description"
                     value={
                       "conf terminal" +
-                      JSON.parse(localStorage.router_final)["interfaces"] +
+                      JSON.parse(localStorage.router_final)[localStorage.router_tabid]["interfaces"] +
                       "\nend"
                     }
                   ></TextField>
@@ -870,7 +859,7 @@ function TabsDemo() {
                     id="modal-modal-description"
                     value={
                       "conf terminal" +
-                      JSON.parse(localStorage.router_final)["DHCP"] +
+                      JSON.parse(localStorage.router_final)[localStorage.router_tabid]["DHCP"] +
                       "\nend"
                     }
                   ></TextField>
