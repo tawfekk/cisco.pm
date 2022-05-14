@@ -8,15 +8,15 @@ import { CssBaseline } from '@mui/material';
 
 
 window.onload = function () {
-  if (!localStorage.getItem("router_data")){localStorage.router_data = JSON.stringify({
+  if (!localStorage.getItem("router_data")){localStorage.router_data = JSON.stringify(
+[
+  {
     interfaces: [{ porte: [] }],
     dhcp: [{ ip: "" }],
     initial: [{ hostname: "" }],
-  })
-  localStorage.router_final = JSON.stringify({
-    interfaces: "",
-  })
-}
+  }
+]
+)}
 };
 
 const App = () => {

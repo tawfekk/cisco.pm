@@ -36,7 +36,7 @@ const menuItems = [
       {
         name: 'Router',
         icon: RouterIcon,
-        link: '/components/tabs'
+        link: '/components/router'
       },
       {
         name: 'Delt session',

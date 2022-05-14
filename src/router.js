@@ -20,7 +20,7 @@ const Overview = Loader(lazy(() => import('src/content/overview')));
 // Components
 
 const Accordions = Loader(lazy(() => import('src/content/pages/Components/Accordions')));
-const Tabs = Loader(lazy(() => import('src/content/pages/Components/Tabs')));
+const Router = Loader(lazy(() => import('src/content/pages/Components/Router')));
 const Tooltips = Loader(lazy(() => import('src/content/pages/Components/Tooltips')));
 
 // Status
@@ -85,8 +85,8 @@ const routes = [
         element: <Accordions />
       },
       {
-        path: 'tabs',
-        element: <Tabs />
+        path: 'router',
+        element: <Router />
       },
       {
         path: 'tooltips',

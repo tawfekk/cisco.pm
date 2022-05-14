@@ -103,8 +103,8 @@ function HeaderMenu() {
         <MenuItem sx={{ px: 3 }} component={NavLink} to="https://mads03.dk">
           mads03.dk
         </MenuItem>
-        <MenuItem sx={{ px: 3 }} component={NavLink} to="/components/tabs">
-          Tabs
+        <MenuItem sx={{ px: 3 }} component={NavLink} to="/components/router">
+          Router
         </MenuItem>
         <MenuItem sx={{ px: 3 }} component={NavLink} to="/components/cards">
           Cards
