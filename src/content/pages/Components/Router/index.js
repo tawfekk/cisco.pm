@@ -927,6 +927,8 @@ function TabsDemo() {
       <Footer />
     </>
   );
+  onreloadtab();
 }
+
 
 export default TabsDemo;
