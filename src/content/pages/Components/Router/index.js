@@ -379,7 +379,7 @@ function TabsDemo() {
     if (sessionStorage.getItem("sessionid") != undefined) {
       try {
         await setDoc(doc(db, sessionStorage.sessionid, "router"), {
-          data: { ...formFields },
+          data: [ ...formFields ],
         });
       } catch (e) {
         console.log(e);
