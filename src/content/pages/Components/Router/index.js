@@ -207,18 +207,6 @@ function TabsDemo() {
     setValue(value);
   }
 
-  function sleep2(ms) {
-    setValue(99);
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
-  async function run2() {
-    // Pause execution of this async function for 2 seconds
-    await sleep2(250);
-    onreloadtab()
-    setValue(value);
-  }
-
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -354,8 +342,9 @@ function TabsDemo() {
       //setformFields[tabid](JSON.parse(localStorage.router_data));
       sync();
     }
-    run2();
   };
+
+  if (maxTabIndex == 0) {onreloadtab()}
 
   function Start() {
     try {
