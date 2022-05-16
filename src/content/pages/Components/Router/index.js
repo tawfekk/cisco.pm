@@ -734,9 +734,9 @@ function TabsDemo() {
             variant="outlined"
             sx={{ margin: 1 }}
             size="medium"
-            onClick={() => {}}
+            onClick={() => {onreloadtab()}}
           >
-            Ryd felter
+            test
           </Button>
           <Button
             variant="outlined"
@@ -929,6 +929,5 @@ function TabsDemo() {
   );
   onreloadtab();
 }
-
 
 export default TabsDemo;
