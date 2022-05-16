@@ -149,6 +149,7 @@ function TabsDemo() {
   }
 
   // Handle Tab Button Click
+  const [tabs, setAddTab] = useState([]);
   const [tabid, settabid] = useState(0);
   const handleTabChange = (event, newtabid) => {
     if (newtabid === "tabProperties") {
@@ -173,7 +174,7 @@ function TabsDemo() {
   };
 
   // Handle Add Tab Button
-  const [tabs, setAddTab] = useState([]);
+
   const onreloadtab = () => {
     let tabdata = [...tabs];
     if (JSON.parse(localStorage.router_data).length != 1) {
@@ -203,6 +204,18 @@ function TabsDemo() {
   async function run() {
     // Pause execution of this async function for 2 seconds
     await sleep(250);
+    setValue(value);
+  }
+
+  function sleep2(ms) {
+    setValue(99);
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async function run2() {
+    // Pause execution of this async function for 2 seconds
+    await sleep2(250);
+    onreloadtab()
     setValue(value);
   }
 
@@ -341,7 +354,7 @@ function TabsDemo() {
       //setformFields[tabid](JSON.parse(localStorage.router_data));
       sync();
     }
-    onreloadtab();
+    run2();
   };
 
   function Start() {
@@ -927,7 +940,6 @@ function TabsDemo() {
       <Footer />
     </>
   );
-  onreloadtab();
 }
 
 export default TabsDemo;
