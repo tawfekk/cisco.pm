@@ -13,6 +13,25 @@ const App = () => {
 
   const content = useRoutes(routes);
 
+
+  if (!localStorage.getItem("router_data")) {
+    localStorage.router_data = JSON.stringify([
+      {
+        interfaces: [{ porte: [] }],
+        dhcp: [{ ip: "" }],
+        initial: [{ hostname: "R1" }],
+      },
+    ]);
+  }
+
+  if (!localStorage.getItem("router_final")) {
+    localStorage.router_final = JSON.stringify([
+      {
+        initial: "",
+      },
+    ]);
+  }
+
   return (
     <ThemeProvider>
       <LocalizationProvider dateAdapter={AdapterDateFns}>

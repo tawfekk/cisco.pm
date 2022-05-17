@@ -109,25 +109,6 @@ function a11yProps(index) {
 }
 let maxTabIndex = 0;
 
-if (!localStorage.getItem("router_data")) {
-  localStorage.router_data = JSON.stringify([
-    {
-      interfaces: [{ porte: [] }],
-      dhcp: [{ ip: "" }],
-      initial: [{ hostname: "" }],
-    },
-  ]);
-}
-
-if (!localStorage.getItem("router_final")) {
-  localStorage.router_final = JSON.stringify([
-    {
-      initial: "",
-    },
-  ]);
-}
-
-
 
 const porte = ["gi0/0", "gi0/1", "port-channel 1"];
 
@@ -155,11 +136,12 @@ function Router() {
   const [tabid, settabid] = useState(0);
   const handleTabChange = (event, newtabid) => {
     if (newtabid === "tabProperties") {
+      let workingtabindex = maxTabIndex + 2
       let data = [...formFields];
       let object = {
         interfaces: [{ porte: [] }],
         dhcp: [{ ip: "" }],
-        initial: [{ hostname: "" }],
+        initial: [{ hostname: "R"+workingtabindex}],
       };
       data.push(object);
       setformFields(data);
@@ -462,6 +444,7 @@ function Initial(){
                           name="hostname"
                           label="Hostname"
                           value={form.hostname}
+                          autoFocus={true}
                           placeholder="R1"
                           onChange={(event) => handleFormChange(event, 0)}
                           InputLabelProps={{ shrink: true }}
