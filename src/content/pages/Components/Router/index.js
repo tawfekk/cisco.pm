@@ -112,6 +112,19 @@ const porte = ["gi0/0", "gi0/1", "port-channel 1"];
 
 sessionStorage.router_tabid = 0;
 
+
+if (JSON.parse(localStorage.router_final).length != JSON.parse(localStorage.router_data).length){
+var times = JSON.parse(localStorage.router_data).length
+let data = JSON.parse(localStorage.router_final)
+for(var i = 0; i < times; i++){
+    let object = {
+      initial: ""
+    };
+    data.push(object);
+}
+localStorage.router_final = JSON.stringify(data)
+}
+
 function Router() {
   function tablabel(maxTabIndex) {
     try {
@@ -347,9 +360,13 @@ function Router() {
     }
   };
 
-  if (maxTabIndex == 0 || localStorage.tabid == 999) {
+  if (maxTabIndex == 0) {
     onreloadtab();
   }
+
+
+
+
 
   function Initial() {
     try {
@@ -400,6 +417,7 @@ function Router() {
   }
 
   async function sync() {
+    try {
     if (sessionStorage.getItem("sessionid")) {
       const docRef = doc(db, sessionStorage.sessionid, "router");
       const docSnap = await getDoc(docRef);
@@ -408,7 +426,11 @@ function Router() {
     } else {
       setformFields(JSON.parse(localStorage.router_data));
     }
+  } catch (e) {
+    console.log(e);
   }
+  }
+
   function runner() {
     Initial();
     Interfaces();

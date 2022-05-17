@@ -20,6 +20,10 @@ function handleFormChange3() {
 sessionStorage.sessionid = ""; window.location.reload()
 }
 
+function handleFormChange4() {
+sessionStorage.sessionid = sessionStorage.t_sessionid; window.location.reload()
+}
+
 function DeltSession() {
   return (
     <>
@@ -98,6 +102,7 @@ function DeltSession() {
                 </Typography>
                 <TextField
                   multiline
+                  onChange={(event) => {sessionStorage.t_sessionid = event.target.value}}
                   sx={{ mt: 2 }}
                   inputProps={{ style: { color: "#FFC13D" } }}
                   style={{ width: "20%" }}
@@ -108,6 +113,7 @@ function DeltSession() {
                   sx={{ right: "20%", left: "20%", margin: 2 }}
                   size="big"
                   color="primary"
+                  onClick={() => handleFormChange4()}
                 >
                   Deltag i session
                 </Button>
