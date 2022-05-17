@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Footer from 'src/components/Footer';
 
-function Accordions() {
+function VLAN() {
 
   return (
     <>
@@ -85,4 +85,4 @@ function Accordions() {
   );
 }
 
-export default Accordions;
+export default VLAN;

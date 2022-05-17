@@ -20,7 +20,7 @@ function handleFormChange3() {
 sessionStorage.sessionid = ""; window.location.reload()
 }
 
-function Tooltips() {
+function DeltSession() {
   return (
     <>
       <Helmet>
@@ -30,7 +30,7 @@ function Tooltips() {
         <PageTitle
           heading="Fælles session"
           subHeading="Arbejd sammen med andre, ved at dele din sesssionskode"
-          docs="https://material-ui.com/components/tooltips/" />
+          docs="https://material-ui.com/components/DeltSession/" />
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid
@@ -122,4 +122,4 @@ function Tooltips() {
   );
 }
 
-export default Tooltips;
+export default DeltSession;

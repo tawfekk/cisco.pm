@@ -36,7 +36,7 @@ const SubMenuWrapper = styled(List)(
 
       .MuiListItem-root {
         padding: 2px ${theme.spacing(2)};
-    
+
         .MuiButton-root {
           display: flex;
           color: ${theme.sidebar.menuItemColor};
@@ -60,7 +60,7 @@ const SubMenuWrapper = styled(List)(
               color: ${theme.palette.primary.contrastText};
             }
           }
-    
+
           .MuiButton-startIcon,
           .MuiButton-endIcon {
             transition: ${theme.transitions.create(['color'])};
@@ -76,7 +76,7 @@ const SubMenuWrapper = styled(List)(
             margin-right: ${theme.spacing(1.5)};
             color: ${theme.sidebar.menuItemIconColor};
           }
-          
+
           .MuiButton-endIcon {
             margin-left: auto;
             font-size: ${theme.typography.pxToRem(22)};
@@ -187,12 +187,12 @@ const reduceChildRoutes = ({
 function SidebarMenu() {
   const location = useLocation();
 
-
   return (
     <>
       {menuItems.map((section) => (
         <MenuWrapper
           key={section.heading}
+          onClick={sessionStorage.getItem('router_tabid')}
           subheader={
             <ListSubheader component="div" disableSticky>{section.heading}</ListSubheader>
           }

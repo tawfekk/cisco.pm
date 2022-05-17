@@ -80,6 +80,7 @@ function Forms() {
   };
 }
 
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -121,17 +122,18 @@ if (!localStorage.getItem("router_data")) {
 if (!localStorage.getItem("router_final")) {
   localStorage.router_final = JSON.stringify([
     {
-      initial: ""
+      initial: "",
     },
   ]);
 }
 
-localStorage.router_tabid = 0;
+
 
 const porte = ["gi0/0", "gi0/1", "port-channel 1"];
 
-//let currentTablIndex = 0;
-function TabsDemo() {
+sessionStorage.router_tabid = 0
+
+function Router() {
   function tablabel(maxTabIndex) {
     try {
       if (
@@ -162,12 +164,12 @@ function TabsDemo() {
       data.push(object);
       setformFields(data);
       localStorage.router_data = JSON.stringify(data);
-      let data2 = JSON.parse(localStorage.router_final)
-      data2.push({initial:""})
-      localStorage.router_final = JSON.stringify(data2)
+      let data2 = JSON.parse(localStorage.router_final);
+      data2.push({ initial: "" });
+      localStorage.router_final = JSON.stringify(data2);
       handleAddTab();
     } else {
-      localStorage.router_tabid = newtabid;
+      sessionStorage.router_tabid = newtabid;
       //currentTablIndex = newtabid;
       settabid(newtabid);
     }
@@ -175,7 +177,7 @@ function TabsDemo() {
 
   // Handle Add Tab Button
 
-  const onreloadtab = () => {
+  function onreloadtab() {
     let tabdata = [...tabs];
     if (JSON.parse(localStorage.router_data).length != 1) {
       for (var i = 1; i < JSON.parse(localStorage.router_data).length; i++) {
@@ -235,11 +237,12 @@ function TabsDemo() {
   const handleFormChange = (event, index) => {
     let data = [...formFields];
     //if (data[0][event.target.id][index] == undefined) {data[0][event.target.id] = {}}
-    data[localStorage.router_tabid][event.target.id][index][event.target.name] =
+    data[sessionStorage.router_tabid][event.target.id][index][event.target.name] =
       event.target.value;
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
     syncupdate();
+    runner()
   };
 
   const submit = (e) => {
@@ -253,7 +256,7 @@ function TabsDemo() {
       porte: [],
       dhcp: [],
     };
-    data[localStorage.router_tabid][id].push(object);
+    data[sessionStorage.router_tabid][id].push(object);
     //workingarray = formFields[tabid]
     setformFields(data);
     //localStorage.router_data = JSON.stringify(data)
@@ -261,7 +264,7 @@ function TabsDemo() {
 
   const removeFields = (id, index) => {
     let data = [...formFields];
-    data[localStorage.router_tabid][id].splice(index, 1);
+    data[sessionStorage.router_tabid][id].splice(index, 1);
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
     syncupdate();
@@ -283,7 +286,7 @@ function TabsDemo() {
       var workingvar = "";
       if (localStorage.getItem("router_data")) {
         for (const element of JSON.parse(localStorage.router_data)[
-          localStorage.router_tabid
+          sessionStorage.router_tabid
         ]["dhcp"]) {
           workingvar +=
             '\nservice dhcp \nip dhcp pool "' +
@@ -306,7 +309,7 @@ function TabsDemo() {
         }
       }
       let workingdata = JSON.parse(localStorage.router_final);
-      workingdata[localStorage.router_tabid]["dhcp"] = workingvar;
+      workingdata[sessionStorage.router_tabid]["dhcp"] = workingvar;
       localStorage.router_final = JSON.stringify(workingdata);
       return workingvar;
     } catch (error) {}
@@ -316,7 +319,9 @@ function TabsDemo() {
     try {
       var workingvar = "";
       if (localStorage.getItem("router_data")) {
-        for (const element of JSON.parse(localStorage.router_data)[localStorage.router_tabid]["interfaces"]) {
+        for (const element of JSON.parse(localStorage.router_data)[
+          sessionStorage.router_tabid
+        ]["interfaces"]) {
           workingvar +=
             "\ninterface range " +
             element.porte.toString() +
@@ -331,7 +336,7 @@ function TabsDemo() {
         }
       }
       let workingdata = JSON.parse(localStorage.router_final);
-      workingdata[localStorage.router_tabid]["interfaces"] = workingvar;
+      workingdata[sessionStorage.router_tabid]["interfaces"] = workingvar;
       localStorage.router_final = JSON.stringify(workingdata);
       return workingvar;
     } catch (error) {}
@@ -342,17 +347,26 @@ function TabsDemo() {
       //setformFields[tabid](JSON.parse(localStorage.router_data));
       sync();
     }
+
   };
 
-  if (maxTabIndex == 0) {onreloadtab()}
 
-  function Start() {
+  if (maxTabIndex == 0 || localStorage.tabid == 999) {
+      onreloadtab()
+  }
+
+function Initial(){
     try {
       if (localStorage.getItem("router_data")) {
         var today = new Date();
         var workingvar = "\n";
-        var workingarr = JSON.parse(localStorage.router_data)[localStorage.router_tabid]["initial"][0];
-        if (true == true) {workingvar += "clock set " + today.getHours() +
+        var workingarr = JSON.parse(localStorage.router_data)[
+          sessionStorage.router_tabid
+        ]["initial"][0];
+        if (true == true) {
+          workingvar +=
+            "clock set " +
+            today.getHours() +
             ":" +
             today.getMinutes() +
             ":" +
@@ -370,7 +384,7 @@ function TabsDemo() {
           workingvar += "\nbanner motd #" + workingarr.motd + "#";
         }
         let workingdata = JSON.parse(localStorage.router_final);
-        workingdata[localStorage.router_tabid]["initial"] = workingvar;
+        workingdata[sessionStorage.router_tabid]["initial"] = workingvar;
         localStorage.router_final = JSON.stringify(workingdata);
         return workingvar;
       }
@@ -381,7 +395,7 @@ function TabsDemo() {
     if (sessionStorage.getItem("sessionid") != undefined) {
       try {
         await setDoc(doc(db, sessionStorage.sessionid, "router"), {
-          data: [ ...formFields ],
+          data: [...formFields],
         });
       } catch (e) {
         console.log(e);
@@ -399,6 +413,12 @@ function TabsDemo() {
       setformFields(JSON.parse(localStorage.router_data));
     }
   }
+  function runner() {
+    Initial()
+    Interfaces()
+  }
+
+
 
   function Content() {
     return (
@@ -432,7 +452,7 @@ function TabsDemo() {
                 noValidate
                 autoComplete="off"
               >
-                {formFields[localStorage.router_tabid]["initial"].map(
+                {formFields[sessionStorage.router_tabid]["initial"].map(
                   (form, index) => {
                     return (
                       <div key={0}>
@@ -512,7 +532,7 @@ function TabsDemo() {
                 </Button>
                 <Button
                   onClick={() => {
-                    Start();
+                    Initial();
                     handleOpen();
                   }}
                   variant="outlined"
@@ -547,7 +567,9 @@ function TabsDemo() {
                       id="modal-modal-description"
                       value={
                         "conf t" +
-                        JSON.parse(localStorage.router_final)[localStorage.router_tabid]["initial"] +
+                        JSON.parse(localStorage.router_final)[
+                          sessionStorage.router_tabid
+                        ]["initial"] +
                         "\nend"
                       }
                     ></TextField>
@@ -709,7 +731,9 @@ function TabsDemo() {
                     id="modal-modal-description"
                     value={
                       "conf terminal" +
-                      JSON.parse(localStorage.router_final)[localStorage.router_tabid]["interfaces"] +
+                      JSON.parse(localStorage.router_final)[
+                        sessionStorage.router_tabid
+                      ]["interfaces"] +
                       "\nend"
                     }
                   ></TextField>
@@ -736,7 +760,8 @@ function TabsDemo() {
             variant="outlined"
             sx={{ margin: 1 }}
             size="medium"
-            onClick={() => {onreloadtab()}}
+            onClick={() => {
+            }}
           >
             test
           </Button>
@@ -861,7 +886,9 @@ function TabsDemo() {
                     id="modal-modal-description"
                     value={
                       "conf terminal" +
-                      JSON.parse(localStorage.router_final)[localStorage.router_tabid]["DHCP"] +
+                      JSON.parse(localStorage.router_final)[
+                        sessionStorage.router_tabid
+                      ]["DHCP"] +
                       "\nend"
                     }
                   ></TextField>
@@ -931,4 +958,4 @@ function TabsDemo() {
   );
 }
 
-export default TabsDemo;
+export default Router;
