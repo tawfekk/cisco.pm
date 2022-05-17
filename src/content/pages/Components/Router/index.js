@@ -80,7 +80,6 @@ function Forms() {
   };
 }
 
-
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -109,10 +108,9 @@ function a11yProps(index) {
 }
 let maxTabIndex = 0;
 
-
 const porte = ["gi0/0", "gi0/1", "port-channel 1"];
 
-sessionStorage.router_tabid = 0
+sessionStorage.router_tabid = 0;
 
 function Router() {
   function tablabel(maxTabIndex) {
@@ -136,12 +134,12 @@ function Router() {
   const [tabid, settabid] = useState(0);
   const handleTabChange = (event, newtabid) => {
     if (newtabid === "tabProperties") {
-      let workingtabindex = maxTabIndex + 2
+      let workingtabindex = maxTabIndex + 2;
       let data = [...formFields];
       let object = {
         interfaces: [{ porte: [] }],
         dhcp: [{ ip: "" }],
-        initial: [{ hostname: "R"+workingtabindex}],
+        initial: [{ hostname: "R" + workingtabindex }],
       };
       data.push(object);
       setformFields(data);
@@ -152,8 +150,9 @@ function Router() {
       handleAddTab();
     } else {
       sessionStorage.router_tabid = newtabid;
-      //currentTablIndex = newtabid;
       settabid(newtabid);
+      run2()
+      sync();
     }
   };
 
@@ -168,7 +167,7 @@ function Router() {
       }
       setAddTab(tabdata);
     }
-  };
+  }
   const handleAddTab = () => {
     let tabdata = [...tabs];
     maxTabIndex = maxTabIndex + 1;
@@ -190,6 +189,22 @@ function Router() {
     await sleep(250);
     setValue(value);
   }
+
+
+
+  function sleep2(ms) {
+    setValue(99);
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async function run2() {
+    // Pause execution of this async function for 2 seconds
+    await sleep(250);
+    setValue(value);
+  }
+
+
+
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -219,12 +234,13 @@ function Router() {
   const handleFormChange = (event, index) => {
     let data = [...formFields];
     //if (data[0][event.target.id][index] == undefined) {data[0][event.target.id] = {}}
-    data[sessionStorage.router_tabid][event.target.id][index][event.target.name] =
-      event.target.value;
+    data[sessionStorage.router_tabid][event.target.id][index][
+      event.target.name
+    ] = event.target.value;
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
     syncupdate();
-    runner()
+    runner();
   };
 
   const submit = (e) => {
@@ -329,15 +345,13 @@ function Router() {
       //setformFields[tabid](JSON.parse(localStorage.router_data));
       sync();
     }
-
   };
 
-
   if (maxTabIndex == 0 || localStorage.tabid == 999) {
-      onreloadtab()
+    onreloadtab();
   }
 
-function Initial(){
+  function Initial() {
     try {
       if (localStorage.getItem("router_data")) {
         var today = new Date();
@@ -396,11 +410,9 @@ function Initial(){
     }
   }
   function runner() {
-    Initial()
-    Interfaces()
+    Initial();
+    Interfaces();
   }
-
-
 
   function Content() {
     return (
@@ -420,6 +432,11 @@ function Initial(){
           <Tab label="Interfaces" {...a11yProps(1)} />
           <Tab label="Subinterfaces" {...a11yProps(2)} />
           <Tab label="DHCP" {...a11yProps(3)} />
+          <Tab label="Static route" {...a11yProps(4)} />
+          <Tab label="FHRP" {...a11yProps(5)} />
+          <Tab label="RIP" {...a11yProps(6)} />
+          <Tab label="ACL" {...a11yProps(7)} />
+          <Tab label="Noter" {...a11yProps(8)} />
         </Tabs>
         <TabPanel value={value} index={0}>
           <Card>
@@ -743,8 +760,7 @@ function Initial(){
             variant="outlined"
             sx={{ margin: 1 }}
             size="medium"
-            onClick={() => {
-            }}
+            onClick={() => {}}
           >
             test
           </Button>
@@ -890,6 +906,15 @@ function Initial(){
                   </Button>
                 </Box>
               </Modal>
+            </CardContent>
+          </Card>
+        </TabPanel>
+        <TabPanel value={value} index={8}>
+          <Card sx={{ width: "100%" }}>
+            <CardHeader title="Noter" />
+            <Divider />
+            <CardContent>
+
             </CardContent>
           </Card>
         </TabPanel>

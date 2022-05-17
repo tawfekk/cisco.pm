@@ -1,21 +1,29 @@
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from "react-helmet-async";
 
-import PageTitle from 'src/components/PageTitle';
-import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import { TextField, Button, Container, Grid, Card, CardHeader, CardContent, Divider } from '@mui/material';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Footer from 'src/components/Footer';
+import PageTitle from "src/components/PageTitle";
+import PageTitleWrapper from "src/components/PageTitleWrapper";
+import {
+  TextField,
+  Button,
+  Container,
+  Grid,
+  Card,
+  CardHeader,
+  CardContent,
+  Divider,
+} from "@mui/material";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Footer from "src/components/Footer";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { useState } from "react";
 import * as React from "react";
 
 function Oversigt() {
-
   const style = {
     position: "absolute",
     top: "50%",
@@ -29,9 +37,9 @@ function Oversigt() {
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = (index) => {
-    sessionStorage.oversigt_index = index
-    setOpen(true)
-  }
+    sessionStorage.oversigt_index = index;
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
 
   const [formFields, setformFields] = useState(
@@ -46,20 +54,23 @@ function Oversigt() {
 
   const removeFields = (index) => {
     let data = [...formFields];
-    data.splice(index,1);
+    data.splice(index, 1);
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
     //syncupdate();
   };
 
-  function returner(){
-    let data = ""
-    for (var prop in JSON.parse(localStorage.router_final)[sessionStorage.oversigt_index]) {
-      data += JSON.parse(localStorage.router_final)[sessionStorage.oversigt_index][prop]
+  function returner() {
+    let data = "";
+    for (var prop in JSON.parse(localStorage.router_final)[
+      sessionStorage.oversigt_index
+    ]) {
+      data += JSON.parse(localStorage.router_final)[
+        sessionStorage.oversigt_index
+      ][prop];
     }
-    return data
+    return data;
   }
-
 
   return (
     <>
@@ -70,7 +81,8 @@ function Oversigt() {
         <PageTitle
           heading="Test"
           subHeading="testtest"
-          docs="https://material-ui.com/components/accordion/" />
+          docs="https://material-ui.com/components/accordion/"
+        />
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid
@@ -94,27 +106,25 @@ function Oversigt() {
                         }}
                         autoComplete="off"
                       >
-                      <Typography
-                        sx={{ mt: 2 }}
-                      >
-                      {formFields[index]['initial'][0]['hostname']}
-                      </Typography>
-                <Button
-                  variant="contained"
-                  onClick={() => {handleOpen(index)}}
-                >
-                  Vis config
-                </Button>
-                <Button
-                  onClick={() => removeFields(index)}
-                >
-                Slet
-                </Button>
-                <Divider sx={{ m: 2 }} />
-              </Box>
-            </div>
-            );
-            })}
+                        <Typography sx={{ mt: 2 }}>
+                          {formFields[index]["initial"][0]["hostname"]}
+                        </Typography>
+                        <Button
+                          variant="contained"
+                          onClick={() => {
+                            handleOpen(index);
+                          }}
+                        >
+                          Vis config
+                        </Button>
+                        <Button onClick={() => removeFields(index)}>
+                          Slet
+                        </Button>
+                        <Divider sx={{ m: 2 }} />
+                      </Box>
+                    </div>
+                  );
+                })}
                 <Modal
                   open={open}
                   onClose={handleClose}
@@ -137,17 +147,11 @@ function Oversigt() {
                       rows={5}
                       style={{ width: "100%" }}
                       id="modal-modal-description"
-                      value={
-                        "conf terminal" +
-                        returner() +
-                        "\nend"
-                      }
+                      value={"conf terminal" + returner() + "\nend"}
                     ></TextField>
                     <Button
                       onClick={() => {
-                        navigator.clipboard.writeText(
-                          returner()
-                        );
+                        navigator.clipboard.writeText(returner());
                       }}
                       variant="contained"
                       sx={{ right: "20%", left: "20%", margin: 2 }}
