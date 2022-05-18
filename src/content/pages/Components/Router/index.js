@@ -213,7 +213,7 @@ function Router() {
   async function run2() {
     // Pause execution of this async function for 2 seconds
     await sleep(250);
-    setValue(value);
+    setValue(0);
   }
 
 
