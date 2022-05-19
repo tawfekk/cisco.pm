@@ -63,33 +63,121 @@ const firebaseConfig = {
   appId: "1:727036040743:web:a7c5f4382c0f5ab1ada002",
 };
 
+function Initial() {
+  try {
+    var today = new Date();
+    var workingvar = "\n";
+    var workingarr = JSON.parse(localStorage.router_data)[
+      sessionStorage.router_tabid
+    ]["initial"][0];
+    if (true == true) {
+      workingvar +=
+        "clock set " +
+        today.getHours() +
+        ":" +
+        today.getMinutes() +
+        ":" +
+        today.getSeconds() +
+        " " +
+        today.getDate() +
+        " " +
+        today.toLocaleString("en-us", { month: "short" }) +
+        " " +
+        today.getFullYear();
+    }
+    workingvar += "\nconfigure terminal";
+    workingvar += "\nset hostname " + workingarr.hostname;
+    if (workingarr.motd != "") {
+      workingvar += "\nbanner motd #" + workingarr.motd + "#";
+      let workingdata = JSON.parse(localStorage.router_final);
+      workingdata[sessionStorage.router_tabid]["initial"] = workingvar;
+      localStorage.router_final = JSON.stringify(workingdata);
+      return workingvar;
+    }
+  } catch (error) {}
+}
+
+function Interfaces() {
+  try {
+    var workingvar = "";
+    for (const element of JSON.parse(localStorage.router_data)[
+      sessionStorage.router_tabid
+    ]["interfaces"]) {
+      workingvar +=
+        "\ninterface range " +
+        element.porte.toString() +
+        "\nip address " +
+        element.ip +
+        " " +
+        element.subnet;
+      if (element.description != "" && element.description != undefined) {
+        workingvar += "\ndescription " + element.description;
+      }
+      workingvar += "\nexit";
+    }
+    let workingdata = JSON.parse(localStorage.router_final);
+    workingdata[sessionStorage.router_tabid]["interfaces"] = workingvar;
+    localStorage.router_final = JSON.stringify(workingdata);
+    return workingvar;
+  } catch (error) {}
+}
+
+function DHCP() {
+  try {
+    var workingvar = "";
+    for (const element of JSON.parse(localStorage.router_data)[
+      sessionStorage.router_tabid
+    ]["dhcp"]) {
+      workingvar +=
+        '\nservice dhcp \nip dhcp pool "' +
+        element.navn +
+        '"' +
+        "\nnetwork " +
+        element.ip +
+        " " +
+        element.subnet +
+        "\ndefault-router " +
+        element.gateway;
+      if (element.domæne != undefined) {
+        workingvar += "\ndomain-name " + element.domæne;
+      }
+      if (element.DNS != undefined) {
+        workingvar += "\ndns-server " + element.DNS;
+      }
+      workingvar += "\nexit";
+      //for (const elem of Input29.text.replace("-", " ").split("+")){workingvar += "\nip dhcp excluded-address "+elem}
+    }
+    let workingdata = JSON.parse(localStorage.router_final);
+    workingdata[sessionStorage.router_tabid]["dhcp"] = workingvar;
+    localStorage.router_final = JSON.stringify(workingdata);
+    return workingvar;
+  } catch (error) {}
+}
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-function Forms() {
-  const [currency, setCurrency] = useState("EUR");
-
-  const handleChange = (event) => {
-    setCurrency(event.target.value);
-  };
-
-  const [value, setValue] = useState(30);
-
-  const handleChange2 = (event, newValue) => {
-    setValue(newValue);
-  };
-}
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
     <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
+    //role="tabpanel"
+    //hidden={value !== index}
+    //id={`simple-tabpanel-${index}`}
+    //aria-labelledby={`simple-tab-${index}`}
+    //{...other}
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
@@ -100,29 +188,31 @@ function TabPanel(props) {
   );
 }
 
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
+//function a11yProps(index) {
+//  return {
+//    id: `simple-tab-${index}`,
+//    "aria-controls": `simple-tabpanel-${index}`,
+//  };
+//}
 let maxTabIndex = 0;
 
 const porte = ["gi0/0", "gi0/1", "port-channel 1"];
 
 sessionStorage.router_tabid = 0;
 
-
-if (JSON.parse(localStorage.router_final).length != JSON.parse(localStorage.router_data).length){
-var times = JSON.parse(localStorage.router_data).length
-let data = JSON.parse(localStorage.router_final)
-for(var i = 0; i < times; i++){
+if (
+  JSON.parse(localStorage.router_final).length !=
+  JSON.parse(localStorage.router_data).length
+) {
+  var times = JSON.parse(localStorage.router_data).length;
+  let data = JSON.parse(localStorage.router_final);
+  for (var i = 0; i < times; i++) {
     let object = {
-      initial: ""
+      initial: "",
     };
     data.push(object);
-}
-localStorage.router_final = JSON.stringify(data)
+  }
+  localStorage.router_final = JSON.stringify(data);
 }
 
 function Router() {
@@ -164,8 +254,8 @@ function Router() {
     } else {
       sessionStorage.router_tabid = newtabid;
       settabid(newtabid);
-      run2()
       sync();
+      run2();
     }
   };
 
@@ -203,8 +293,6 @@ function Router() {
     setValue(value);
   }
 
-
-
   function sleep2(ms) {
     setValue(99);
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -212,12 +300,9 @@ function Router() {
 
   async function run2() {
     // Pause execution of this async function for 2 seconds
-    await sleep(250);
+    await sleep2(325);
     setValue(0);
   }
-
-
-
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -247,18 +332,26 @@ function Router() {
   const handleFormChange = (event, index) => {
     let data = [...formFields];
     //if (data[0][event.target.id][index] == undefined) {data[0][event.target.id] = {}}
-    data[sessionStorage.router_tabid][event.target.id][index][
-      event.target.name
-    ] = event.target.value;
+    if (event.target.type == "text") {
+      data[sessionStorage.router_tabid][event.target.id][index][
+        event.target.name
+      ] = event.target.value;
+    } else if (Array.isArray(event.target.value)) {
+      var parsed = event.target.name.split('.'),
+        id = parsed[0], name = parsed[1];
+      data[sessionStorage.router_tabid][id][index][
+        name
+      ] = event.target.value;
+    } else {
+      data[sessionStorage.router_tabid][event.target.id][index][
+        event.target.name
+      ] = event.target.checked;
+    }
+
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
     syncupdate();
     runner();
-  };
-
-  const submit = (e) => {
-    e.preventDefault();
-    console.log(formFields[tabid]);
   };
 
   const addFields = (id) => {
@@ -281,131 +374,17 @@ function Router() {
     syncupdate();
   };
 
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
-
-  function DHCP() {
-    try {
-      var workingvar = "";
-      if (localStorage.getItem("router_data")) {
-        for (const element of JSON.parse(localStorage.router_data)[
-          sessionStorage.router_tabid
-        ]["dhcp"]) {
-          workingvar +=
-            '\nservice dhcp \nip dhcp pool "' +
-            element.navn +
-            '"' +
-            "\nnetwork " +
-            element.ip +
-            " " +
-            element.subnet +
-            "\ndefault-router " +
-            element.gateway;
-          if (element.domæne != undefined) {
-            workingvar += "\ndomain-name " + element.domæne;
-          }
-          if (element.DNS != undefined) {
-            workingvar += "\ndns-server " + element.DNS;
-          }
-          workingvar += "\nexit";
-          //for (const elem of Input29.text.replace("-", " ").split("+")){workingvar += "\nip dhcp excluded-address "+elem}
-        }
-      }
-      let workingdata = JSON.parse(localStorage.router_final);
-      workingdata[sessionStorage.router_tabid]["dhcp"] = workingvar;
-      localStorage.router_final = JSON.stringify(workingdata);
-      return workingvar;
-    } catch (error) {}
-  }
-
-  function Interfaces() {
-    try {
-      var workingvar = "";
-      if (localStorage.getItem("router_data")) {
-        for (const element of JSON.parse(localStorage.router_data)[
-          sessionStorage.router_tabid
-        ]["interfaces"]) {
-          workingvar +=
-            "\ninterface range " +
-            element.porte.toString() +
-            "\nip address " +
-            element.ip +
-            " " +
-            element.subnet;
-          if (element.description != "" && element.description != undefined) {
-            workingvar += "\ndescription " + element.description;
-          }
-          workingvar += "\nexit";
-        }
-      }
-      let workingdata = JSON.parse(localStorage.router_final);
-      workingdata[sessionStorage.router_tabid]["interfaces"] = workingvar;
-      localStorage.router_final = JSON.stringify(workingdata);
-      return workingvar;
-    } catch (error) {}
-  }
-
   window.onload = function () {
-    if (localStorage.getItem("router_data")) {
-      //setformFields[tabid](JSON.parse(localStorage.router_data));
-      sync();
-    }
+    //setformFields[tabid](JSON.parse(localStorage.router_data));
+    sync();
   };
 
   if (maxTabIndex == 0) {
     onreloadtab();
   }
 
-
-
-
-
-  function Initial() {
-    try {
-      if (localStorage.getItem("router_data")) {
-        var today = new Date();
-        var workingvar = "\n";
-        var workingarr = JSON.parse(localStorage.router_data)[
-          sessionStorage.router_tabid
-        ]["initial"][0];
-        if (true == true) {
-          workingvar +=
-            "clock set " +
-            today.getHours() +
-            ":" +
-            today.getMinutes() +
-            ":" +
-            today.getSeconds() +
-            " " +
-            today.getDate() +
-            " " +
-            today.toLocaleString("en-us", { month: "short" }) +
-            " " +
-            today.getFullYear();
-        }
-        workingvar += "\nconfigure terminal";
-        workingvar += "\nset hostname " + workingarr.hostname;
-        if (workingarr.motd != "") {
-          workingvar += "\nbanner motd #" + workingarr.motd + "#";
-        }
-        let workingdata = JSON.parse(localStorage.router_final);
-        workingdata[sessionStorage.router_tabid]["initial"] = workingvar;
-        localStorage.router_final = JSON.stringify(workingdata);
-        return workingvar;
-      }
-    } catch (error) {}
-  }
-
   async function syncupdate() {
-    if (sessionStorage.getItem("sessionid") != undefined) {
+    if (sessionStorage.sessionid) {
       try {
         await setDoc(doc(db, sessionStorage.sessionid, "router"), {
           data: [...formFields],
@@ -418,17 +397,18 @@ function Router() {
 
   async function sync() {
     try {
-    if (sessionStorage.getItem("sessionid")) {
-      const docRef = doc(db, sessionStorage.sessionid, "router");
-      const docSnap = await getDoc(docRef);
-      setformFields(docSnap.data()["data"]);
-      localStorage.router_data = JSON.stringify(docSnap.data()["data"]);
-    } else {
-      setformFields(JSON.parse(localStorage.router_data));
+      if (sessionStorage.sessionid) {
+        const docRef = doc(db, sessionStorage.sessionid, "router");
+        const docSnap = await getDoc(docRef);
+        setformFields(docSnap.data()["data"]);
+        localStorage.router_data = JSON.stringify(docSnap.data()["data"]);
+      }
+      //else {
+      //  setformFields(JSON.parse(localStorage.router_data));
+      //}
+    } catch (e) {
+      console.log(e);
     }
-  } catch (e) {
-    console.log(e);
-  }
   }
 
   function runner() {
@@ -450,15 +430,15 @@ function Router() {
             sync();
           }}
         >
-          <Tab label="Initial settings" {...a11yProps(0)} />
-          <Tab label="Interfaces" {...a11yProps(1)} />
-          <Tab label="Subinterfaces" {...a11yProps(2)} />
-          <Tab label="DHCP" {...a11yProps(3)} />
-          <Tab label="Static route" {...a11yProps(4)} />
-          <Tab label="FHRP" {...a11yProps(5)} />
-          <Tab label="RIP" {...a11yProps(6)} />
-          <Tab label="ACL" {...a11yProps(7)} />
-          <Tab label="Noter" {...a11yProps(8)} />
+          <Tab label="Initial settings" />
+          <Tab label="Interfaces" />
+          <Tab label="Subinterfaces" />
+          <Tab label="DHCP" />
+          <Tab label="Static route" />
+          <Tab label="FHRP" />
+          <Tab label="RIP" />
+          <Tab label="ACL" />
+          <Tab label="Noter" />
         </Tabs>
         <TabPanel value={value} index={0}>
           <Card>
@@ -655,30 +635,11 @@ function Router() {
                       <FormControl sx={{ m: 1, width: 220 }}>
                         <InputLabel id="interfaces">Porte</InputLabel>
                         <Select
-                          name="porte"
-                          id="interfaces"
+                          name="interfaces.porte"
                           multiple
                           value={form.porte}
                           onChange={(event) => handleFormChange(event, index)}
-                          input={
-                            <OutlinedInput
-                              id="select-multiple-chip"
-                              label="Chip"
-                            />
-                          }
-                          renderValue={(selected) => (
-                            <Box
-                              sx={{
-                                display: "flex",
-                                flexWrap: "wrap",
-                                gap: 0.5,
-                              }}
-                            >
-                              {selected.map((value) => (
-                                <Chip key={value} label={value} />
-                              ))}
-                            </Box>
-                          )}
+                          input={<OutlinedInput label="Name" />}
                           MenuProps={MenuProps}
                         >
                           {porte.map((name) => (
@@ -935,9 +896,7 @@ function Router() {
           <Card sx={{ width: "100%" }}>
             <CardHeader title="Noter" />
             <Divider />
-            <CardContent>
-
-            </CardContent>
+            <CardContent></CardContent>
           </Card>
         </TabPanel>
       </div>

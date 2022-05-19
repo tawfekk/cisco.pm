@@ -22,7 +22,6 @@ const Oversigt = Loader(lazy(() => import('src/content/pages/Components/Oversigt
 const VLAN = Loader(lazy(() => import('src/content/pages/Components/VLAN')));
 const Router = Loader(lazy(() => import('src/content/pages/Components/Router')));
 const Switch = Loader(lazy(() => import('src/content/pages/Components/Switch')));
-const DeltSession = Loader(lazy(() => import('src/content/pages/Components/DeltSession')));
 
 // Status
 
@@ -96,10 +95,6 @@ const routes = [
       {
         path: 'switch',
         element: <Switch />
-      },
-      {
-        path: 'deltsession',
-        element: <DeltSession />
       },
     ]
   }

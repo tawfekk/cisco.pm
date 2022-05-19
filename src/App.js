@@ -14,17 +14,17 @@ const App = () => {
   const content = useRoutes(routes);
 
 
-  if (!localStorage.getItem("router_data")) {
+  if (!localStorage.router_data) {
     localStorage.router_data = JSON.stringify([
       {
-        interfaces: [{ porte: [] }],
+        interfaces: [{ porte: []}],
         dhcp: [{ ip: "" }],
         initial: [{ hostname: "R1" }],
       },
     ]);
   }
 
-  if (!localStorage.getItem("router_final")) {
+  if (!localStorage.router_final) {
     localStorage.router_final = JSON.stringify([
       {
         initial: "",

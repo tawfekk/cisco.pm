@@ -1,7 +1,6 @@
 
 import AltRouteIcon from '@mui/icons-material/AltRoute';
 import RouterIcon from '@mui/icons-material/Router';
-import GroupsIcon from '@mui/icons-material/Groups';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import DeviceHubIcon from '@mui/icons-material/DeviceHub';
 
@@ -39,11 +38,6 @@ const menuItems = [
         name: 'Switch',
         icon: DeviceHubIcon,
         link: '/components/switch'
-      },
-      {
-        name: 'Delt session',
-        icon: GroupsIcon,
-        link: '/components/deltsession'
       },
     ]
   },

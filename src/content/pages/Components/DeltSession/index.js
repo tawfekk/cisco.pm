@@ -10,18 +10,18 @@ import Footer from 'src/components/Footer';
 
 
 function handleFormChange(event) {
-  if (!sessionStorage.getItem('sessionid') || sessionStorage.getItem('sessionid') == ""){
+  if (!sessionStorage.getItem('sessionid')){
   sessionStorage.sessionid = Math.floor(Math.random()*90000) + 10000}
   window.location.reload()
 }
 
 
 function handleFormChange3() {
-sessionStorage.sessionid = ""; window.location.reload()
+sessionStorage.removeItem('sessionid'); window.location.reload()
 }
 
 function handleFormChange4() {
-sessionStorage.sessionid = sessionStorage.t_sessionid; window.location.reload()
+if (sessionStorage.t_sessionid != "") {sessionStorage.sessionid = sessionStorage.t_sessionid; window.location.reload()}
 }
 
 function DeltSession() {

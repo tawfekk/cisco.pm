@@ -15,12 +15,12 @@ function VLAN() {
   return (
     <>
       <Helmet>
-        <title>Test - Components</title>
+        <title>VLAN</title>
       </Helmet>
       <PageTitleWrapper>
         <PageTitle
-          heading="Test"
-          subHeading="testtest"
+          heading="VLAN"
+          subHeading="Se og lav VLAN"
           docs="https://material-ui.com/components/accordion/" />
       </PageTitleWrapper>
       <Container maxWidth="lg">
