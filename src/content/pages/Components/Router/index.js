@@ -337,11 +337,10 @@ function Router() {
         event.target.name
       ] = event.target.value;
     } else if (Array.isArray(event.target.value)) {
-      var parsed = event.target.name.split('.'),
-        id = parsed[0], name = parsed[1];
-      data[sessionStorage.router_tabid][id][index][
-        name
-      ] = event.target.value;
+      var parsed = event.target.name.split("."),
+        id = parsed[0],
+        name = parsed[1];
+      data[sessionStorage.router_tabid][id][index][name] = event.target.value;
     } else {
       data[sessionStorage.router_tabid][event.target.id][index][
         event.target.name
@@ -414,6 +413,14 @@ function Router() {
   function runner() {
     Initial();
     Interfaces();
+  }
+
+  function modalclipboardcontent(id) {
+    return (
+      "conf terminal" +
+      JSON.parse(localStorage.router_final)[sessionStorage.router_tabid][id] +
+      "\nend"
+    );
   }
 
   function Content() {
@@ -544,7 +551,6 @@ function Router() {
                 >
                   Vis config
                 </Button>
-
                 <Modal
                   open={open}
                   onClose={handleClose}
@@ -566,7 +572,6 @@ function Router() {
                       maxRows={Infinity}
                       rows={5}
                       style={{ width: "100%" }}
-                      id="modal-modal-description"
                       value={
                         "conf t" +
                         JSON.parse(localStorage.router_final)[
@@ -578,7 +583,7 @@ function Router() {
                     <Button
                       onClick={() => {
                         navigator.clipboard.writeText(
-                          localStorage.router_initial_final
+                          modalclipboardcontent('initial')
                         );
                       }}
                       variant="contained"
@@ -690,18 +695,9 @@ function Router() {
               >
                 Vis config
               </Button>
-              <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
+              <Modal open={open} onClose={handleClose}>
                 <Box sx={style}>
-                  <Typography
-                    id="modal-modal-title"
-                    variant="h4"
-                    component="h2"
-                  >
+                  <Typography variant="h4" component="h2">
                     Konfig genereret
                   </Typography>
                   <TextField
@@ -711,7 +707,6 @@ function Router() {
                     maxRows={Infinity}
                     rows={5}
                     style={{ width: "100%" }}
-                    id="modal-modal-description"
                     value={
                       "conf terminal" +
                       JSON.parse(localStorage.router_final)[
@@ -722,9 +717,7 @@ function Router() {
                   ></TextField>
                   <Button
                     onClick={() => {
-                      navigator.clipboard.writeText(
-                        localStorage.router_final.interfaces
-                      );
+                      navigator.clipboard.writeText();
                     }}
                     variant="contained"
                     sx={{ right: "20%", left: "20%", margin: 2 }}

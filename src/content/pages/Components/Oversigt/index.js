@@ -55,16 +55,16 @@ function Oversigt() {
   const removeFields = (index) => {
     let data = [...formFields];
     data.splice(index, 1);
-    if (data.length != 0 ){
-    setformFields(data);
-    localStorage.router_data = JSON.stringify(data);
-    let data2 = JSON.parse(localStorage.router_final);
-    data2.splice(index, 1);
-    localStorage.router_final = JSON.stringify(data2)
-  }else{
-    localStorage.removeItem("router_data")
-    localStorage.removeItem("router_final")
-  }
+    if (data.length != 0) {
+      setformFields(data);
+      localStorage.router_data = JSON.stringify(data);
+      let data2 = JSON.parse(localStorage.router_final);
+      data2.splice(index, 1);
+      localStorage.router_final = JSON.stringify(data2);
+    } else {
+      localStorage.removeItem("router_data");
+      localStorage.removeItem("router_final");
+    }
     //syncupdate();
   };
 
@@ -88,7 +88,7 @@ function Oversigt() {
         <PageTitle
           heading="Oversigt"
           subHeading="Oversigt over oprettede router & switch configs"
-          docs="https://material-ui.com/components/DeltSession/" />
+        />
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid
@@ -99,92 +99,100 @@ function Oversigt() {
           spacing={3}
         >
           <Grid item xs="auto">
-          <Card>
-            <CardHeader title="Router" />
-            <Divider />
-            <CardContent sx={{ width: 500, justifyContent: 'center'}}>
-              {formFields.map((form, index) => {
-                return (
-                  <div key={index}>
-                    <Box
-                      autoComplete="off"
-                      display="block"
-                      justifyContent="flex-center"
-                    >
-                      <text
-                      >
-                      {formFields[index]["initial"][0]["hostname"]}
-                      </text>
-                      <Button
-                        sx={{ float: 'right', ml: 2 }}
-                        variant="contained"
-                        onClick={() => {
-                          handleOpen(index);
-                        }}
-                      >
-                        Vis config
-                      </Button>
-                      <Button  style={{color: '#DD4B34'}} sx={{float: 'right', ml: 2 }} onClick={() => removeFields(index)}>
-                        Slet
-                      </Button>
-                      <Divider sx={{ m: 3 }} />
-                    </Box>
-                  </div>
-                );
-              })}
-              <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
-                <Box sx={style}>
-                  <Typography
-                    id="modal-modal-title"
-                    variant="h4"
-                    component="h2"
-                  >
-                    Konfig genereret
-                  </Typography>
-                  <TextField
-                    multiline
-                    sx={{ mt: 2 }}
-                    inputProps={{ style: { color: "#FFC13D" } }}
-                    maxRows={Infinity}
-                    rows={5}
-                    style={{ width: "100%" }}
-                    id="modal-modal-description"
-                    value={"conf terminal" + returner() + "\nend"}
-                  ></TextField>
-                  <Button
-                    onClick={() => {
-                      navigator.clipboard.writeText(returner());
-                    }}
-                    variant="contained"
-                    sx={{ right: "20%", left: "20%", margin: 2 }}
-                    size="small"
-                    color="secondary"
-                  >
-                    Kopier til udklipsholder
-                  </Button>
+            <Card>
+              <CardHeader title="VLAN" />
+              <Divider />
+              <CardContent sx={{ display: "flex", justifyContent: "center" }}>
+                <Box sx={{ width: 333 }}>
+                  <Typography variant="h4">VLAN</Typography>
                 </Box>
-              </Modal>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs="auto">
+            <Card>
+              <CardHeader title="Router" />
+              <Divider sx={{ mb: 1 }} />
+              <CardContent sx={{ width: 333, justifyContent: "center" }}>
+                {formFields.map((form, index) => {
+                  return (
+                    <div key={index} style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                flexWrap: 'nowrap',
+                            }}>
+                      <Container>
+                        <span><b>{formFields[index]["initial"][0]["hostname"]}</b></span>
+                        <Button
+                          size="small"
+                          style={{color: "#DD4B34" }}
+                          sx={{float: 'right', ml: 1, mt: -0.8 }}
+                          onClick={() => removeFields(index)}
+                        >
+                          Slet
+                        </Button>
+                        <Button
+                          size="small"
+                          sx={{ float: 'right',  mt: -0.8  }}
+                          variant="contained"
+                          onClick={() => {
+                            handleOpen(index);
+                          }}
+                        >
+                          Vis config
+                        </Button>
+                        <Divider sx={{ mt: 3, mb: 3 }} />
+                      </Container>
+                    </div>
+                  );
+                })}
+                <Modal
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style}>
+                    <Typography
+                      id="modal-modal-title"
+                      variant="h4"
+                      component="h2"
+                    >
+                      Konfig genereret
+                    </Typography>
+                    <TextField
+                      multiline
+                      sx={{ mt: 2 }}
+                      inputProps={{ style: { color: "#FFC13D" } }}
+                      maxRows={Infinity}
+                      rows={5}
+                      style={{ width: "100%" }}
+                      id="modal-modal-description"
+                      value={"conf terminal" + returner() + "\nend"}
+                    ></TextField>
+                    <Button
+                      onClick={() => {
+                        navigator.clipboard.writeText(returner());
+                      }}
+                      variant="contained"
+                      sx={{ right: "25%", left: "25%", mt: 2 }}
+                      size="small"
+                      color="secondary"
+                    >
+                      Kopier til udklipsholder
+                    </Button>
+                  </Box>
+                </Modal>
+              </CardContent>
+            </Card>
           </Grid>
           <Grid item xs="auto">
             <Card>
               <CardHeader title="Switch" />
               <Divider />
-              <CardContent sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Box sx={{ width: 500 }}>
-                <Typography
-                  id="modal-modal-title"
-                  variant="h4"
-                  component="h2"
-                >
-                  Switch
-                </Typography>
+              <CardContent sx={{ display: "flex", justifyContent: "center" }}>
+                <Box sx={{ width: 333 }}>
+                  <Typography variant="h4">Switch</Typography>
                 </Box>
               </CardContent>
             </Card>
