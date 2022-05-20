@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
-import SyncIcon from '@mui/icons-material/Sync';
+import SyncIcon from "@mui/icons-material/Sync";
 
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -34,12 +34,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {
-  doc,
-  getFirestore,
-  getDoc,
-  setDoc,
-} from "firebase/firestore";
+import { doc, getFirestore, getDoc, setDoc } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -397,6 +392,7 @@ function Router() {
   function runner() {
     Initial();
     Interfaces();
+    DHCP();
   }
 
   function modalclipboardcontent(id) {
@@ -410,7 +406,6 @@ function Router() {
   function Content() {
     return (
       <div>
-
         <Tabs
           variant="scrollable"
           scrollButtons="auto"
@@ -568,7 +563,7 @@ function Router() {
                     <Button
                       onClick={() => {
                         navigator.clipboard.writeText(
-                          modalclipboardcontent('initial')
+                          modalclipboardcontent("initial")
                         );
                       }}
                       variant="contained"
@@ -901,9 +896,18 @@ function Router() {
           spacing={3}
         >
           <Grid item xs={12}>
-          <Box sx={{mr: 6, float:'right'}}>
-          <Button onClick={() => {sync(); window.location.reload()}} startIcon={<SyncIcon/>} variant="outlined">Synk</Button>
-          </Box>
+            <Box sx={{ mr: 6, float: "right" }}>
+              <Button
+                onClick={() => {
+                  sync();
+                  window.location.reload();
+                }}
+                startIcon={<SyncIcon />}
+                variant="outlined"
+              >
+                Synk
+              </Button>
+            </Box>
             <Box sx={{ width: "100%" }}>
               <Tabs
                 value={tabid}
