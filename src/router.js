@@ -1,6 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { Navigate } from 'react-router-dom';
-
+import React, { Component }  from 'react';
 import SidebarLayout from 'src/layouts/SidebarLayout';
 import BaseLayout from 'src/layouts/BaseLayout';
 
@@ -34,14 +34,14 @@ const routes = [
     element: <BaseLayout />,
     children: [
       {
-        path: '/',
+        path: '',
         element: <Overview />
       },
       {
         path: 'overview',
         element: (
           <Navigate
-            to="/"
+            to=""
             replace
           />
         )
@@ -50,7 +50,7 @@ const routes = [
         path: 'status',
         children: [
           {
-            path: '/',
+            path: '',
             element: (
               <Navigate
                 to="404"

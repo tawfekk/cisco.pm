@@ -48,7 +48,7 @@ const SidebarMenuItem = ({
   return (
     <ListItem component="div" key={name} {...rest}>
       <Button
-        activeClassName="Mui-active"
+      //  activeClassName="Mui-active"
         component={RouterLink}
         onClick={toggleSidebar}
         to={link}
