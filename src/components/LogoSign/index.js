@@ -31,7 +31,7 @@ const LogoSign = styled(Box)(
         top: 3px;
         left: 17px;
 
-        &:after, 
+        &:after,
         &:before {
             content: "";
             display: block;
@@ -73,8 +73,8 @@ const LogoSignInner = styled(Box)(
 function Logo() {
 
   return (
-    <Tooltip title="Tokyo Free Black React Admin Dashboard" arrow>
-      <LogoWrapper to="/overview">
+    <Tooltip title="Cisco.pm" arrow>
+      <LogoWrapper to="/oversigt">
         <LogoSignWrapper>
           <LogoSign>
             <LogoSignInner />

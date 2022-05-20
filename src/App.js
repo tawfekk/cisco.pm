@@ -32,6 +32,25 @@ const App = () => {
     ]);
   }
 
+
+  if (!localStorage.switch_data) {
+    localStorage.switch_data = JSON.stringify([
+      {
+        interfaces: [{ porte: []}],
+        dhcp: [{ ip: "" }],
+        initial: [{ hostname: "S1" }],
+      },
+    ]);
+  }
+
+  if (!localStorage.switch_final) {
+    localStorage.switch_final = JSON.stringify([
+      {
+        initial: "",
+      },
+    ]);
+  }
+
   return (
     <ThemeProvider>
       <LocalizationProvider dateAdapter={AdapterDateFns}>

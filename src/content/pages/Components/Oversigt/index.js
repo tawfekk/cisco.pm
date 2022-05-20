@@ -1,4 +1,7 @@
 import { Helmet } from "react-helmet-async";
+import Footer from "src/components/Footer";
+import { useState } from "react";
+import * as React from "react";
 
 import PageTitle from "src/components/PageTitle";
 import PageTitleWrapper from "src/components/PageTitleWrapper";
@@ -11,13 +14,38 @@ import {
   CardHeader,
   CardContent,
   Divider,
+  Typography,
+  Box,
+  Modal,
 } from "@mui/material";
-import Typography from "@mui/material/Typography";
-import Footer from "src/components/Footer";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import { useState } from "react";
-import * as React from "react";
+
+
+
+import { initializeApp } from "firebase/app";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
+const firebaseConfig = {
+  apiKey: "AIzaSyD3npySkxT-_E2ZESGzzftE6JZagBf-UHQ",
+  authDomain: "cisco-pm.firebaseapp.com",
+  projectId: "cisco-pm",
+  storageBucket: "cisco-pm.appspot.com",
+  messagingSenderId: "727036040743",
+  appId: "1:727036040743:web:a7c5f4382c0f5ab1ada002",
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function syncupdate() {
+  if (sessionStorage.sessionid) {
+    try {
+      await setDoc(doc(db, sessionStorage.sessionid, "router"), {
+        data: JSON.parse(localStorage.router_data),
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 
 function Oversigt() {
   const style = {
@@ -54,8 +82,9 @@ function Oversigt() {
     } else {
       localStorage.removeItem("router_data");
       localStorage.removeItem("router_final");
+      window.location.reload()
     }
-    //syncupdate();
+    syncupdate();
   };
 
   function returner() {

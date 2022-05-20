@@ -1,7 +1,16 @@
 import { Helmet } from "react-helmet-async";
 import PageTitle from "src/components/PageTitle";
 import PageTitleWrapper from "src/components/PageTitleWrapper";
+import Footer from "src/components/Footer";
+import { useState } from "react";
+import * as React from "react";
+import SyncIcon from "@mui/icons-material/Sync";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import Switch from "src/components/Switch";
+
 import {
+  TextField,
   IconButton,
   FormControlLabel,
   Checkbox,
@@ -12,35 +21,21 @@ import {
   CardHeader,
   CardContent,
   Divider,
+  Tabs,
+  Tab,
+  Typography,
+  Box,
+  InputLabel,
+  MenuItem,
+  Select,
+  FormControl,
+  OutlinedInput,
+  Modal,
 } from "@mui/material";
-import { useState } from "react";
 
-import SyncIcon from "@mui/icons-material/Sync";
-
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Footer from "src/components/Footer";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import * as React from "react";
-import Modal from "@mui/material/Modal";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
-
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { doc, getFirestore, getDoc, setDoc } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-import TextField from "@mui/material/TextField";
-
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyD3npySkxT-_E2ZESGzzftE6JZagBf-UHQ",
   authDomain: "cisco-pm.firebaseapp.com",
@@ -49,6 +44,9 @@ const firebaseConfig = {
   messagingSenderId: "727036040743",
   appId: "1:727036040743:web:a7c5f4382c0f5ab1ada002",
 };
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 function Initial() {
   try {
@@ -141,9 +139,6 @@ function DHCP() {
   } catch (error) {}
 }
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -233,6 +228,7 @@ function Router() {
       };
       data.push(object);
       setformFields(data);
+      syncupdate(data);
       localStorage.router_data = JSON.stringify(data);
       let data2 = JSON.parse(localStorage.router_final);
       data2.push({ initial: "" });
@@ -269,7 +265,7 @@ function Router() {
 
   function sleep(ms) {
     setValue(99);
-    syncupdate();
+    syncupdate(formFields);
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
@@ -328,7 +324,7 @@ function Router() {
 
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
-    syncupdate();
+    syncupdate(formFields);
     runner();
   };
 
@@ -349,7 +345,7 @@ function Router() {
     data[sessionStorage.router_tabid][id].splice(index, 1);
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
-    syncupdate();
+    syncupdate(formFields);
   };
 
   window.onload = function () {
@@ -361,11 +357,11 @@ function Router() {
     onreloadtab();
   }
 
-  async function syncupdate() {
+  async function syncupdate(data) {
     if (sessionStorage.sessionid) {
       try {
         await setDoc(doc(db, sessionStorage.sessionid, "router"), {
-          data: [...formFields],
+          data: [...data],
         });
       } catch (e) {
         console.log(e);
@@ -501,6 +497,182 @@ function Router() {
                           onChange={(event) => handleFormChange(event, 0)}
                           InputLabelProps={{ shrink: true }}
                         />
+                        <TextField
+                          id="initial"
+                          name="model"
+                          value={form.model}
+                          label="Model"
+                          placeholder="cisco"
+                          onChange={(event) => handleFormChange(event, 0)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <Grid
+                          sx={{ mt: 3, mb: 4 }}
+                          container
+                          justifyContent="center"
+                        >
+                          <FormControlLabel
+                            sx={{ m: 1.5  }}
+                            control={
+                              <Switch
+                                defaultChecked
+                                name="Set clock"
+                                id="initial"
+                                checked={form.clock}
+                                onChange={(event) =>
+                                  handleFormChange(event, index)
+                                }
+                              />
+                            }
+                            label="Set clock"
+                          />
+                          <FormControlLabel
+                            sx={{ m: 1.5 }}
+                            control={
+                              <Switch
+                                defaultChecked
+                                name="synchronuslogging"
+                                id="initial"
+                                checked={form.synchronuslogging}
+                                onChange={(event) =>
+                                  handleFormChange(event, index)
+                                }
+                              />
+                            }
+                            label="Synchronus logging  (con0)"
+                          />
+                          <FormControlLabel
+                            sx={{ m: 1.5  }}
+                            control={
+                              <Switch
+                                defaultChecked
+                                name="ipv6unicastrouting"
+                                id="initial"
+                                checked={form.ipv6unicastrouting}
+                                onChange={(event) =>
+                                  handleFormChange(event, index)
+                                }
+                              />
+                            }
+                            label="IPv6 unicast routing"
+                          />
+                          <FormControlLabel
+                            sx={{ m: 1.5  }}
+                            control={
+                              <Switch
+                                defaultChecked
+                                name="passwordencryption"
+                                id="initial"
+                                checked={form.passwordencryption}
+                                onChange={(event) =>
+                                  handleFormChange(event, index)
+                                }
+                              />
+                            }
+                            label="Password encryption"
+                          />
+                          <FormControlLabel
+                            sx={{ m: 1.5  }}
+                            control={
+                              <Switch
+                                defaultChecked
+                                name="disabledomainlookup"
+                                id="initial"
+                                checked={form.disabledomainlookup}
+                                onChange={(event) =>
+                                  handleFormChange(event, index)
+                                }
+                              />
+                            }
+                            label="Disable domain lookup"
+                          />
+                          <FormControlLabel
+                            sx={{ m: 1.5  }}
+                            control={
+                              <Switch
+                                defaultChecked
+                                name="enablessh"
+                                id="initial"
+                                checked={form.enablessh}
+                                onChange={(event) =>
+                                  handleFormChange(event, index)
+                                }
+                              />
+                            }
+                            label="Enable SSH"
+                          />
+                          <FormControlLabel
+                            sx={{ m: 1.5  }}
+                            control={
+                              <Switch
+                                name="sshv2"
+                                id="initial"
+                                checked={form.sshv2}
+                                onChange={(event) =>
+                                  handleFormChange(event, index)
+                                }
+                              />
+                            }
+                            label="SSH v2"
+                          />
+                          <FormControlLabel
+                            sx={{ m: 1.5  }}
+                            control={
+                              <Switch
+                                name="genereatersa"
+                                id="initial"
+                                checked={form.genereatersa}
+                                onChange={(event) =>
+                                  handleFormChange(event, index)
+                                }
+                              />
+                            }
+                            label="Genereate RSA"
+                          />
+                          <FormControlLabel
+                            sx={{ m: 1.5  }}
+                            control={
+                              <Switch
+                                name="telnet"
+                                id="initial"
+                                checked={form.telnet}
+                                onChange={(event) =>
+                                  handleFormChange(event, index)
+                                }
+                              />
+                            }
+                            label="Telnet"
+                          />
+                          <FormControlLabel
+                            sx={{ m: 1.5  }}
+                            control={
+                              <Switch
+                                name="cdp"
+                                defaultChecked
+                                id="initial"
+                                checked={form.cdp}
+                                onChange={(event) =>
+                                  handleFormChange(event, index)
+                                }
+                              />
+                            }
+                            label="CDP"
+                          />
+                          <FormControlLabel
+                            sx={{ m: 1.5  }}
+                            control={
+                              <Switch
+                                name="lldp"
+                                id="initial"
+                                checked={form.lldp}
+                                onChange={(event) =>
+                                  handleFormChange(event, index)
+                                }
+                              />
+                            }
+                            label="LLDP"
+                          />
+                        </Grid>
                       </div>
                     );
                   }
