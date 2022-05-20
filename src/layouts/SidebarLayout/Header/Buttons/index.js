@@ -1,25 +1,14 @@
 import {
   Alert,
   Snackbar,
-  Switch,
   Typography,
   TextField,
-  Container,
-  Grid,
-  Card,
-  CardHeader,
-  CardContent,
   Divider,
   Chip,
   Box,
   Button,
 } from "@mui/material";
-import { Helmet } from "react-helmet-async";
-import PageTitle from "src/components/PageTitle";
-import PageTitleWrapper from "src/components/PageTitleWrapper";
-import Tooltip from "@mui/material/Tooltip";
 import Modal from "@mui/material/Modal";
-import { useState } from "react";
 import * as React from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
 
@@ -90,7 +79,7 @@ function HeaderButtons() {
             color="success"
             onClick={() => {
               navigator.clipboard.writeText(sessionStorage.sessionid);
-              handleClick({ vertical: "top", horizontal: "center" });
+              handleClick();
             }}
             variant="contained"
           />
@@ -138,7 +127,7 @@ function HeaderButtons() {
               style={{ color: "#DD4B34" }}
               sx={{ ml: 1.2, mb: 2 }}
             >
-              Dine eksisterende configs vil blive overskrevet
+              Eksisterende configs vil blive overskrevet
             </Typography>
             <TextField
               size="small"

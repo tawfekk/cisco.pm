@@ -1,16 +1,7 @@
-import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
   Container,
-  Divider,
-  OutlinedInput,
-  IconButton,
-  Tooltip,
-  FormControl,
-  InputAdornment,
-  Button,
-  FormHelperText,
 } from "@mui/material";
 import { Helmet } from "react-helmet-async";
 import Logo from "src/components/LogoSign";
@@ -28,23 +19,6 @@ const MainContent = styled(Box)(
 `
 );
 
-const TypographyH1 = styled(Typography)(
-  ({ theme }) => `
-  font-size: ${theme.typography.pxToRem(75)};
-`
-);
-
-const TypographyH3 = styled(Typography)(
-  ({ theme }) => `
-  color: ${theme.colors.alpha.black[50]};
-`
-);
-
-const OutlinedInputWrapper = styled(OutlinedInput)(
-  ({ theme }) => `
-    background-color: ${theme.colors.alpha.white[100]};
-`
-);
 
 function StatusComingSoon() {
   return (

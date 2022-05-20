@@ -12,11 +12,7 @@ import {
   CardContent,
   Divider,
 } from "@mui/material";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Footer from "src/components/Footer";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -45,12 +41,6 @@ function Oversigt() {
   const [formFields, setformFields] = useState(
     JSON.parse(localStorage.router_data)
   );
-
-  const handleFormChange = (event, index) => {
-    let data = [...formFields];
-    //if (data[0][event.target.id][index] == undefined) {data[0][event.target.id] = {}}
-    setformFields(data);
-  };
 
   const removeFields = (index) => {
     let data = [...formFields];

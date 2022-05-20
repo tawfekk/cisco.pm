@@ -2,14 +2,9 @@ import { Helmet } from "react-helmet-async";
 import PageTitle from "src/components/PageTitle";
 import PageTitleWrapper from "src/components/PageTitleWrapper";
 import {
-  TextareaAutosize,
-  Paper,
   IconButton,
   FormControlLabel,
   Checkbox,
-  Dialog,
-  DialogTitle,
-  Alert,
   Button,
   Container,
   Grid,
@@ -20,17 +15,17 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
+import SyncIcon from '@mui/icons-material/Sync';
+
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Footer from "src/components/Footer";
-import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import Chip from "@mui/material/Chip";
+import Select from "@mui/material/Select";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import * as React from "react";
 import Modal from "@mui/material/Modal";
@@ -38,14 +33,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 
 // Import the functions you need from the SDKs you need
-import firebase from "@firebase/app";
 import { initializeApp } from "firebase/app";
 import {
   doc,
   getFirestore,
-  collection,
   getDoc,
-  addDoc,
   setDoc,
 } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -169,7 +161,7 @@ const MenuProps = {
 };
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index } = props;
 
   return (
     <div
@@ -279,7 +271,6 @@ function Router() {
   };
 
   const [value, setValue] = useState(0);
-  const [value2, setValue2] = useState(0);
 
   function sleep(ms) {
     setValue(99);
@@ -316,13 +307,6 @@ function Router() {
     bgcolor: "background.paper",
     boxShadow: 24,
     p: 4,
-  };
-  const styles = {
-    input: {
-      "&:invalid": {
-        border: "red solid 2px",
-      },
-    },
   };
 
   const [formFields, setformFields] = useState(
@@ -426,6 +410,7 @@ function Router() {
   function Content() {
     return (
       <div>
+
         <Tabs
           variant="scrollable"
           scrollButtons="auto"
@@ -916,6 +901,9 @@ function Router() {
           spacing={3}
         >
           <Grid item xs={12}>
+          <Box sx={{mr: 6, float:'right'}}>
+          <Button onClick={() => {sync(); window.location.reload()}} startIcon={<SyncIcon/>} variant="outlined">Synk</Button>
+          </Box>
             <Box sx={{ width: "100%" }}>
               <Tabs
                 value={tabid}
@@ -926,7 +914,6 @@ function Router() {
               >
                 <Tab label={tablabel(0)} />
                 {tabs.map((child) => child)}
-
                 <Tab icon={<AddIcon />} value="tabProperties" />
               </Tabs>
               <Divider />

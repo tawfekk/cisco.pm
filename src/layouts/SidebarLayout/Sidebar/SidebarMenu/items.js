@@ -1,6 +1,6 @@
 
 import AltRouteIcon from '@mui/icons-material/AltRoute';
-import RouterIcon from '@mui/icons-material/Router';
+import HubIcon from '@mui/icons-material/Hub';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import DeviceHubIcon from '@mui/icons-material/DeviceHub';
 
@@ -31,7 +31,7 @@ const menuItems = [
       },
       {
         name: 'Router',
-        icon: RouterIcon,
+        icon: HubIcon,
         link: '/components/router'
       },
       {

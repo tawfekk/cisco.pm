@@ -45,7 +45,7 @@ function Header() {
       <Box display="flex" alignItems="center">
         <HeaderButtons />
         <Hidden lgUp>
-          <Tooltip arrow title="Toggle Menu">
+          <Tooltip arrow title="Åben menu">
             <IconButton color="primary" onClick={toggleSidebar}>
               {!sidebarToggle ? <MenuTwoToneIcon /> : <CloseTwoToneIcon />}
             </IconButton>

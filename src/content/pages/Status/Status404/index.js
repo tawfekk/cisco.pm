@@ -1,16 +1,9 @@
 import {
   Box,
-  Card,
   Typography,
   Container,
-  Divider,
-  Button,
-  FormControl,
-  OutlinedInput,
-  InputAdornment
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import { styled } from '@mui/material/styles';
 
 const MainContent = styled(Box)(

@@ -1,6 +1,5 @@
 import App from './App';
 import ReactDOM from 'react-dom';
-import * as serviceWorker from './serviceWorker';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -17,5 +16,3 @@ ReactDOM.render(
   </HelmetProvider>,
   document.getElementById('root')
 );
-
-serviceWorker.unregister();
