@@ -43,7 +43,7 @@ function Oversigt() {
     JSON.parse(localStorage.router_data)
   );
 
-  const removeFields = (index) => {
+  const removeFields = (index, type) => {
     let data = [...formFields];
     data.splice(index, 1);
     if (data.length != 0) {
@@ -57,7 +57,7 @@ function Oversigt() {
       localStorage.removeItem("router_final");
       window.location.reload()
     }
-    syncup();
+    syncup(JSON.parse(localStorage.getItem(type+"_data")), type);
   };
 
   function returner() {
@@ -119,7 +119,7 @@ function Oversigt() {
                           size="small"
                           style={{color: "#DD4B34" }}
                           sx={{float: 'right', ml: 1, mt: -0.8 }}
-                          onClick={() => removeFields(index)}
+                          onClick={() => removeFields(index, "router")}
                         >
                           Slet
                         </Button>

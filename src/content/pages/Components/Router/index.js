@@ -8,6 +8,7 @@ import SyncIcon from "@mui/icons-material/Sync";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import Switch from "src/components/Switch";
+import {syncup} from "src/handlers/sync"
 
 import {
   TextField,
@@ -34,7 +35,7 @@ import {
 } from "@mui/material";
 
 import { initializeApp } from "firebase/app";
-import { doc, getFirestore, getDoc, setDoc } from "firebase/firestore";
+import { doc, getFirestore, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD3npySkxT-_E2ZESGzzftE6JZagBf-UHQ", //hack mig :-)
@@ -231,7 +232,7 @@ function Router() {
       };
       data.push(object);
       setformFields(data);
-      syncupdate(data);
+      syncup(data, "router");
       localStorage.router_data = JSON.stringify(data);
       let data2 = JSON.parse(localStorage.router_final);
       data2.push({ initial: "" });
@@ -329,7 +330,7 @@ function Router() {
 
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
-    syncupdate(formFields);
+    syncup(formFields, "router");
     runner();
   };
 
@@ -350,7 +351,7 @@ function Router() {
     data[sessionStorage.router_tabid][id].splice(index, 1);
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
-    syncupdate(formFields);
+    syncup(formFields, "router");
   };
 
   window.onload = function () {
@@ -359,18 +360,6 @@ function Router() {
 
   if (maxTabIndex == 0) {
     onreloadtab();
-  }
-
-  async function syncupdate(data) {
-    if (sessionStorage.sessionid) {
-      try {
-        await setDoc(doc(db, sessionStorage.sessionid, "router"), {
-          data: [...data],
-        });
-      } catch (e) {
-        console.log(e);
-      }
-    }
   }
 
   async function sync() {

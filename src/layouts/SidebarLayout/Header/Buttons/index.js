@@ -61,7 +61,8 @@ function HeaderButtons() {
     if (!sessionStorage.getItem("sessionid")) {
       sessionStorage.sessionid = Math.floor(Math.random() * 90000) + 10000;
     }
-    syncup()
+    syncup(JSON.parse(localStorage.getItem("router_data")), "router")
+    syncup(JSON.parse(localStorage.getItem("switch_data")), "switch")
     handleClose()
   }
 

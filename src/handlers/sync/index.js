@@ -15,14 +15,14 @@ const db = getFirestore(app);
 
 
 
-  export async function syncup() {
+  export async function syncup(data, type) {
     if (sessionStorage.sessionid) {
-      try {
-        await setDoc(doc(db, sessionStorage.sessionid, "router"), {
-          data: JSON.parse(localStorage.router_data),
+    //  try {
+        await setDoc(doc(db, sessionStorage.sessionid, type), {
+          data: data,
         });
-      } catch (e) {
-        console.log(e);
-      }
+    //  } catch (e) {
+    //    console.log(e);
+    //  }
     }
   }
