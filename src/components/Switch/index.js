@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import Switchcontext from '@mui/material/Switch'
 
 const Switch = styled(Switchcontext)(({ theme }) => ({
- padding: 5, 'padding-right': 10,
+ padding: 5, paddingRight: 10,
   '& .MuiSwitch-track': {
     borderRadius: 22 / 2,
     '&:before, &:after': {

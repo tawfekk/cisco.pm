@@ -1,6 +1,5 @@
 import { Suspense, lazy } from 'react';
 import { Navigate } from 'react-router-dom';
-import React, { Component }  from 'react';
 import SidebarLayout from 'src/layouts/SidebarLayout';
 import BaseLayout from 'src/layouts/BaseLayout';
 

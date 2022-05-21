@@ -11,6 +11,8 @@ import {
 import Modal from "@mui/material/Modal";
 import * as React from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
+import {syncup} from "src/handlers/sync"
+
 
 const style = {
   position: "absolute",
@@ -23,12 +25,7 @@ const style = {
   p: 4,
 };
 
-function handleFormChange(event) {
-  if (!sessionStorage.getItem("sessionid")) {
-    sessionStorage.sessionid = Math.floor(Math.random() * 90000) + 10000;
-  }
-  window.location.reload();
-}
+
 
 function handleFormChange3() {
   sessionStorage.removeItem("sessionid");
@@ -36,7 +33,7 @@ function handleFormChange3() {
 }
 
 function handleFormChange4() {
-  if (sessionStorage.t_sessionid != "") {
+  if (sessionStorage.t_sessionid != "" || sessionStorage.t_sessionid != undefined) {
     localStorage.removeItem("router_data");
     localStorage.removeItem("router_final");
     sessionStorage.sessionid = sessionStorage.t_sessionid;
@@ -58,6 +55,15 @@ function HeaderButtons() {
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
+
+
+  function handleFormChange(event) {
+    if (!sessionStorage.getItem("sessionid")) {
+      sessionStorage.sessionid = Math.floor(Math.random() * 90000) + 10000;
+    }
+    syncup()
+    handleClose()
+  }
 
   function issessionshared() {
     if (!sessionStorage.sessionid) {

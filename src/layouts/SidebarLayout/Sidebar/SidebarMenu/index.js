@@ -192,7 +192,7 @@ function SidebarMenu() {
       {menuItems.map((section) => (
         <MenuWrapper
           key={section.heading}
-          onClick={sessionStorage.getItem('router_tabid')}
+          onClick={"this_is_a_string_on_purpose"}
           subheader={
             <ListSubheader component="div" disableSticky>{section.heading}</ListSubheader>
           }

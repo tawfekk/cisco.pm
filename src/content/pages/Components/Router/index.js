@@ -37,7 +37,7 @@ import { initializeApp } from "firebase/app";
 import { doc, getFirestore, getDoc, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD3npySkxT-_E2ZESGzzftE6JZagBf-UHQ",
+  apiKey: "AIzaSyD3npySkxT-_E2ZESGzzftE6JZagBf-UHQ", //hack mig :-)
   authDomain: "cisco-pm.firebaseapp.com",
   projectId: "cisco-pm",
   storageBucket: "cisco-pm.appspot.com",
@@ -199,17 +199,20 @@ if (
 
 function Router() {
   function tablabel(maxTabIndex) {
+    let data = JSON.parse(localStorage.router_data)
+    let workingdata = data[maxTabIndex]["initial"][0][
+      "hostname"
+    ]
     try {
       if (
-        JSON.parse(localStorage.router_data)[maxTabIndex]["initial"][0][
-          "hostname"
-        ]
+        workingdata
       ) {
-        return JSON.parse(localStorage.router_data)[maxTabIndex]["initial"][0][
-          "hostname"
-        ];
+        return workingdata
       } else {
-        return "Ny router";
+        let routerid = maxTabIndex + 1
+        return "R"+routerid;
+        data[maxTabIndex]["initial"][0][ "hostname"] = "R"+routerid
+        localStorage.router_data = JSON.stringify(data)
       }
     } catch (e) {}
   }
@@ -244,16 +247,18 @@ function Router() {
 
   // Handle Add Tab Button
 
+
   function onreloadtab() {
     let tabdata = [...tabs];
     if (JSON.parse(localStorage.router_data).length != 1) {
-      for (var i = 1; i < JSON.parse(localStorage.router_data).length; i++) {
+    while (JSON.parse(localStorage.router_data).length != tabdata.length+1) {
         maxTabIndex = maxTabIndex + 1;
         tabdata.push(<Tab label={tablabel(maxTabIndex)} key={maxTabIndex} />);
       }
       setAddTab(tabdata);
-    }
   }
+}
+
   const handleAddTab = () => {
     let tabdata = [...tabs];
     maxTabIndex = maxTabIndex + 1;
@@ -264,8 +269,8 @@ function Router() {
   const [value, setValue] = useState(0);
 
   function sleep(ms) {
-    setValue(99);
-    syncupdate(formFields);
+    setValue(false)
+    sync()
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
@@ -276,7 +281,7 @@ function Router() {
   }
 
   function sleep2(ms) {
-    setValue(99);
+    setValue(false)
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
@@ -349,7 +354,6 @@ function Router() {
   };
 
   window.onload = function () {
-    //setformFields[tabid](JSON.parse(localStorage.router_data));
     sync();
   };
 
@@ -706,12 +710,9 @@ function Router() {
                 <Modal
                   open={open}
                   onClose={handleClose}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
                 >
                   <Box sx={style}>
                     <Typography
-                      id="modal-modal-title"
                       variant="h4"
                       component="h2"
                     >
@@ -765,6 +766,11 @@ function Router() {
                       }}
                       autoComplete="off"
                     >
+                    <IconButton
+                      sx={{ float: 'right', mt:1.5}} onClick={() => removeFields("interfaces", index)}
+                    >
+                      <DeleteIcon color="secondary" />
+                    </IconButton>
                       <TextField
                         name="ip"
                         label="IP"
@@ -789,7 +795,7 @@ function Router() {
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.description}
                       />
-                      <FormControl sx={{ m: 1, width: 220 }}>
+                      <FormControl sx={{ mr:1, ml:1.2, mt:1, width: 220 }}>
                         <InputLabel id="interfaces">Porte</InputLabel>
                         <Select
                           name="interfaces.porte"
@@ -806,10 +812,9 @@ function Router() {
                           ))}
                         </Select>
                       </FormControl>
-                      <FormControlLabel
+                      <FormControlLabel  labelPlacement="bottom"
                         control={
                           <Checkbox
-                            sx={{ margin: 1.7, left: "10%" }}
                             color="warning"
                             name="shutdown"
                             id="interfaces"
@@ -819,12 +824,8 @@ function Router() {
                         }
                         label="Shutdown"
                       />
-                      <IconButton
-                        onClick={() => removeFields("interfaces", index)}
-                      >
-                        <DeleteIcon color="secondary" />
-                      </IconButton>
-                      <Divider sx={{ m: 2 }} />
+
+                      <Divider sx={{ mt: 2, mb: 2 }} />
                     </Box>
                   </div>
                 );
@@ -915,6 +916,9 @@ function Router() {
                       }}
                       autoComplete="off"
                     >
+                    <IconButton sx={{ float: 'right', mt:1.5}} onClick={() => removeFields("dhcp", index)}>
+                      <DeleteIcon color="secondary" />
+                    </IconButton>
                       <TextField
                         name="navn"
                         id="dhcp"
@@ -963,10 +967,7 @@ function Router() {
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.DNS}
                       />
-                      <IconButton onClick={() => removeFields("dhcp", index)}>
-                        <DeleteIcon color="secondary" />
-                      </IconButton>
-                      <Divider sx={{ m: 2 }} />
+                      <Divider sx={{ mt: 2, mb: 2  }} />
                     </Box>
                   </div>
                 );
@@ -1071,8 +1072,8 @@ function Router() {
             <Box sx={{ mr: 6, float: "right" }}>
               <Button
                 onClick={() => {
-                  sync();
-                  window.location.reload();
+                  run()
+                  onreloadtab()
                 }}
                 startIcon={<SyncIcon />}
                 variant="outlined"
@@ -1098,7 +1099,7 @@ function Router() {
           </Grid>
         </Grid>
       </Container>
-      <Footer />
+    <Footer />
     </>
   );
 }
