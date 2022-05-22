@@ -11,7 +11,7 @@ import {
 import Modal from "@mui/material/Modal";
 import * as React from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
-import {syncup} from "src/handlers/sync"
+import {syncup} from "src/handlers/Sync"
 
 
 const style = {

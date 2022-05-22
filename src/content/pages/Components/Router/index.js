@@ -8,10 +8,15 @@ import SyncIcon from "@mui/icons-material/Sync";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import Switch from "src/components/Switch";
-import {syncup} from "src/handlers/sync"
+import {syncup} from "src/handlers/Sync"
+import {Initial} from "src/handlers/ConfigGenerator/Router"
+import {Interfaces} from "src/handlers/ConfigGenerator/Router"
+import {DHCP} from "src/handlers/ConfigGenerator/Router"
 
 import {
   TextField,
+  Snackbar,
+  Alert,
   IconButton,
   FormControlLabel,
   Checkbox,
@@ -48,97 +53,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
-function Initial() {
-  try {
-    var today = new Date();
-    var workingvar = "\n";
-    var workingarr = JSON.parse(localStorage.router_data)[
-      sessionStorage.router_tabid
-    ]["initial"][0];
-    if (true == true) {
-      workingvar +=
-        "clock set " +
-        today.getHours() +
-        ":" +
-        today.getMinutes() +
-        ":" +
-        today.getSeconds() +
-        " " +
-        today.getDate() +
-        " " +
-        today.toLocaleString("en-us", { month: "short" }) +
-        " " +
-        today.getFullYear();
-    }
-    workingvar += "\nconfigure terminal";
-    workingvar += "\nset hostname " + workingarr.hostname;
-    if (workingarr.motd != "") {
-      workingvar += "\nbanner motd #" + workingarr.motd + "#";
-      let workingdata = JSON.parse(localStorage.router_final);
-      workingdata[sessionStorage.router_tabid]["initial"] = workingvar;
-      localStorage.router_final = JSON.stringify(workingdata);
-      return workingvar;
-    }
-  } catch (error) {}
-}
-
-function Interfaces() {
-  try {
-    var workingvar = "";
-    for (const element of JSON.parse(localStorage.router_data)[
-      sessionStorage.router_tabid
-    ]["interfaces"]) {
-      workingvar +=
-        "\ninterface range " +
-        element.porte.toString() +
-        "\nip address " +
-        element.ip +
-        " " +
-        element.subnet;
-      if (element.description != "" && element.description != undefined) {
-        workingvar += "\ndescription " + element.description;
-      }
-      workingvar += "\nexit";
-    }
-    let workingdata = JSON.parse(localStorage.router_final);
-    workingdata[sessionStorage.router_tabid]["interfaces"] = workingvar;
-    localStorage.router_final = JSON.stringify(workingdata);
-    return workingvar;
-  } catch (error) {}
-}
-
-function DHCP() {
-  try {
-    var workingvar = "";
-    for (const element of JSON.parse(localStorage.router_data)[
-      sessionStorage.router_tabid
-    ]["dhcp"]) {
-      workingvar +=
-        '\nservice dhcp \nip dhcp pool "' +
-        element.navn +
-        '"' +
-        "\nnetwork " +
-        element.ip +
-        " " +
-        element.subnet +
-        "\ndefault-router " +
-        element.gateway;
-      if (element.domæne != undefined) {
-        workingvar += "\ndomain-name " + element.domæne;
-      }
-      if (element.DNS != undefined) {
-        workingvar += "\ndns-server " + element.DNS;
-      }
-      workingvar += "\nexit";
-      //for (const elem of Input29.text.replace("-", " ").split("+")){workingvar += "\nip dhcp excluded-address "+elem}
-    }
-    let workingdata = JSON.parse(localStorage.router_final);
-    workingdata[sessionStorage.router_tabid]["dhcp"] = workingvar;
-    localStorage.router_final = JSON.stringify(workingdata);
-    return workingvar;
-  } catch (error) {}
-}
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -329,7 +243,6 @@ function Router() {
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
     syncup(data, "router");
-    runner();
   };
 
   const addFields = (id) => {
@@ -377,23 +290,75 @@ function Router() {
     }
   }
 
-  function runner() {
-    Initial();
-    Interfaces();
-    DHCP();
+function ModalContent(func, id){
+  return (
+    <Box sx={style}>
+      <Typography
+        variant="h4"
+        component="h2"
+      >
+        Konfig genereret
+      </Typography>
+      <TextField
+        multiline
+        sx={{ mt: 2 }}
+        inputProps={{ style: { color: "#FFC13D" } }}
+        maxRows={Infinity}
+        rows={5}
+        style={{ width: "100%" }}
+        value={
+          "configure terminal" +
+           func(sessionStorage.router_tabid) +
+          "\nend"
+        }
+      ></TextField>
+      <Button
+        onClick={() => {
+          navigator.clipboard.writeText(
+          "conf terminal" +
+          JSON.parse(localStorage.router_final)[sessionStorage.router_tabid][id] +
+          "\nend"
+          )
+          handleClose() ; handleClick()
+        }}
+        variant="contained"
+        sx={{ right: "20%", left: "20%", margin: 2 }}
+        size="small"
+        color="secondary"
+      >
+        Kopier til udklipsholder
+      </Button>
+    </Box>
+  )
   }
 
-  function modalclipboardcontent(id) {
-    return (
-      "conf terminal" +
-      JSON.parse(localStorage.router_final)[sessionStorage.router_tabid][id] +
-      "\nend"
-    );
-  }
+  const [open2, setOpen2] = React.useState(false);
+  const handleClick = () => {
+    setOpen2(true);
+  };
+  const handleClose2 = () => setOpen2(false);
+  const vertical = "top";
+  const horizontal = "center";
+
 
   function Content() {
     return (
       <div>
+      <Snackbar
+        open={open2}
+        anchorOrigin={{ vertical, horizontal }}
+        onClose={handleClose2}
+        autoHideDuration={2000}
+      >
+        <Alert
+          variant="filled"
+          onClose={handleClose2}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Config kopieret til udklipsholder
+        </Alert>
+      </Snackbar>
         <Tabs
           variant="scrollable"
           scrollButtons="auto"
@@ -685,7 +650,6 @@ function Router() {
                 </Button>
                 <Button
                   onClick={() => {
-                    Initial();
                     handleOpen();
                   }}
                   variant="outlined"
@@ -699,42 +663,7 @@ function Router() {
                   open={open}
                   onClose={handleClose}
                 >
-                  <Box sx={style}>
-                    <Typography
-                      variant="h4"
-                      component="h2"
-                    >
-                      Konfig genereret
-                    </Typography>
-                    <TextField
-                      multiline
-                      sx={{ mt: 2 }}
-                      inputProps={{ style: { color: "#FFC13D" } }}
-                      maxRows={Infinity}
-                      rows={5}
-                      style={{ width: "100%" }}
-                      value={
-                        "conf t" +
-                        JSON.parse(localStorage.router_final)[
-                          sessionStorage.router_tabid
-                        ]["initial"] +
-                        "\nend"
-                      }
-                    ></TextField>
-                    <Button
-                      onClick={() => {
-                        navigator.clipboard.writeText(
-                          modalclipboardcontent("initial")
-                        );
-                      }}
-                      variant="contained"
-                      sx={{ right: "20%", left: "20%", margin: 2 }}
-                      size="small"
-                      color="secondary"
-                    >
-                      Kopier til udklipsholder
-                    </Button>
-                  </Box>
+                {ModalContent(Initial, 'initial')}
                 </Modal>
               </Box>
             </CardContent>
@@ -830,44 +759,16 @@ function Router() {
               <Button
                 variant="outlined"
                 onClick={() => {
-                  Interfaces();
                   handleOpen();
                 }}
               >
                 Vis config
               </Button>
-              <Modal open={open} onClose={handleClose}>
-                <Box sx={style}>
-                  <Typography variant="h4" component="h2">
-                    Konfig genereret
-                  </Typography>
-                  <TextField
-                    multiline
-                    sx={{ mt: 2 }}
-                    inputProps={{ style: { color: "#FFC13D" } }}
-                    maxRows={Infinity}
-                    rows={5}
-                    style={{ width: "100%" }}
-                    value={
-                      "conf terminal" +
-                      JSON.parse(localStorage.router_final)[
-                        sessionStorage.router_tabid
-                      ]["interfaces"] +
-                      "\nend"
-                    }
-                  ></TextField>
-                  <Button
-                    onClick={() => {
-                      navigator.clipboard.writeText();
-                    }}
-                    variant="contained"
-                    sx={{ right: "20%", left: "20%", margin: 2 }}
-                    size="small"
-                    color="secondary"
-                  >
-                    Kopier til udklipsholder
-                  </Button>
-                </Box>
+              <Modal
+                open={open}
+                onClose={handleClose}
+              >
+              {ModalContent(Interfaces, 'interfaces')}
               </Modal>
             </CardContent>
           </Card>
@@ -972,7 +873,6 @@ function Router() {
               <Button
                 variant="contained"
                 onClick={() => {
-                  DHCP();
                   handleOpen();
                 }}
               >
@@ -981,47 +881,8 @@ function Router() {
               <Modal
                 open={open}
                 onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
               >
-                <Box sx={style}>
-                  <Typography
-                    id="modal-modal-title"
-                    variant="h4"
-                    component="h2"
-                  >
-                    Konfig genereret
-                  </Typography>
-                  <TextField
-                    multiline
-                    sx={{ mt: 2 }}
-                    inputProps={{ style: { color: "#FFC13D" } }}
-                    maxRows={Infinity}
-                    rows={5}
-                    style={{ width: "100%" }}
-                    id="modal-modal-description"
-                    value={
-                      "conf terminal" +
-                      JSON.parse(localStorage.router_final)[
-                        sessionStorage.router_tabid
-                      ]["DHCP"] +
-                      "\nend"
-                    }
-                  ></TextField>
-                  <Button
-                    onClick={() => {
-                      navigator.clipboard.writeText(
-                        localStorage.router_DHCP_final
-                      );
-                    }}
-                    variant="contained"
-                    sx={{ right: "20%", left: "20%", margin: 2 }}
-                    size="small"
-                    color="secondary"
-                  >
-                    Kopier til udklipsholder
-                  </Button>
-                </Box>
+              {ModalContent(DHCP, 'dhcp')}
               </Modal>
             </CardContent>
           </Card>

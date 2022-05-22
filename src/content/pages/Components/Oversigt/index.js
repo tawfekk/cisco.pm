@@ -17,11 +17,14 @@ import {
   Typography,
   Box,
   Modal,
-  IconButton
+  IconButton,
+  Snackbar,
+  Alert
 } from "@mui/material";
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import DangerousRoundedIcon from '@mui/icons-material/DangerousRounded';
-import {syncup} from "src/handlers/sync"
+import {syncup} from "src/handlers/Sync"
+import {Runner} from "src/handlers/ConfigGenerator/Router"
 
 function Oversigt() {
   const style = {
@@ -64,6 +67,7 @@ function Oversigt() {
   };
 
   function returner() {
+    Runner(sessionStorage.oversigt_index)
     let data = "";
     for (var prop in JSON.parse(localStorage.router_final)[
       sessionStorage.oversigt_index
@@ -74,8 +78,32 @@ function Oversigt() {
     }
     return data;
   }
+
+  const [open2, setOpen2] = React.useState(false);
+  const handleClick = () => {
+    setOpen2(true);
+  };
+  const handleClose2 = () => setOpen2(false);
+  const vertical = "top";
+  const horizontal = "center";
+
   return (
     <>
+    <Snackbar
+      open={open2}
+      anchorOrigin={{ vertical, horizontal }}
+      onClose={handleClose2}
+      autoHideDuration={2000}
+    >
+      <Alert
+        variant="filled"
+        onClose={handleClose2}
+        severity="success"
+        sx={{ width: "100%" }}
+      >
+        Config kopieret til udklipsholder
+      </Alert>
+    </Snackbar>
       <Helmet>
         <title>Oversigt</title>
       </Helmet>
@@ -178,7 +206,7 @@ function Oversigt() {
                     <Button
                       onClick={() => {
                         navigator.clipboard.writeText("conf terminal" + returner() + "\nend");
-                      }}
+                      handleClose(); handleClick()}}
                       variant="contained"
                       sx={{ right: "25%", left: "25%", mt: 2 }}
                       size="small"

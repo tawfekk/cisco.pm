@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Footer from 'src/components/Footer';
 import { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import {syncup} from "src/handlers/Sync"
 
 import { initializeApp } from "firebase/app";
 import { doc, getFirestore, getDoc } from "firebase/firestore";
