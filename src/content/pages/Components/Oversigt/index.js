@@ -17,7 +17,10 @@ import {
   Typography,
   Box,
   Modal,
+  IconButton
 } from "@mui/material";
+import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
+import DangerousRoundedIcon from '@mui/icons-material/DangerousRounded';
 import {syncup} from "src/handlers/sync"
 
 function Oversigt() {
@@ -77,10 +80,22 @@ function Oversigt() {
         <title>Oversigt</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageTitle
+        <PageTitle   sx={{ mb:-1}}
           heading="Oversigt"
-          subHeading="Oversigt over oprettede router & switch configs"
+          subHeading="Oversigt over oprettede router, switch & VLAN configs"
         />
+        <Button
+          size="small"
+          sx={{ float: 'right', mt:-4 }}
+          variant="outlined"
+          color="error"
+          startIcon=<DangerousRoundedIcon/>
+          onClick={() => {
+            localStorage.clear(); window.location.reload()
+          }}
+        >
+          Slet al data
+        </Button>
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid
@@ -104,7 +119,7 @@ function Oversigt() {
           <Grid item xs="auto">
             <Card>
               <CardHeader title="Router" />
-              <Divider sx={{ mb: 1 }} />
+              <Divider sx={{ mb: -2 }} />
               <CardContent sx={{ width: 333, justifyContent: "center" }}>
                 {formFields.map((form, index) => {
                   return (
@@ -113,16 +128,14 @@ function Oversigt() {
                                 alignItems: 'center',
                                 flexWrap: 'nowrap',
                             }}>
-                      <Container>
+                      <Container
+                      sx={{ mt: 3 }}>
                         <span><b>{formFields[index]["initial"][0]["hostname"]}</b></span>
-                        <Button
-                          size="small"
-                          style={{color: "#DD4B34" }}
-                          sx={{float: 'right', ml: 1, mt: -0.8 }}
-                          onClick={() => removeFields(index, "router")}
+                        <IconButton
+                          size="small" sx={{ float: 'right', ml: 1, mt: -0.8 }} onClick={() => removeFields(index, "router")}
                         >
-                          Slet
-                        </Button>
+                          <DeleteForeverRoundedIcon color="error" />
+                        </IconButton>
                         <Button
                           size="small"
                           sx={{ float: 'right',  mt: -0.8  }}
@@ -133,7 +146,7 @@ function Oversigt() {
                         >
                           Vis config
                         </Button>
-                        <Divider sx={{ mt: 3, mb: 3 }} />
+                        <Divider sx={{ mt: 3, }} />
                       </Container>
                     </div>
                   );
@@ -164,7 +177,7 @@ function Oversigt() {
                     ></TextField>
                     <Button
                       onClick={() => {
-                        navigator.clipboard.writeText(returner());
+                        navigator.clipboard.writeText("conf terminal" + returner() + "\nend");
                       }}
                       variant="contained"
                       sx={{ right: "25%", left: "25%", mt: 2 }}

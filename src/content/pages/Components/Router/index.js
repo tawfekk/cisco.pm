@@ -200,19 +200,17 @@ if (
 
 function Router() {
   function tablabel(maxTabIndex) {
+        try {
     let data = JSON.parse(localStorage.router_data)
     let workingdata = data[maxTabIndex]["initial"][0][
       "hostname"
     ]
-    try {
-      if (
-        workingdata
-      ) {
+      if (workingdata) {
         return workingdata
       } else {
         let routerid = maxTabIndex + 1
         return "R"+routerid;
-        data[maxTabIndex]["initial"][0][ "hostname"] = "R"+routerid
+        data[2]["initial"][0]["hostname"] = "R"+routerid
         localStorage.router_data = JSON.stringify(data)
       }
     } catch (e) {}
@@ -330,7 +328,7 @@ function Router() {
 
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
-    syncup(formFields, "router");
+    syncup(data, "router");
     runner();
   };
 
@@ -339,6 +337,7 @@ function Router() {
     let object = {
       porte: [],
       dhcp: [],
+      hostname: "",
     };
     data[sessionStorage.router_tabid][id].push(object);
     //workingarray = formFields[tabid]
@@ -441,7 +440,7 @@ function Router() {
                           value={form.hostname}
                           autoFocus={true}
                           placeholder="R1"
-                          onChange={(event) => handleFormChange(event, 0)}
+                          onChange={(event) => {handleFormChange(event, 0); tablabel()}}
                           InputLabelProps={{ shrink: true }}
                         />
                         <TextField
@@ -1044,7 +1043,7 @@ function Router() {
         <title>Router</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageTitle
+        <PageTitle   sx={{ mb:-2}}
           heading="Router"
           //subHeading="Rouer konfiguration."
         />

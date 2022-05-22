@@ -51,6 +51,16 @@ const App = () => {
     ]);
   }
 
+  if (!localStorage.vlan_data) {
+    localStorage.vlan_data = JSON.stringify([
+      {
+        interfaces: [{ porte: []}],
+        dhcp: [{ ip: "" }],
+        initial: [{ hostname: "S1" }],
+      },
+    ]);
+  }
+
   return (
     <ThemeProvider>
       <LocalizationProvider dateAdapter={AdapterDateFns}>

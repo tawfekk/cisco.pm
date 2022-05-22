@@ -1,21 +1,21 @@
 
 import AltRouteIcon from '@mui/icons-material/AltRoute';
-import HubIcon from '@mui/icons-material/Hub';
+import HubOutlinedIcon from '@mui/icons-material/HubOutlined';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import DeviceHubIcon from '@mui/icons-material/DeviceHub';
 
 
 const menuItems = [
-//  {
-//    heading: '',
-//    items: [
-//      {
-//        name: 'Overview',
-//        link: '/overview',
-//        icon: DesignServicesTwoToneIcon
-//      }
-//    ]
-//  },
+  //{
+  //  heading: '',
+  //  items: [
+    //  {
+    //    name: 'Oversigt',
+    //    link: '/components/oversigt',
+      //  icon: ListAltIcon
+    //  }
+    //]
+  //},
   {
     heading: 'Menu',
     items: [
@@ -31,7 +31,7 @@ const menuItems = [
       },
       {
         name: 'Router',
-        icon: HubIcon,
+        icon: HubOutlinedIcon,
         link: '/components/router'
       },
       {
