@@ -8,10 +8,10 @@ import SyncIcon from "@mui/icons-material/Sync";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import Switch from "src/components/Switch";
-import {syncup} from "src/handlers/Sync"
-import {Initial} from "src/handlers/ConfigGenerator/Router"
-import {Interfaces} from "src/handlers/ConfigGenerator/Router"
-import {DHCP} from "src/handlers/ConfigGenerator/Router"
+import { syncup } from "src/handlers/Sync";
+import { Initial } from "src/handlers/ConfigGenerator/Router";
+import { Interfaces } from "src/handlers/ConfigGenerator/Router";
+import { DHCP } from "src/handlers/ConfigGenerator/Router";
 
 import {
   TextField,
@@ -41,6 +41,7 @@ import {
 
 import { initializeApp } from "firebase/app";
 import { doc, getFirestore, getDoc } from "firebase/firestore";
+import CardMedia from '@mui/material/CardMedia';
 
 const firebaseConfig = {
   apiKey: "AIzaSyD3npySkxT-_E2ZESGzzftE6JZagBf-UHQ", //hack mig :-)
@@ -114,18 +115,16 @@ if (
 
 function Router() {
   function tablabel(maxTabIndex) {
-        try {
-    let data = JSON.parse(localStorage.router_data)
-    let workingdata = data[maxTabIndex]["initial"][0][
-      "hostname"
-    ]
+    try {
+      let data = JSON.parse(localStorage.router_data);
+      let workingdata = data[maxTabIndex]["initial"][0]["hostname"];
       if (workingdata) {
-        return workingdata
+        return workingdata;
       } else {
-        let routerid = maxTabIndex + 1
-        return "R"+routerid;
-        data[2]["initial"][0]["hostname"] = "R"+routerid
-        localStorage.router_data = JSON.stringify(data)
+        let routerid = maxTabIndex + 1;
+        return "R" + routerid;
+        data[2]["initial"][0]["hostname"] = "R" + routerid;
+        localStorage.router_data = JSON.stringify(data);
       }
     } catch (e) {}
   }
@@ -160,17 +159,19 @@ function Router() {
 
   // Handle Add Tab Button
 
-
   function onreloadtab() {
     let tabdata = [...tabs];
     if (JSON.parse(localStorage.router_data).length != 1) {
-    while (JSON.parse(localStorage.router_data).length != tabdata.length+1) {
+      while (
+        JSON.parse(localStorage.router_data).length !=
+        tabdata.length + 1
+      ) {
         maxTabIndex = maxTabIndex + 1;
         tabdata.push(<Tab label={tablabel(maxTabIndex)} key={maxTabIndex} />);
       }
       setAddTab(tabdata);
+    }
   }
-}
 
   const handleAddTab = () => {
     let tabdata = [...tabs];
@@ -182,8 +183,8 @@ function Router() {
   const [value, setValue] = useState(0);
 
   function sleep(ms) {
-    setValue(false)
-    sync()
+    setValue(false);
+    sync();
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
@@ -194,7 +195,7 @@ function Router() {
   }
 
   function sleep2(ms) {
-    setValue(false)
+    setValue(false);
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
@@ -290,46 +291,44 @@ function Router() {
     }
   }
 
-function ModalContent(func, id){
-  return (
-    <Box sx={style}>
-      <Typography
-        variant="h4"
-        component="h2"
-      >
-        Konfig genereret
-      </Typography>
-      <TextField
-        multiline
-        sx={{ mt: 2 }}
-        inputProps={{ style: { color: "#FFC13D" } }}
-        maxRows={Infinity}
-        rows={5}
-        style={{ width: "100%" }}
-        value={
-          "configure terminal" +
-           func(sessionStorage.router_tabid) +
-          "\nend"
-        }
-      ></TextField>
-      <Button
-        onClick={() => {
-          navigator.clipboard.writeText(
-          "conf terminal" +
-          JSON.parse(localStorage.router_final)[sessionStorage.router_tabid][id] +
-          "\nend"
-          )
-          handleClose() ; handleClick()
-        }}
-        variant="contained"
-        sx={{ right: "20%", left: "20%", margin: 2 }}
-        size="small"
-        color="secondary"
-      >
-        Kopier til udklipsholder
-      </Button>
-    </Box>
-  )
+  function ModalContent(func, id) {
+    return (
+      <Box sx={style}>
+        <Typography variant="h4" component="h2">
+          Konfig genereret
+        </Typography>
+        <TextField
+          multiline
+          sx={{ mt: 2 }}
+          inputProps={{ style: { color: "#FFC13D" } }}
+          maxRows={Infinity}
+          rows={5}
+          style={{ width: "100%" }}
+          value={
+            "configure terminal" + func(sessionStorage.router_tabid) + "\nend"
+          }
+        ></TextField>
+        <Button
+          onClick={() => {
+            navigator.clipboard.writeText(
+              "conf terminal" +
+                JSON.parse(localStorage.router_final)[
+                  sessionStorage.router_tabid
+                ][id] +
+                "\nend"
+            );
+            handleClose();
+            handleClick();
+          }}
+          variant="contained"
+          sx={{ right: "20%", left: "20%", mt: 3, ml: 1 }}
+          size="small"
+          color="secondary"
+        >
+          Kopier til udklipsholder
+        </Button>
+      </Box>
+    );
   }
 
   const [open2, setOpen2] = React.useState(false);
@@ -340,25 +339,24 @@ function ModalContent(func, id){
   const vertical = "top";
   const horizontal = "center";
 
-
   function Content() {
     return (
       <div>
-      <Snackbar
-        open={open2}
-        anchorOrigin={{ vertical, horizontal }}
-        onClose={handleClose2}
-        autoHideDuration={2000}
-      >
-        <Alert
-          variant="filled"
+        <Snackbar
+          open={open2}
+          anchorOrigin={{ vertical, horizontal }}
           onClose={handleClose2}
-          severity="success"
-          sx={{ width: "100%" }}
+          autoHideDuration={2000}
         >
-          Config kopieret til udklipsholder
-        </Alert>
-      </Snackbar>
+          <Alert
+            variant="filled"
+            onClose={handleClose2}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            Config kopieret til udklipsholder
+          </Alert>
+        </Snackbar>
         <Tabs
           variant="scrollable"
           scrollButtons="auto"
@@ -405,7 +403,10 @@ function ModalContent(func, id){
                           value={form.hostname}
                           autoFocus={true}
                           placeholder="R1"
-                          onChange={(event) => {handleFormChange(event, 0); tablabel()}}
+                          onChange={(event) => {
+                            handleFormChange(event, 0);
+                            tablabel();
+                          }}
                           InputLabelProps={{ shrink: true }}
                         />
                         <TextField
@@ -469,7 +470,7 @@ function ModalContent(func, id){
                           justifyContent="center"
                         >
                           <FormControlLabel
-                            sx={{ m: 1.5  }}
+                            sx={{ m: 1.5 }}
                             control={
                               <Switch
                                 defaultChecked
@@ -499,7 +500,7 @@ function ModalContent(func, id){
                             label="Synchronus logging  (con0)"
                           />
                           <FormControlLabel
-                            sx={{ m: 1.5  }}
+                            sx={{ m: 1.5 }}
                             control={
                               <Switch
                                 defaultChecked
@@ -514,7 +515,7 @@ function ModalContent(func, id){
                             label="IPv6 unicast routing"
                           />
                           <FormControlLabel
-                            sx={{ m: 1.5  }}
+                            sx={{ m: 1.5 }}
                             control={
                               <Switch
                                 defaultChecked
@@ -529,7 +530,7 @@ function ModalContent(func, id){
                             label="Password encryption"
                           />
                           <FormControlLabel
-                            sx={{ m: 1.5  }}
+                            sx={{ m: 1.5 }}
                             control={
                               <Switch
                                 defaultChecked
@@ -544,7 +545,7 @@ function ModalContent(func, id){
                             label="Disable domain lookup"
                           />
                           <FormControlLabel
-                            sx={{ m: 1.5  }}
+                            sx={{ m: 1.5 }}
                             control={
                               <Switch
                                 defaultChecked
@@ -559,7 +560,7 @@ function ModalContent(func, id){
                             label="Enable SSH"
                           />
                           <FormControlLabel
-                            sx={{ m: 1.5  }}
+                            sx={{ m: 1.5 }}
                             control={
                               <Switch
                                 name="sshv2"
@@ -573,7 +574,7 @@ function ModalContent(func, id){
                             label="SSH v2"
                           />
                           <FormControlLabel
-                            sx={{ m: 1.5  }}
+                            sx={{ m: 1.5 }}
                             control={
                               <Switch
                                 name="genereatersa"
@@ -587,7 +588,7 @@ function ModalContent(func, id){
                             label="Genereate RSA"
                           />
                           <FormControlLabel
-                            sx={{ m: 1.5  }}
+                            sx={{ m: 1.5 }}
                             control={
                               <Switch
                                 name="telnet"
@@ -601,7 +602,7 @@ function ModalContent(func, id){
                             label="Telnet"
                           />
                           <FormControlLabel
-                            sx={{ m: 1.5  }}
+                            sx={{ m: 1.5 }}
                             control={
                               <Switch
                                 name="cdp"
@@ -616,7 +617,7 @@ function ModalContent(func, id){
                             label="CDP"
                           />
                           <FormControlLabel
-                            sx={{ m: 1.5  }}
+                            sx={{ m: 1.5 }}
                             control={
                               <Switch
                                 name="lldp"
@@ -659,11 +660,8 @@ function ModalContent(func, id){
                 >
                   Vis config
                 </Button>
-                <Modal
-                  open={open}
-                  onClose={handleClose}
-                >
-                {ModalContent(Initial, 'initial')}
+                <Modal open={open} onClose={handleClose}>
+                  {ModalContent(Initial, "initial")}
                 </Modal>
               </Box>
             </CardContent>
@@ -683,11 +681,12 @@ function ModalContent(func, id){
                       }}
                       autoComplete="off"
                     >
-                    <IconButton
-                      sx={{ float: 'right', mt:1.5}} onClick={() => removeFields("interfaces", index)}
-                    >
-                      <DeleteIcon color="secondary" />
-                    </IconButton>
+                      <IconButton
+                        sx={{ float: "right", mt: 1.5 }}
+                        onClick={() => removeFields("interfaces", index)}
+                      >
+                        <DeleteIcon color="secondary" />
+                      </IconButton>
                       <TextField
                         name="ip"
                         label="IP"
@@ -712,7 +711,7 @@ function ModalContent(func, id){
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.description}
                       />
-                      <FormControl sx={{ mr:1, ml:1.2, mt:1, width: 220 }}>
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
                         <InputLabel id="interfaces">Porte</InputLabel>
                         <Select
                           name="interfaces.porte"
@@ -729,7 +728,8 @@ function ModalContent(func, id){
                           ))}
                         </Select>
                       </FormControl>
-                      <FormControlLabel  labelPlacement="bottom"
+                      <FormControlLabel
+                        labelPlacement="bottom"
                         control={
                           <Checkbox
                             color="warning"
@@ -764,32 +764,14 @@ function ModalContent(func, id){
               >
                 Vis config
               </Button>
-              <Modal
-                open={open}
-                onClose={handleClose}
-              >
-              {ModalContent(Interfaces, 'interfaces')}
+              <Modal open={open} onClose={handleClose}>
+                {ModalContent(Interfaces, "interfaces")}
               </Modal>
             </CardContent>
           </Card>
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <Button
-            variant="outlined"
-            sx={{ margin: 1 }}
-            size="medium"
-            onClick={() => {}}
-          >
-            test
-          </Button>
-          <Button
-            variant="outlined"
-            sx={{ margin: 1 }}
-            size="medium"
-            onClick={() => {}}
-          >
-            Ryd felter
-          </Button>
+          <iframe  src="https://app.cisco.pm/status/coming-soon" frameBorder="0" height="500" width="1000"></iframe>
         </TabPanel>
         <TabPanel value={value} index={3}>
           <Card sx={{ width: "100%" }}>
@@ -805,9 +787,12 @@ function ModalContent(func, id){
                       }}
                       autoComplete="off"
                     >
-                    <IconButton sx={{ float: 'right', mt:1.5}} onClick={() => removeFields("dhcp", index)}>
-                      <DeleteIcon color="secondary" />
-                    </IconButton>
+                      <IconButton
+                        sx={{ float: "right", mt: 1.5 }}
+                        onClick={() => removeFields("dhcp", index)}
+                      >
+                        <DeleteIcon color="secondary" />
+                      </IconButton>
                       <TextField
                         name="navn"
                         id="dhcp"
@@ -856,13 +841,13 @@ function ModalContent(func, id){
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.DNS}
                       />
-                      <Divider sx={{ mt: 2, mb: 2  }} />
+                      <Divider sx={{ mt: 2, mb: 2 }} />
                     </Box>
                   </div>
                 );
               })}
               <Button
-                variant="outlined"
+                variant="contained"
                 sx={{ margin: 1 }}
                 size="medium"
                 color="primary"
@@ -871,21 +856,30 @@ function ModalContent(func, id){
                 Tilføj pool
               </Button>
               <Button
-                variant="contained"
+                variant="outlined"
                 onClick={() => {
                   handleOpen();
                 }}
               >
                 Vis config
               </Button>
-              <Modal
-                open={open}
-                onClose={handleClose}
-              >
-              {ModalContent(DHCP, 'dhcp')}
+              <Modal open={open} onClose={handleClose}>
+                {ModalContent(DHCP, "dhcp")}
               </Modal>
             </CardContent>
           </Card>
+        </TabPanel>
+        <TabPanel value={value} index={4}>
+          <iframe  src="https://app.cisco.pm/status/coming-soon" frameBorder="0" height="500" width="1000"></iframe>
+        </TabPanel>
+        <TabPanel value={value} index={5}>
+          <iframe  src="https://app.cisco.pm/status/coming-soon" frameBorder="0" height="500" width="1000"></iframe>
+        </TabPanel>
+        <TabPanel value={value} index={6}>
+          <iframe  src="https://app.cisco.pm/status/coming-soon" frameBorder="0" height="500" width="1000"></iframe>
+        </TabPanel>
+        <TabPanel value={value} index={7}>
+          <iframe  src="https://app.cisco.pm/status/coming-soon" frameBorder="0" height="500" width="1000"></iframe>
         </TabPanel>
         <TabPanel value={value} index={8}>
           <Card sx={{ width: "100%" }}>
@@ -904,7 +898,8 @@ function ModalContent(func, id){
         <title>Router</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageTitle   sx={{ mb:-2}}
+        <PageTitle
+          sx={{ mb: -2 }}
           heading="Router"
           //subHeading="Rouer konfiguration."
         />
@@ -921,8 +916,8 @@ function ModalContent(func, id){
             <Box sx={{ mr: 6, float: "right" }}>
               <Button
                 onClick={() => {
-                  run()
-                  onreloadtab()
+                  run();
+                  onreloadtab();
                 }}
                 startIcon={<SyncIcon />}
                 variant="outlined"
@@ -948,7 +943,7 @@ function ModalContent(func, id){
           </Grid>
         </Grid>
       </Container>
-    <Footer />
+      <Footer />
     </>
   );
 }
