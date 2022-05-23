@@ -202,6 +202,7 @@ function Oversigt() {
               "conf terminal" + returner(type) + "\nend"
             );
             handleClose();
+            handleClose2();
             handleClick();
           }}
           variant="contained"

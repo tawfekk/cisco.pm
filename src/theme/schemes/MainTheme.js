@@ -13,7 +13,7 @@ const themeColors = {
   info: '#33C2FF',
   black: '#CBCCD2',
   white: '#111633',
-  primaryAlt: '#111633',
+  primaryAlt: '#111633', //111633
   trueWhite: '#ffffff'
 };
 
@@ -48,7 +48,7 @@ const colors = {
   },
   layout: {
     general: {
-     bodyBg: '#070C27'
+     bodyBg: '#0c1024'
     //bodyBg: '#2E3D49'
     },
     sidebar: {
@@ -129,7 +129,7 @@ const colors = {
   }
 };
 
-export const NebulaFighterTheme = createTheme({
+export const MainTheme = createTheme({
   // direction: i18n.dir(),
   colors: {
     gradients: {

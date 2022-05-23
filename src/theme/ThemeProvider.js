@@ -6,7 +6,7 @@ import { StylesProvider } from '@mui/material/styles';
 export const ThemeContext = React.createContext((themeName) => { });
 
 const ThemeProviderWrapper = function (props) {
-  const curThemeName = localStorage.getItem('appTheme') || 'NebulaFighterTheme';
+  const curThemeName = localStorage.getItem('appTheme') || 'MainTheme';
   const [themeName, _setThemeName] = useState(curThemeName);
   const theme = themeCreator(themeName);
   const setThemeName = (themeName) => {

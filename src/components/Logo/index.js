@@ -10,6 +10,7 @@ const LogoWrapper = styled(Link)(
         display: flex;
         text-decoration: none;
         font-weight: ${theme.typography.fontWeightBold};
+        border-radius: 16px;
 `
 );
 
@@ -18,63 +19,33 @@ const LogoSignWrapper = styled(Box)(
         width: 52px;
         height: 38px;
         margin-top: 4px;
-        transform: scale(.8);
+        transform: scale(.4);
 `
 );
 
 const LogoSign = styled(Box)(
   ({ theme }) => `
-        background: ${theme.general.reactFrameworkColor};
-        width: 18px;
-        height: 18px;
-        border-radius: ${theme.general.borderRadiusSm};
-        position: relative;
-        transform: rotate(45deg);
-        top: 3px;
-        left: 17px;
+    width: ${theme.spacing(50)};
+    height: ${theme.spacing(24)};
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto ${theme.spacing(2)};
 
-        &:after,
-        &:before {
-            content: "";
-            display: block;
-            width: 18px;
-            height: 18px;
-            position: absolute;
-            top: -1px;
-            right: -20px;
-            transform: rotate(0deg);
-            border-radius: ${theme.general.borderRadiusSm};
-        }
-
-        &:before {
-            background: ${theme.palette.primary.main};
-            right: auto;
-            left: 0;
-            top: 20px;
-        }
-
-        &:after {
-            background: ${theme.palette.secondary.main};
-        }
+    img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
 `
 );
 
-const LogoSignInner = styled(Box)(
-  ({ theme }) => `
-        width: 16px;
-        height: 16px;
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        z-index: 5;
-        border-radius: ${theme.general.borderRadiusSm};
-        background: ${theme.header.background};
-`
-);
 
 const LogoTextWrapper = styled(Box)(
   ({ theme }) => `
         padding-left: ${theme.spacing(1)};
+        padding-bottom: ${theme.spacing(6)};
 `
 );
 
@@ -102,20 +73,18 @@ function Logo() {
 
 
   return (
-    <LogoWrapper to="/components/router">
+    <LogoWrapper to="/components/oversigt">
       <LogoSignWrapper>
-        <LogoSign>
-          <LogoSignInner />
+        <LogoSign sx={{mt:7, ml:-6.4}}>
+          <img src="/static/images/logo/main.svg" />
         </LogoSign>
       </LogoSignWrapper>
-      <Hidden smDown>
-        <LogoTextWrapper>
-          <Tooltip title="development preview" arrow placement="right">
-            <VersionBadge>development preview</VersionBadge>
+        <LogoTextWrapper sx={{ml:11, mt:7}}>
+          <Tooltip title="version 1.00.1 - alpha" arrow placement="right">
+            <VersionBadge>alpha</VersionBadge>
           </Tooltip>
           <LogoText>cisco.pm</LogoText>
         </LogoTextWrapper>
-      </Hidden>
     </LogoWrapper>
   );
 }

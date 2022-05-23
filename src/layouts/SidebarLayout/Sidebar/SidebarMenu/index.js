@@ -155,12 +155,9 @@ const reduceChildRoutes = ({
     ev.push(
       <SidebarMenuItem
         key={key}
-        active={partialMatch}
-        open={partialMatch}
         name={item.name}
         icon={item.icon}
         link={item.link}
-        badge={item.badge}
       >
         {renderSidebarMenuItems({
           path,
@@ -172,10 +169,8 @@ const reduceChildRoutes = ({
     ev.push(
       <SidebarMenuItem
         key={key}
-        active={exactMatch}
         name={item.name}
         link={item.link}
-        badge={item.badge}
         icon={item.icon}
       />
     );

@@ -1,9 +1,9 @@
-import { NebulaFighterTheme } from './schemes/NebulaFighterTheme';
+import { MainTheme } from './schemes/MainTheme';
 
 export function themeCreator(theme) {
   return themeMap[theme];
 }
 
 const themeMap = {
-  NebulaFighterTheme
+  MainTheme
 };

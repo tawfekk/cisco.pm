@@ -7,6 +7,7 @@ import {
   Chip,
   Box,
   Button,
+  Tooltip,
 } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import * as React from "react";
@@ -68,7 +69,11 @@ function HeaderButtons() {
 
   function issessionshared() {
     if (!sessionStorage.sessionid) {
-      return <Chip label="Session offline" variant="outlined" />;
+      return (
+                        <Tooltip arrow title="Du deler ikke din session med nogen">
+                        <Chip label="Session offline" variant="outlined" />
+                        </Tooltip>
+                      )
     } else {
       return (
         <Box component="span">
@@ -81,6 +86,7 @@ function HeaderButtons() {
           >
             Stop session
           </Button>
+          <Tooltip arrow title="Kopier til udklipsholder">
           <Chip
             label={sessionStorage.sessionid}
             color="success"
@@ -90,6 +96,7 @@ function HeaderButtons() {
             }}
             variant="contained"
           />
+          </Tooltip>
           <Snackbar
             open={open2}
             anchorOrigin={{ vertical, horizontal }}
