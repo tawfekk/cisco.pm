@@ -20,11 +20,11 @@ const MainContent = styled(Box)(
 );
 
 
-function StatusComingSoon() {
+export function StatusComingSoon() {
   return (
     <>
       <Helmet>
-        <title>Status - Coming Soon</title>
+        <title>Kommer snart</title>
       </Helmet>
       <MainContent>
         <Container maxWidth="md">
@@ -54,5 +54,3 @@ function StatusComingSoon() {
     </>
   );
 }
-
-export default StatusComingSoon;

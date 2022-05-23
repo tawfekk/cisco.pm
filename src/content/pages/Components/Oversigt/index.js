@@ -16,15 +16,42 @@ import {
   Divider,
   Typography,
   Box,
+  Tooltip,
   Modal,
   IconButton,
   Snackbar,
-  Alert
+  Alert,
 } from "@mui/material";
-import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
-import DangerousRoundedIcon from '@mui/icons-material/DangerousRounded';
-import {syncup} from "src/handlers/Sync"
-import {Runner} from "src/handlers/ConfigGenerator/Router"
+import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
+import DangerousRoundedIcon from "@mui/icons-material/DangerousRounded";
+import { syncup } from "src/handlers/Sync";
+import { Runner } from "src/handlers/ConfigGenerator/Router";
+import { Runner2 } from "src/handlers/ConfigGenerator/Switch";
+
+function returner(type) {
+  if (type == "router") {
+    Runner(sessionStorage.oversigt_index);
+  } else if (type == "switch") {
+    Runner2(sessionStorage.oversigt_index);
+  }
+  let data = "";
+  for (var elem in JSON.parse(localStorage.getItem(type + "_final"))[
+    sessionStorage.oversigt_index
+  ]) {
+    data += JSON.parse(localStorage.getItem(type + "_final"))[
+      sessionStorage.oversigt_index
+    ][elem];
+  }
+  return data;
+}
+
+function navn(data, type, index) {
+  if (type != "vlan") {
+    return data[index]["initial"][0]["hostname"];
+  } else {
+    return data[index]["navn"];
+  }
+}
 
 function Oversigt() {
   const style = {
@@ -38,6 +65,13 @@ function Oversigt() {
     p: 4,
   };
 
+  const [open0, setOpen0] = React.useState(false);
+  const handleOpen0 = (index) => {
+    sessionStorage.oversigt_index = index;
+    setOpen0(true);
+  };
+  const handleClose0 = () => setOpen0(false);
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = (index) => {
     sessionStorage.oversigt_index = index;
@@ -49,34 +83,166 @@ function Oversigt() {
     JSON.parse(localStorage.router_data)
   );
 
+  const [formFields2, setformFields2] = useState(
+    JSON.parse(localStorage.switch_data)
+  );
+
+  const [formFields3, setformFields3] = useState(
+    JSON.parse(localStorage.vlan_data)
+  );
+
   const removeFields = (index, type) => {
-    let data = [...formFields];
+    if (type == "router") {
+      var data = [...formFields];
+    } else if (type == "switch") {
+      var data = [...formFields2];
+    } else {
+      var data = [...formFields3];
+    }
     data.splice(index, 1);
     if (data.length != 0) {
-      setformFields(data);
-      localStorage.router_data = JSON.stringify(data);
-      let data2 = JSON.parse(localStorage.router_final);
+      if (type == "router") {
+        setformFields(data);
+      } else if (type == "switch") {
+        setformFields2(data);
+      } else {
+        setformFields3(data);
+      }
+      localStorage.setItem(type + "_data", JSON.stringify(data));
+      let data2 = JSON.parse(localStorage.getItem(type + "_final"));
       data2.splice(index, 1);
-      localStorage.router_final = JSON.stringify(data2);
+      localStorage.setItem(type + "_final", JSON.stringify(data2));
     } else {
-      localStorage.removeItem("router_data");
-      localStorage.removeItem("router_final");
-      window.location.reload()
+      localStorage.removeItem(type + "_final");
+      localStorage.removeItem(type + "_data");
+      window.location.reload();
     }
-    syncup(JSON.parse(localStorage.getItem(type+"_data")), type);
+    syncup(JSON.parse(localStorage.getItem(type + "_data")), type);
   };
 
-  function returner() {
-    Runner(sessionStorage.oversigt_index)
-    let data = "";
-    for (var prop in JSON.parse(localStorage.router_final)[
-      sessionStorage.oversigt_index
-    ]) {
-      data += JSON.parse(localStorage.router_final)[
-        sessionStorage.oversigt_index
-      ][prop];
+  function Content(type) {
+    if (type == "router") {
+      var data = [...formFields];
+    } else if (type == "switch") {
+      var data = [...formFields2];
+    } else {
+      var data = [...formFields3];
     }
-    return data;
+    return (
+      <>
+        <Divider sx={{ mb: -2 }} />
+        <CardContent sx={{ width: 333, justifyContent: "center" }}>
+          {data.map((form, index) => {
+            return (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexWrap: "nowrap",
+                }}
+              >
+                <Container sx={{ mt: 3 }}>
+                  <span>
+                    <b>{navn(data, type, index)}</b>
+                  </span>
+                  <Tooltip arrow title="Denne handling er permanent">
+                    <IconButton
+                      size="small"
+                      sx={{ float: "right", ml: 1, mt: -0.8 }}
+                      onClick={() => removeFields(index, type)}
+                    >
+                      <DeleteForeverRoundedIcon color="error" />
+                    </IconButton>
+                  </Tooltip>
+                  {configshow(type, index)}
+                  <Divider sx={{ mt: 3 }} />
+                </Container>
+              </div>
+            );
+          })}
+          <Snackbar
+            open={open2}
+            anchorOrigin={{ vertical, horizontal }}
+            onClose={handleClose2}
+            autoHideDuration={2000}
+          >
+            <Alert
+              variant="filled"
+              onClose={handleClose2}
+              severity="success"
+              sx={{ width: "100%" }}
+            >
+              Config kopieret til udklipsholder
+            </Alert>
+          </Snackbar>
+        </CardContent>
+      </>
+    );
+  }
+
+  function ModalContent(type) {
+    return (
+      <Box sx={style}>
+        <Typography variant="h4" component="h2">
+          Konfig genereret
+        </Typography>
+        <TextField
+          multiline
+          sx={{ mt: 2 }}
+          inputProps={{ style: { color: "#FFC13D" } }}
+          maxRows={Infinity}
+          rows={5}
+          style={{ width: "100%" }}
+          value={"conf terminal" + returner(type) + "\nend"}
+        ></TextField>
+        <Button
+          onClick={() => {
+            navigator.clipboard.writeText(
+              "conf terminal" + returner(type) + "\nend"
+            );
+            handleClose();
+            handleClick();
+          }}
+          variant="contained"
+          sx={{ right: "25%", left: "25%", mt: 2 }}
+          size="small"
+          color="secondary"
+        >
+          Kopier til udklipsholder
+        </Button>
+      </Box>
+    );
+  }
+
+  function configshow(type, index) {
+    if (type == "router") {
+      return (
+        <Button
+          size="small"
+          sx={{ float: "right", mt: -0.8 }}
+          variant="contained"
+          onClick={() => {
+            handleOpen0(index);
+          }}
+        >
+          Vis config
+        </Button>
+      );
+    } else if (type == "switch") {
+      return (
+        <Button
+          size="small"
+          sx={{ float: "right", mt: -0.8 }}
+          variant="contained"
+          onClick={() => {
+            handleOpen(index);
+          }}
+        >
+          Vis config
+        </Button>
+      );
+    }
   }
 
   const [open2, setOpen2] = React.useState(false);
@@ -89,41 +255,30 @@ function Oversigt() {
 
   return (
     <>
-    <Snackbar
-      open={open2}
-      anchorOrigin={{ vertical, horizontal }}
-      onClose={handleClose2}
-      autoHideDuration={2000}
-    >
-      <Alert
-        variant="filled"
-        onClose={handleClose2}
-        severity="success"
-        sx={{ width: "100%" }}
-      >
-        Config kopieret til udklipsholder
-      </Alert>
-    </Snackbar>
       <Helmet>
         <title>Oversigt</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageTitle   sx={{ mb:-1}}
+        <PageTitle
+          sx={{ mb: -1 }}
           heading="Oversigt"
           subHeading="Oversigt over oprettede router, switch & VLAN configs"
         />
-        <Button
-          size="small"
-          sx={{ float: 'right', mt:-4 }}
-          variant="outlined"
-          color="error"
-          startIcon=<DangerousRoundedIcon/>
-          onClick={() => {
-            localStorage.clear(); window.location.reload()
-          }}
-        >
-          Slet al data
-        </Button>
+        <Tooltip arrow title="Denne handling er permanent">
+          <Button
+            size="small"
+            sx={{ float: "right", mt: -4 }}
+            variant="outlined"
+            color="error"
+            startIcon=<DangerousRoundedIcon />
+            onClick={() => {
+              localStorage.clear();
+              window.location.reload();
+            }}
+          >
+            Slet al data
+          </Button>
+        </Tooltip>
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid
@@ -136,98 +291,25 @@ function Oversigt() {
           <Grid item xs="auto">
             <Card>
               <CardHeader title="VLAN" />
-              <Divider />
-              <CardContent sx={{ display: "flex", justifyContent: "center" }}>
-                <Box sx={{ width: 333 }}>
-                  <Typography variant="h4">VLAN</Typography>
-                </Box>
-              </CardContent>
+              {Content("vlan")}
             </Card>
           </Grid>
           <Grid item xs="auto">
             <Card>
               <CardHeader title="Router" />
-              <Divider sx={{ mb: -2 }} />
-              <CardContent sx={{ width: 333, justifyContent: "center" }}>
-                {formFields.map((form, index) => {
-                  return (
-                    <div key={index} style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                flexWrap: 'nowrap',
-                            }}>
-                      <Container
-                      sx={{ mt: 3 }}>
-                        <span><b>{formFields[index]["initial"][0]["hostname"]}</b></span>
-                        <IconButton
-                          size="small" sx={{ float: 'right', ml: 1, mt: -0.8 }} onClick={() => removeFields(index, "router")}
-                        >
-                          <DeleteForeverRoundedIcon color="error" />
-                        </IconButton>
-                        <Button
-                          size="small"
-                          sx={{ float: 'right',  mt: -0.8  }}
-                          variant="contained"
-                          onClick={() => {
-                            handleOpen(index);
-                          }}
-                        >
-                          Vis config
-                        </Button>
-                        <Divider sx={{ mt: 3, }} />
-                      </Container>
-                    </div>
-                  );
-                })}
-                <Modal
-                  open={open}
-                  onClose={handleClose}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <Box sx={style}>
-                    <Typography
-                      id="modal-modal-title"
-                      variant="h4"
-                      component="h2"
-                    >
-                      Konfig genereret
-                    </Typography>
-                    <TextField
-                      multiline
-                      sx={{ mt: 2 }}
-                      inputProps={{ style: { color: "#FFC13D" } }}
-                      maxRows={Infinity}
-                      rows={5}
-                      style={{ width: "100%" }}
-                      id="modal-modal-description"
-                      value={"conf terminal" + returner() + "\nend"}
-                    ></TextField>
-                    <Button
-                      onClick={() => {
-                        navigator.clipboard.writeText("conf terminal" + returner() + "\nend");
-                      handleClose(); handleClick()}}
-                      variant="contained"
-                      sx={{ right: "25%", left: "25%", mt: 2 }}
-                      size="small"
-                      color="secondary"
-                    >
-                      Kopier til udklipsholder
-                    </Button>
-                  </Box>
-                </Modal>
-              </CardContent>
+              {Content("router")}
+              <Modal open={open0} onClose={handleClose0}>
+                {ModalContent("router")}
+              </Modal>
             </Card>
           </Grid>
           <Grid item xs="auto">
             <Card>
               <CardHeader title="Switch" />
-              <Divider />
-              <CardContent sx={{ display: "flex", justifyContent: "center" }}>
-                <Box sx={{ width: 333 }}>
-                  <Typography variant="h4">Switch</Typography>
-                </Box>
-              </CardContent>
+              {Content("switch")}
+              <Modal open={open} onClose={handleClose}>
+                {ModalContent("switch")}
+              </Modal>
             </Card>
           </Grid>
         </Grid>

@@ -25,7 +25,7 @@ const Switch = Loader(lazy(() => import('src/content/pages/Components/Switch')))
 // Status
 
 const Status404 = Loader(lazy(() => import('src/content/pages/Status/Status404')));
-const StatusComingSoon = Loader(lazy(() => import('src/content/pages/Status/ComingSoon')));
+//const StatusComingSoon = Loader(lazy(() => import('src/content/pages/Status/ComingSoon')));
 
 const routes = [
   {
@@ -61,10 +61,10 @@ const routes = [
             path: '404',
             element: <Status404 />
           },
-          {
-            path: 'coming-soon',
-            element: <StatusComingSoon />
-          },
+      //    {
+    //        path: 'coming-soon',
+    //        element: <StatusComingSoon />
+    //      },
         ]
       },
       {

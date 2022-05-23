@@ -12,6 +12,7 @@ import { syncup } from "src/handlers/Sync";
 import { Initial } from "src/handlers/ConfigGenerator/Router";
 import { Interfaces } from "src/handlers/ConfigGenerator/Router";
 import { DHCP } from "src/handlers/ConfigGenerator/Router";
+import {StatusComingSoon} from "src/content/pages/Status/ComingSoon"
 
 import {
   TextField,
@@ -771,7 +772,7 @@ function Router() {
           </Card>
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <iframe  src="https://app.cisco.pm/status/coming-soon" frameBorder="0" height="500" width="1000"></iframe>
+        {StatusComingSoon()}
         </TabPanel>
         <TabPanel value={value} index={3}>
           <Card sx={{ width: "100%" }}>
@@ -870,16 +871,16 @@ function Router() {
           </Card>
         </TabPanel>
         <TabPanel value={value} index={4}>
-          <iframe  src="https://app.cisco.pm/status/coming-soon" frameBorder="0" height="500" width="1000"></iframe>
+          {StatusComingSoon()}
         </TabPanel>
         <TabPanel value={value} index={5}>
-          <iframe  src="https://app.cisco.pm/status/coming-soon" frameBorder="0" height="500" width="1000"></iframe>
+        {StatusComingSoon()}
         </TabPanel>
         <TabPanel value={value} index={6}>
-          <iframe  src="https://app.cisco.pm/status/coming-soon" frameBorder="0" height="500" width="1000"></iframe>
+          {StatusComingSoon()}
         </TabPanel>
         <TabPanel value={value} index={7}>
-          <iframe  src="https://app.cisco.pm/status/coming-soon" frameBorder="0" height="500" width="1000"></iframe>
+        {StatusComingSoon()}
         </TabPanel>
         <TabPanel value={value} index={8}>
           <Card sx={{ width: "100%" }}>

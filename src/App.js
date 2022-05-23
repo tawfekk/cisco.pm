@@ -54,7 +54,7 @@ const App = () => {
   if (!localStorage.vlan_data) {
     localStorage.vlan_data = JSON.stringify([
       {
-        navn: "",
+        navn: "VLAN1",
         id: "",
       },
     ]);
