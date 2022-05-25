@@ -9,10 +9,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import Switch from "src/components/Switch";
 import { syncup } from "src/handlers/Sync";
+import { syncdown } from "src/handlers/Sync";
 import { Initial } from "src/handlers/ConfigGenerator/Router";
 import { Interfaces } from "src/handlers/ConfigGenerator/Router";
 import { DHCP } from "src/handlers/ConfigGenerator/Router";
-import {StatusComingSoon} from "src/content/pages/Status/ComingSoon"
+import { Staticroute } from "src/handlers/ConfigGenerator/Router";
+import { StatusComingSoon } from "src/content/pages/Status/ComingSoon";
 
 import {
   TextField,
@@ -39,22 +41,6 @@ import {
   OutlinedInput,
   Modal,
 } from "@mui/material";
-
-import { initializeApp } from "firebase/app";
-import { doc, getFirestore, getDoc } from "firebase/firestore";
-import CardMedia from '@mui/material/CardMedia';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD3npySkxT-_E2ZESGzzftE6JZagBf-UHQ", //hack mig :-)
-  authDomain: "cisco-pm.firebaseapp.com",
-  projectId: "cisco-pm",
-  storageBucket: "cisco-pm.appspot.com",
-  messagingSenderId: "727036040743",
-  appId: "1:727036040743:web:a7c5f4382c0f5ab1ada002",
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -94,6 +80,8 @@ function TabPanel(props) {
 //  };
 //}
 let maxTabIndex = 0;
+let alerttext = "";
+let alertsev = "info";
 
 const porte = ["gi0/0", "gi0/1", "port-channel 1"];
 
@@ -113,6 +101,8 @@ if (
   }
   localStorage.router_final = JSON.stringify(data);
 }
+
+var p = 0;
 
 function Router() {
   function tablabel(maxTabIndex) {
@@ -140,20 +130,37 @@ function Router() {
       let object = {
         interfaces: [{ porte: [] }],
         dhcp: [{ ip: "" }],
-        initial: [{ hostname: "R" + workingtabindex }],
+        initial: [
+          {
+            hostname: "R" + workingtabindex,
+            clock: true,
+            synchronuslogging: true,
+            ipv6unicastrouting: true,
+            passwordencryption: true,
+            disabledomainlookup: true,
+            enablessh: true,
+            cdp: true,
+            sshv2: false,
+            genereatersa: false,
+          },
+        ],
+        staticroute: [{}],
       };
       data.push(object);
       setformFields(data);
       syncup(data, "router");
       localStorage.router_data = JSON.stringify(data);
-      let data2 = JSON.parse(localStorage.router_final);
-      data2.push({ initial: "" });
-      localStorage.router_final = JSON.stringify(data2);
+      //let data2 = JSON.parse(localStorage.router_final);
+      //data2.push({ initial: "" });
+      //localStorage.router_final = JSON.stringify(data2);
       handleAddTab();
     } else {
       sessionStorage.router_tabid = newtabid;
       settabid(newtabid);
-      sync();
+      syncdown("router");
+      setTimeout(() => {
+        setformFields(JSON.parse(localStorage.router_data));
+      }, 600);
       run2();
     }
   };
@@ -185,13 +192,26 @@ function Router() {
 
   function sleep(ms) {
     setValue(false);
-    sync();
+    syncdown("router");
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   async function run() {
     // Pause execution of this async function for 2 seconds
     await sleep(250);
+    onreloadtab();
+    setValue(value);
+  }
+
+  function sleep3(ms) {
+    setValue(false);
+    syncdown("router");
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async function run3() {
+    await sleep(250);
+    addFields("initial");
     setValue(value);
   }
 
@@ -201,8 +221,7 @@ function Router() {
   }
 
   async function run2() {
-    // Pause execution of this async function for 2 seconds
-    await sleep2(325);
+    await sleep2(350);
     setValue(0);
   }
 
@@ -227,19 +246,20 @@ function Router() {
   const handleFormChange = (event, index) => {
     let data = [...formFields];
     //if (data[0][event.target.id][index] == undefined) {data[0][event.target.id] = {}}
-    if (event.target.type == "text") {
+    if (event.target.type == "checkbox") {
+      data[sessionStorage.router_tabid][event.target.id][index][
+        event.target.name
+      ] = event.target.checked;
+    } else if (event.target.type == "text") {
       data[sessionStorage.router_tabid][event.target.id][index][
         event.target.name
       ] = event.target.value;
-    } else if (Array.isArray(event.target.value)) {
+    } //(Array.isArray(event.target.value))
+    else {
       var parsed = event.target.name.split("."),
         id = parsed[0],
         name = parsed[1];
       data[sessionStorage.router_tabid][id][index][name] = event.target.value;
-    } else {
-      data[sessionStorage.router_tabid][event.target.id][index][
-        event.target.name
-      ] = event.target.checked;
     }
 
     setformFields(data);
@@ -257,7 +277,6 @@ function Router() {
     data[sessionStorage.router_tabid][id].push(object);
     //workingarray = formFields[tabid]
     setformFields(data);
-    //localStorage.router_data = JSON.stringify(data)
   };
 
   const removeFields = (id, index) => {
@@ -268,28 +287,11 @@ function Router() {
     syncup(formFields, "router");
   };
 
-  window.onload = function () {
-    sync();
-  };
+  //window.onload = function () {};
 
   if (maxTabIndex == 0) {
+    syncdown("router");
     onreloadtab();
-  }
-
-  async function sync() {
-    try {
-      if (sessionStorage.sessionid) {
-        const docRef = doc(db, sessionStorage.sessionid, "router");
-        const docSnap = await getDoc(docRef);
-        setformFields(docSnap.data()["data"]);
-        localStorage.router_data = JSON.stringify(docSnap.data()["data"]);
-      }
-      //else {
-      //  setformFields(JSON.parse(localStorage.router_data));
-      //}
-    } catch (e) {
-      console.log(e);
-    }
   }
 
   function ModalContent(func, id) {
@@ -319,7 +321,7 @@ function Router() {
                 "\nend"
             );
             handleClose();
-            handleClick();
+            handleClick("success", "Konfig kopieret til udklipsholder");
           }}
           variant="contained"
           sx={{ right: "20%", left: "20%", mt: 3, ml: 1 }}
@@ -333,12 +335,26 @@ function Router() {
   }
 
   const [open2, setOpen2] = React.useState(false);
-  const handleClick = () => {
+  const handleClick = (sev, text) => {
+    alerttext = text;
+    alertsev = sev;
     setOpen2(true);
   };
   const handleClose2 = () => setOpen2(false);
   const vertical = "top";
   const horizontal = "center";
+
+  function validhandleFormChange(statement, tru, errrormessage, event, index) {
+    if (statement) {
+      if (statement == tru) {
+        handleClick("error", errrormessage);
+      } else {
+        handleFormChange(event, index);
+      }
+    } else {
+      handleClick("error", errrormessage);
+    }
+  }
 
   function Content() {
     return (
@@ -352,10 +368,10 @@ function Router() {
           <Alert
             variant="filled"
             onClose={handleClose2}
-            severity="success"
+            severity={alertsev}
             sx={{ width: "100%" }}
           >
-            Config kopieret til udklipsholder
+            {alerttext}
           </Alert>
         </Snackbar>
         <Tabs
@@ -366,7 +382,10 @@ function Router() {
           value={value}
           onChange={(event, newValue) => {
             setValue(newValue);
-            sync();
+            syncdown("router");
+            setTimeout(() => {
+              setformFields(JSON.parse(localStorage.router_data));
+            }, 600);
           }}
         >
           <Tab label="Initial settings" />
@@ -398,6 +417,7 @@ function Router() {
                       <div key={0}>
                         <TextField
                           required
+                          error={form.hostname == ""}
                           id="initial"
                           name="hostname"
                           label="Hostname"
@@ -411,7 +431,6 @@ function Router() {
                           InputLabelProps={{ shrink: true }}
                         />
                         <TextField
-                          required
                           id="initial"
                           name="motd"
                           InputLabelProps={{ shrink: true }}
@@ -474,7 +493,6 @@ function Router() {
                             sx={{ m: 1.5 }}
                             control={
                               <Switch
-                                defaultChecked
                                 name="Set clock"
                                 id="initial"
                                 checked={form.clock}
@@ -489,7 +507,6 @@ function Router() {
                             sx={{ m: 1.5 }}
                             control={
                               <Switch
-                                defaultChecked
                                 name="synchronuslogging"
                                 id="initial"
                                 checked={form.synchronuslogging}
@@ -504,7 +521,6 @@ function Router() {
                             sx={{ m: 1.5 }}
                             control={
                               <Switch
-                                defaultChecked
                                 name="ipv6unicastrouting"
                                 id="initial"
                                 checked={form.ipv6unicastrouting}
@@ -519,7 +535,6 @@ function Router() {
                             sx={{ m: 1.5 }}
                             control={
                               <Switch
-                                defaultChecked
                                 name="passwordencryption"
                                 id="initial"
                                 checked={form.passwordencryption}
@@ -534,7 +549,6 @@ function Router() {
                             sx={{ m: 1.5 }}
                             control={
                               <Switch
-                                defaultChecked
                                 name="disabledomainlookup"
                                 id="initial"
                                 checked={form.disabledomainlookup}
@@ -549,7 +563,6 @@ function Router() {
                             sx={{ m: 1.5 }}
                             control={
                               <Switch
-                                defaultChecked
                                 name="enablessh"
                                 id="initial"
                                 checked={form.enablessh}
@@ -567,9 +580,15 @@ function Router() {
                                 name="sshv2"
                                 id="initial"
                                 checked={form.sshv2}
-                                onChange={(event) =>
-                                  handleFormChange(event, index)
-                                }
+                                onChange={(event) => {
+                                  validhandleFormChange(
+                                    form.genereatersa,
+                                    false,
+                                    "SSHv2 kræver RSA",
+                                    event,
+                                    index
+                                  );
+                                }}
                               />
                             }
                             label="SSH v2"
@@ -582,7 +601,13 @@ function Router() {
                                 id="initial"
                                 checked={form.genereatersa}
                                 onChange={(event) =>
-                                  handleFormChange(event, index)
+                                  validhandleFormChange(
+                                    form.domæne,
+                                    "",
+                                    "RSA kræver domæne",
+                                    event,
+                                    index
+                                  )
                                 }
                               />
                             }
@@ -607,7 +632,6 @@ function Router() {
                             control={
                               <Switch
                                 name="cdp"
-                                defaultChecked
                                 id="initial"
                                 checked={form.cdp}
                                 onChange={(event) =>
@@ -644,8 +668,7 @@ function Router() {
                   size="medium"
                   onClick={() => {
                     removeFields("initial", 0);
-                    addFields("initial");
-                    run();
+                    run3();
                   }}
                 >
                   Ryd felter
@@ -772,7 +795,7 @@ function Router() {
           </Card>
         </TabPanel>
         <TabPanel value={value} index={2}>
-        {StatusComingSoon()}
+          {StatusComingSoon()}
         </TabPanel>
         <TabPanel value={value} index={3}>
           <Card sx={{ width: "100%" }}>
@@ -871,16 +894,131 @@ function Router() {
           </Card>
         </TabPanel>
         <TabPanel value={value} index={4}>
-          {StatusComingSoon()}
+          <Card sx={{ width: "100%" }}>
+            <CardHeader title="Static route" />
+            <Divider />
+            <CardContent>
+              {formFields[tabid]["staticroute"].map((form, index) => {
+                return (
+                  <div key={index}>
+                    <Box // sx={{ width: '100%' }}
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                      }}
+                      autoComplete="off"
+                    >
+                      <IconButton
+                        sx={{ float: "right", mt: 1.5 }}
+                        onClick={() => removeFields("staticroute", index)}
+                      >
+                        <DeleteIcon color="secondary" />
+                      </IconButton>
+                      <TextField
+                        name="destinationip"
+                        id="staticroute"
+                        label="Destination IP"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.destinationip}
+                      />
+                      <TextField
+                        name="destinationsubnet"
+                        id="staticroute"
+                        label="Destination subnet"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.staticroute}
+                      />
+                      <TextField
+                        name="nexthopip"
+                        disabled={form.nexthopinterface}
+                        id="staticroute"
+                        label="Next-hop IP"
+                        onChange={(event) => {
+                          handleFormChange(event, index);
+                          element.nexthopinterface = "";
+                        }}
+                        value={form.nexthopip}
+                      />
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                        <InputLabel>Next-hop Interface</InputLabel>
+                        <Select
+                          disabled={form.nexthopip}
+                          name="staticroute.nexthopinterface"
+                          value={form.nexthopinterface}
+                          onChange={(event) => {
+                            handleFormChange(event, index);
+                            element.nexthopip = "";
+                          }}
+                          input={<OutlinedInput label="Next-hop Interface" />}
+                        >
+                          {porte.map((name) => (
+                            <MenuItem key={name} value={name}>
+                              {name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <TextField
+                        name="distance"
+                        label="Distance"
+                        id="staticroute"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.distance}
+                      />
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        control={
+                          <Checkbox
+                            color="warning"
+                            name="permanent"
+                            id="staticroute"
+                            checked={form.permanent}
+                            onChange={(event) => {
+                              handleFormChange(event, index);
+                              handleClick(
+                                "warning",
+                                "Permanent ruter er typisk en dårlig ide, slå kun til hvis du ved hvad du laver"
+                              );
+                            }}
+                          />
+                        }
+                        label="Permanent"
+                      />
+                      <Divider sx={{ mt: 2, mb: 2 }} />
+                    </Box>
+                  </div>
+                );
+              })}
+              <Button
+                variant="contained"
+                sx={{ margin: 1 }}
+                size="medium"
+                color="primary"
+                onClick={() => addFields("staticroute")}
+              >
+                Tilføj statisk rute
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  handleOpen();
+                }}
+              >
+                Vis config
+              </Button>
+              <Modal open={open} onClose={handleClose}>
+                {ModalContent(Staticroute, "staticroute")}
+              </Modal>
+            </CardContent>
+          </Card>
         </TabPanel>
         <TabPanel value={value} index={5}>
-        {StatusComingSoon()}
+          {StatusComingSoon()}
         </TabPanel>
         <TabPanel value={value} index={6}>
           {StatusComingSoon()}
         </TabPanel>
         <TabPanel value={value} index={7}>
-        {StatusComingSoon()}
+          {StatusComingSoon()}
         </TabPanel>
         <TabPanel value={value} index={8}>
           <Card sx={{ width: "100%" }}>
@@ -918,7 +1056,6 @@ function Router() {
               <Button
                 onClick={() => {
                   run();
-                  onreloadtab();
                 }}
                 startIcon={<SyncIcon />}
                 variant="outlined"

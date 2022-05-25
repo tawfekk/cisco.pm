@@ -13,6 +13,7 @@ import Modal from "@mui/material/Modal";
 import * as React from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
 import {syncup} from "src/handlers/Sync"
+import {syncdown} from "src/handlers/Sync"
 
 
 const style = {
@@ -34,11 +35,14 @@ function handleFormChange3() {
 }
 
 function handleFormChange4() {
-  if (sessionStorage.t_sessionid != "" || sessionStorage.t_sessionid != undefined) {
-    localStorage.removeItem("router_data");
-    localStorage.removeItem("router_final");
+  if (sessionStorage.t_sessionid) {
+    localStorage.clear();
     sessionStorage.sessionid = sessionStorage.t_sessionid;
-    window.location.reload();
+    syncdown('router')
+    syncdown('vlan')
+    syncdown('switch')
+    setTimeout(() => { window.location.reload();}, 1000)
+
   }
 }
 

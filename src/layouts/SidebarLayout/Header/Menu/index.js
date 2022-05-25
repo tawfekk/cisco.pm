@@ -100,17 +100,14 @@ function HeaderMenu() {
         </List>
       </ListWrapper>
       <Menu anchorEl={ref.current} onClose={handleClose} open={isOpen}>
-        <MenuItem sx={{ px: 3 }} component={NavLink} to="https://mads03.dk">
+        <MenuItem onClick={() => window.open("https://mads03.dk", '_blank')} sx={{ px: 3 }}>
           mads03.dk
         </MenuItem>
-        <MenuItem sx={{ px: 3 }} component={NavLink} to="/components/router">
-          Router
+        <MenuItem sx={{ px: 3 }} component={NavLink} to="/status/coming-soon">
+          Historik
         </MenuItem>
-        <MenuItem sx={{ px: 3 }} component={NavLink} to="/components/cards">
-          Cards
-        </MenuItem>
-        <MenuItem sx={{ px: 3 }} component={NavLink} to="/components/modals">
-          Modals
+        <MenuItem sx={{ px: 3 }} component={NavLink} to="/status/coming-soon">
+          Dokumentation
         </MenuItem>
       </Menu>
     </>

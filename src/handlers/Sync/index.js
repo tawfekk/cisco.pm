@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
+import { doc, getFirestore, setDoc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD3npySkxT-_E2ZESGzzftE6JZagBf-UHQ", //hack mig :-)
@@ -14,7 +14,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 
-
   export async function syncup(data, type) {
     if (sessionStorage.sessionid) {
     //  try {
@@ -25,4 +24,14 @@ const db = getFirestore(app);
     //    console.log(e);
     //  }
     }
+  }
+
+  export async function syncdown(type) {
+      if (sessionStorage.sessionid) {
+        const docRef = doc(db, sessionStorage.sessionid, type);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.data()["data"]){
+        localStorage.setItem(type+"_data",JSON.stringify(docSnap.data()["data"]))}
+        else if (docSnap.data()["data"] == 0){sessionStorage.clear(),localStorage.clear(),window.location.reload()}
+      }
   }

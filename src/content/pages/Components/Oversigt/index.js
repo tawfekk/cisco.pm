@@ -202,7 +202,7 @@ function Oversigt() {
               "conf terminal" + returner(type) + "\nend"
             );
             handleClose();
-            handleClose2();
+            handleClose0();
             handleClick();
           }}
           variant="contained"
@@ -273,8 +273,11 @@ function Oversigt() {
             color="error"
             startIcon=<DangerousRoundedIcon />
             onClick={() => {
+              syncup(0, 'router')
+              syncup(0, 'switch')
+              syncup(0, 'vlan')
               localStorage.clear();
-              window.location.reload();
+              setTimeout(() => { window.location.reload()}, 600)
             }}
           >
             Slet al data

@@ -25,8 +25,8 @@ const LogoSignWrapper = styled(Box)(
 
 const LogoSign = styled(Box)(
   ({ theme }) => `
-    width: ${theme.spacing(50)};
-    height: ${theme.spacing(24)};
+    width: ${theme.spacing(48)};
+    height: ${theme.spacing(21)};
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -45,7 +45,7 @@ const LogoSign = styled(Box)(
 const LogoTextWrapper = styled(Box)(
   ({ theme }) => `
         padding-left: ${theme.spacing(1)};
-        padding-bottom: ${theme.spacing(6)};
+        padding-bottom: ${theme.spacing(5)};
 `
 );
 
@@ -69,24 +69,28 @@ const LogoText = styled(Box)(
 `
 );
 
-function Logo() {
+export function Logo() {
 
 
   return (
     <LogoWrapper to="/components/oversigt">
       <LogoSignWrapper>
-        <LogoSign sx={{mt:7, ml:-6.4}}>
+        <LogoSign sx={{mt:5.7, ml:-7}}>
           <img src="/static/images/logo/main.svg" />
         </LogoSign>
       </LogoSignWrapper>
-        <LogoTextWrapper sx={{ml:11, mt:7}}>
-          <Tooltip title="version 1.00.1 - alpha" arrow placement="right">
-            <VersionBadge>alpha</VersionBadge>
-          </Tooltip>
+        <LogoTextWrapper sx={{ml:10, mt:6}}>
+            <VersionBadge>{sessionStorage.version}</VersionBadge>
           <LogoText>cisco.pm</LogoText>
         </LogoTextWrapper>
     </LogoWrapper>
   );
 }
 
-export default Logo;
+export function LogoAlone() {
+return (
+      <LogoSign >
+        <img src="/static/images/logo/main.svg" />
+      </LogoSign>
+);
+}

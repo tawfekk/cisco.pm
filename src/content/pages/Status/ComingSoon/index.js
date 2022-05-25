@@ -54,3 +54,5 @@ export function StatusComingSoon() {
     </>
   );
 }
+
+export default StatusComingSoon;

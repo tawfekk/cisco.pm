@@ -1,7 +1,7 @@
 export function Initial(index) {
   try {
     var today = new Date();
-    var workingvar = "\n";
+    var workingvar = "\nend\n";
     var workingarr = JSON.parse(localStorage.router_data)[index]["initial"][0];
     if (true == true) {
       workingvar +=
@@ -19,7 +19,7 @@ export function Initial(index) {
         today.getFullYear();
     }
     workingvar += "\nconfigure terminal";
-    workingvar += "\nset hostname " + workingarr.hostname;
+    workingvar += "\nhostname " + workingarr.hostname;
     if (workingarr.motd != "") {
       workingvar += "\nbanner motd #" + workingarr.motd + "#";
       let workingdata = JSON.parse(localStorage.router_final);
@@ -85,8 +85,25 @@ export function DHCP(index) {
   } catch (error) {}
 }
 
+export function Staticroute(index) {
+  try {
+    var workingvar = ""
+    for (const element of JSON.parse(localStorage.router_data)[index]["staticroute"]){
+workingvar += "\nip route "+element.destinationip+" "+element.destinationsubnet+" "
+if (element.nexthopip) {workingvar += element.nexthopip} else {workingvar += element.nexthopinterface}
+if (element.distance) {workingvar += " "+element.distance}
+if (element.permanent == true) {workingvar += " permanent"}
+}
+let workingdata = JSON.parse(localStorage.router_final);
+workingdata[index]["staticroute"] = workingvar;
+localStorage.router_final = JSON.stringify(workingdata);
+return workingvar;
+}catch(e){}
+}
+
 export function Runner(index) {
   Initial(index);
   Interfaces(index);
   DHCP(index);
+  Staticroute(index)
 }
