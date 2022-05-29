@@ -22,6 +22,7 @@ if (!localStorage.router_data) {
         {
           hostname: "R1",
           clock: true,
+          model: 4300,
           synchronuslogging: true,
           ipv6unicastrouting: true,
           passwordencryption: true,

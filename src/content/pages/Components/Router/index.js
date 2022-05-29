@@ -15,6 +15,7 @@ import { Interfaces } from "src/handlers/ConfigGenerator/Router";
 import { DHCP } from "src/handlers/ConfigGenerator/Router";
 import { Staticroute } from "src/handlers/ConfigGenerator/Router";
 import { StatusComingSoon } from "src/content/pages/Status/ComingSoon";
+import { RouterInterfaces }from "src/handlers/Interfaces";
 
 import {
   TextField,
@@ -83,8 +84,6 @@ let maxTabIndex = 0;
 let alerttext = "";
 let alertsev = "info";
 
-const porte = ["gi0/0", "gi0/1", "port-channel 1"];
-
 sessionStorage.router_tabid = 0;
 
 if (
@@ -134,6 +133,7 @@ function Router() {
           {
             hostname: "R" + workingtabindex,
             clock: true,
+            model: 4300,
             synchronuslogging: true,
             ipv6unicastrouting: true,
             passwordencryption: true,
@@ -388,7 +388,7 @@ function Router() {
             }, 600);
           }}
         >
-          <Tab label="Initial settings" />
+          <Tab label="Generel     " />
           <Tab label="Interfaces" />
           <Tab label="Subinterfaces" />
           <Tab label="DHCP" />
@@ -475,15 +475,24 @@ function Router() {
                           onChange={(event) => handleFormChange(event, 0)}
                           InputLabelProps={{ shrink: true }}
                         />
-                        <TextField
-                          id="initial"
-                          name="model"
-                          value={form.model}
-                          label="Model"
-                          placeholder="cisco"
-                          onChange={(event) => handleFormChange(event, 0)}
-                          InputLabelProps={{ shrink: true }}
-                        />
+                        <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                          <InputLabel>Model</InputLabel>
+                          <Select
+                            name="initial.model"
+                            value={form.model}
+                            onChange={(event) => {
+                              handleFormChange(event, index);
+                            }}
+                            input={<OutlinedInput label="Model" />}
+                          >
+                              <MenuItem key={"1941"} value={"1941"}>
+                                1941
+                              </MenuItem>
+                              <MenuItem key={"4300"} value={"4300"}>
+                                4300
+                              </MenuItem>
+                          </Select>
+                        </FormControl>
                         <Grid
                           sx={{ mt: 3, mb: 4 }}
                           container
@@ -745,7 +754,7 @@ function Router() {
                           input={<OutlinedInput label="Name" />}
                           MenuProps={MenuProps}
                         >
-                          {porte.map((name) => (
+                          {RouterInterfaces(formFields[tabid]['initial'][0]['model']).map((name) => (
                             <MenuItem key={name} value={name}>
                               {name}
                             </MenuItem>
@@ -950,7 +959,7 @@ function Router() {
                           }}
                           input={<OutlinedInput label="Next-hop Interface" />}
                         >
-                          {porte.map((name) => (
+                          {RouterInterfaces(formFields[tabid]['initial'][0]['model']).map((name) => (
                             <MenuItem key={name} value={name}>
                               {name}
                             </MenuItem>
