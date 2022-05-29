@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+  cisco.pm:
+    ports:
+      - 80:80
+    container_name: cisco.pm
+    image: tawfekk/cisco.pm
