@@ -5,11 +5,11 @@ WORKDIR /app
 # Cache and Install dependencies
 COPY package.json .
 COPY package-lock.json .
-RUN yarn install --production
+RUN npm install --production
 # Copy app files
 COPY . .
 # Build the app
-RUN yarn build
+RUN npm build
 
 # Bundle static assets with nginx
 FROM nginx:1.21.0-alpine as production
