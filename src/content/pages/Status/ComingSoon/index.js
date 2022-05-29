@@ -1,8 +1,4 @@
-import {
-  Box,
-  Typography,
-  Container,
-} from "@mui/material";
+import { Box, Typography, Container } from "@mui/material";
 import { Helmet } from "react-helmet-async";
 import Logo from "src/components/LogoSign";
 
@@ -18,7 +14,6 @@ const MainContent = styled(Box)(
     justify-content: center;
 `
 );
-
 
 export function StatusComingSoon() {
   return (

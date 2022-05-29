@@ -15,7 +15,7 @@ import { Interfaces } from "src/handlers/ConfigGenerator/Router";
 import { DHCP } from "src/handlers/ConfigGenerator/Router";
 import { Staticroute } from "src/handlers/ConfigGenerator/Router";
 import { StatusComingSoon } from "src/content/pages/Status/ComingSoon";
-import { RouterInterfaces }from "src/handlers/Interfaces";
+import { RouterInterfaces } from "src/handlers/Interfaces";
 
 import {
   TextField,
@@ -155,13 +155,13 @@ function Router() {
       //localStorage.router_final = JSON.stringify(data2);
       handleAddTab();
     } else {
+      setformFields(JSON.parse(localStorage.router_data))
       sessionStorage.router_tabid = newtabid;
       settabid(newtabid);
-      syncdown("router");
-      setTimeout(() => {
-        setformFields(JSON.parse(localStorage.router_data));
-      }, 600);
       run2();
+      setTimeout(() => {
+              setformFields(JSON.parse(localStorage.router_data));
+            }, 500);
     }
   };
 
@@ -197,16 +197,9 @@ function Router() {
   }
 
   async function run() {
-    // Pause execution of this async function for 2 seconds
-    await sleep(250);
+    await sleep(350);
     onreloadtab();
     setValue(value);
-  }
-
-  function sleep3(ms) {
-    setValue(false);
-    syncdown("router");
-    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   async function run3() {
@@ -215,14 +208,9 @@ function Router() {
     setValue(value);
   }
 
-  function sleep2(ms) {
-    setValue(false);
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   async function run2() {
-    await sleep2(350);
-    setValue(0);
+    await sleep(350);
+    setValue(value);
   }
 
   const [open, setOpen] = React.useState(false);
@@ -286,8 +274,6 @@ function Router() {
     localStorage.router_data = JSON.stringify(data);
     syncup(formFields, "router");
   };
-
-  //window.onload = function () {};
 
   if (maxTabIndex == 0) {
     syncdown("router");
@@ -382,7 +368,7 @@ function Router() {
           value={value}
           onChange={(event, newValue) => {
             setValue(newValue);
-            syncdown("router");
+            syncdown('router')
             setTimeout(() => {
               setformFields(JSON.parse(localStorage.router_data));
             }, 600);
@@ -485,12 +471,12 @@ function Router() {
                             }}
                             input={<OutlinedInput label="Model" />}
                           >
-                              <MenuItem key={"1941"} value={"1941"}>
-                                1941
-                              </MenuItem>
-                              <MenuItem key={"4300"} value={"4300"}>
-                                4300
-                              </MenuItem>
+                            <MenuItem key={"1941"} value={"1941"}>
+                              1941
+                            </MenuItem>
+                            <MenuItem key={"4300"} value={"4300"}>
+                              4300
+                            </MenuItem>
                           </Select>
                         </FormControl>
                         <Grid
@@ -754,7 +740,9 @@ function Router() {
                           input={<OutlinedInput label="Name" />}
                           MenuProps={MenuProps}
                         >
-                          {RouterInterfaces(formFields[tabid]['initial'][0]['model']).map((name) => (
+                          {RouterInterfaces(
+                            formFields[tabid]["initial"][0]["model"]
+                          ).map((name) => (
                             <MenuItem key={name} value={name}>
                               {name}
                             </MenuItem>
@@ -959,7 +947,9 @@ function Router() {
                           }}
                           input={<OutlinedInput label="Next-hop Interface" />}
                         >
-                          {RouterInterfaces(formFields[tabid]['initial'][0]['model']).map((name) => (
+                          {RouterInterfaces(
+                            formFields[tabid]["initial"][0]["model"]
+                          ).map((name) => (
                             <MenuItem key={name} value={name}>
                               {name}
                             </MenuItem>

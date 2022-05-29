@@ -32,10 +32,8 @@ import {
   Modal,
 } from "@mui/material";
 
-
 import { initializeApp } from "firebase/app";
 import { doc, getFirestore, getDoc, setDoc } from "firebase/firestore";
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyD3npySkxT-_E2ZESGzzftE6JZagBf-UHQ",
@@ -140,8 +138,6 @@ function DHCP() {
   } catch (error) {}
 }
 
-
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -231,7 +227,7 @@ function Switch() {
       };
       data.push(object);
       setformFields(data);
-      syncupdate(data)
+      syncupdate(data);
       localStorage.switch_data = JSON.stringify(data);
       let data2 = JSON.parse(localStorage.switch_final);
       data2.push({ initial: "" });

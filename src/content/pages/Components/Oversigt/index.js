@@ -20,8 +20,9 @@ import {
   Modal,
   IconButton,
   Snackbar,
-  Alert,
+  Alert
 } from "@mui/material";
+import SyncIcon from "@mui/icons-material/Sync";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import DangerousRoundedIcon from "@mui/icons-material/DangerousRounded";
 import { syncup } from "src/handlers/Sync";
@@ -265,6 +266,17 @@ function Oversigt() {
           heading="Oversigt"
           subHeading="Oversigt over oprettede router, switch & VLAN configs"
         />
+        <Button
+          sx={{ float: "right", ml: 2, mt: -4 }}
+          onClick={() =>
+            window.location.reload()
+          }
+          startIcon={<SyncIcon />}
+          variant="outlined"
+          size="small"
+        >
+          Synk
+        </Button>
         <Tooltip arrow title="Denne handling er permanent">
           <Button
             size="small"
@@ -273,11 +285,13 @@ function Oversigt() {
             color="error"
             startIcon=<DangerousRoundedIcon />
             onClick={() => {
-              syncup(0, 'router')
-              syncup(0, 'switch')
-              syncup(0, 'vlan')
+              syncup(0, "router");
+              syncup(0, "switch");
+              syncup(0, "vlan");
               localStorage.clear();
-              setTimeout(() => { window.location.reload()}, 600)
+              setTimeout(() => {
+                window.location.reload();
+              }, 600);
             }}
           >
             Slet al data

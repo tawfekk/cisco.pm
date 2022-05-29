@@ -1,10 +1,6 @@
-import {
-  Box,
-  Typography,
-  Container,
-} from '@mui/material';
-import { Helmet } from 'react-helmet-async';
-import { styled } from '@mui/material/styles';
+import { Box, Typography, Container } from "@mui/material";
+import { Helmet } from "react-helmet-async";
+import { styled } from "@mui/material/styles";
 
 const MainContent = styled(Box)(
   ({ theme }) => `
@@ -19,8 +15,6 @@ const MainContent = styled(Box)(
 );
 
 function Status404() {
-
-
   return (
     <>
       <Helmet>

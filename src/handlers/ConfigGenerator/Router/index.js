@@ -87,23 +87,38 @@ export function DHCP(index) {
 
 export function Staticroute(index) {
   try {
-    var workingvar = ""
-    for (const element of JSON.parse(localStorage.router_data)[index]["staticroute"]){
-workingvar += "\nip route "+element.destinationip+" "+element.destinationsubnet+" "
-if (element.nexthopip) {workingvar += element.nexthopip} else {workingvar += element.nexthopinterface}
-if (element.distance) {workingvar += " "+element.distance}
-if (element.permanent == true) {workingvar += " permanent"}
-}
-let workingdata = JSON.parse(localStorage.router_final);
-workingdata[index]["staticroute"] = workingvar;
-localStorage.router_final = JSON.stringify(workingdata);
-return workingvar;
-}catch(e){}
+    var workingvar = "";
+    for (const element of JSON.parse(localStorage.router_data)[index][
+      "staticroute"
+    ]) {
+      workingvar +=
+        "\nip route " +
+        element.destinationip +
+        " " +
+        element.destinationsubnet +
+        " ";
+      if (element.nexthopip) {
+        workingvar += element.nexthopip;
+      } else {
+        workingvar += element.nexthopinterface;
+      }
+      if (element.distance) {
+        workingvar += " " + element.distance;
+      }
+      if (element.permanent == true) {
+        workingvar += " permanent";
+      }
+    }
+    let workingdata = JSON.parse(localStorage.router_final);
+    workingdata[index]["staticroute"] = workingvar;
+    localStorage.router_final = JSON.stringify(workingdata);
+    return workingvar;
+  } catch (e) {}
 }
 
 export function Runner(index) {
   Initial(index);
   Interfaces(index);
   DHCP(index);
-  Staticroute(index)
+  Staticroute(index);
 }

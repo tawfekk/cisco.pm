@@ -1,13 +1,24 @@
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from "react-helmet-async";
 
-import PageTitle from 'src/components/PageTitle';
-import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import {TextField, Box, Button, IconButton, Container, Grid, Card, CardHeader, CardContent, Divider } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import Footer from 'src/components/Footer';
+import PageTitle from "src/components/PageTitle";
+import PageTitleWrapper from "src/components/PageTitleWrapper";
+import {
+  TextField,
+  Box,
+  Button,
+  IconButton,
+  Container,
+  Grid,
+  Card,
+  CardHeader,
+  CardContent,
+  Divider,
+} from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Footer from "src/components/Footer";
 import { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {syncup} from "src/handlers/Sync"
+import { syncup } from "src/handlers/Sync";
 
 import { initializeApp } from "firebase/app";
 import { doc, getFirestore, getDoc } from "firebase/firestore";
@@ -24,10 +35,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-
-
 function VLAN() {
-
   window.onload = function () {
     sync();
   };
@@ -39,13 +47,9 @@ function VLAN() {
   const handleFormChange = (event, index) => {
     let data = [...formFields];
     if (event.target.type == "text") {
-      data[index][
-        event.target.name
-      ] = event.target.value;
+      data[index][event.target.name] = event.target.value;
     } else {
-      data[index][
-        event.target.name
-      ] = event.target.checked;
+      data[index][event.target.name] = event.target.checked;
     }
     setformFields(data);
     localStorage.vlan_data = JSON.stringify(data);
@@ -90,70 +94,72 @@ function VLAN() {
 
   return (
     <>
-    <Container maxWidth="md">
-      <Helmet>
-        <title>VLAN</title>
-      </Helmet>
-      <PageTitleWrapper>
-        <PageTitle   sx={{ mb:-1}}
-          heading="VLAN"
-          />
-      </PageTitleWrapper>
-      <Card>
-        <CardHeader title="VLAN" />
-        <Divider />
-        <CardContent >
-          {formFields.map((form, index) => {
-            return (
-              <div key={index} >
-                      <Box
-                        sx={{
-                          "& .MuiTextField-root": { m: 1, width: "25ch" },
-                        }}
-                        autoComplete="off"
-                      >
-                      <IconButton
-                        sx={{ float: 'right', mt:1.5}} onClick={() => removeFields(index)}
-                      >
-                        <DeleteIcon color="secondary" />
-                      </IconButton>
-                      <TextField
-                        name="id"
-                        label="VlAN ID"
-                        placeholder="999"
-                        onChange={(event) => handleFormChange(event, index)}
-                        value={form.id}
-                      />
-                      <TextField
-                        name="navn"
-                        label="VLAN navn"
-                        placeholder="Production"
-                        onChange={(event) => handleFormChange(event, index)}
-                        value={form.navn}
-                      />
-                      <Divider sx={{ mt: 2, mb: 2 }} />
-                      </Box>
-                      </div>
-            );
-          })}
-          <Button
-            variant="contained"
-            sx={{ margin: 1 }}
-            size="medium"
-            color="primary"
-            onClick={() => addFields()}
-          >
-            Tilføj VLAN
-          </Button>
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={() => {localStorage.removeItem("vlan_data");window.location.reload()}}
-          >
-            Ryd alle VLAN
-          </Button>
-        </CardContent>
-      </Card>
+      <Container maxWidth="md">
+        <Helmet>
+          <title>VLAN</title>
+        </Helmet>
+        <PageTitleWrapper>
+          <PageTitle sx={{ mb: -1 }} heading="VLAN" />
+        </PageTitleWrapper>
+        <Card>
+          <CardHeader title="VLAN" />
+          <Divider />
+          <CardContent>
+            {formFields.map((form, index) => {
+              return (
+                <div key={index}>
+                  <Box
+                    sx={{
+                      "& .MuiTextField-root": { m: 1, width: "25ch" },
+                    }}
+                    autoComplete="off"
+                  >
+                    <IconButton
+                      sx={{ float: "right", mt: 1.5 }}
+                      onClick={() => removeFields(index)}
+                    >
+                      <DeleteIcon color="secondary" />
+                    </IconButton>
+                    <TextField
+                      name="id"
+                      label="VlAN ID"
+                      placeholder="999"
+                      onChange={(event) => handleFormChange(event, index)}
+                      value={form.id}
+                    />
+                    <TextField
+                      name="navn"
+                      label="VLAN navn"
+                      placeholder="Production"
+                      onChange={(event) => handleFormChange(event, index)}
+                      value={form.navn}
+                    />
+                    <Divider sx={{ mt: 2, mb: 2 }} />
+                  </Box>
+                </div>
+              );
+            })}
+            <Button
+              variant="contained"
+              sx={{ margin: 1 }}
+              size="medium"
+              color="primary"
+              onClick={() => addFields()}
+            >
+              Tilføj VLAN
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => {
+                localStorage.removeItem("vlan_data");
+                window.location.reload();
+              }}
+            >
+              Ryd alle VLAN
+            </Button>
+          </CardContent>
+        </Card>
       </Container>
       <Footer />
     </>
