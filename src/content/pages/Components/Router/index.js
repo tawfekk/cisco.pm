@@ -59,11 +59,6 @@ function TabPanel(props) {
 
   return (
     <div
-    //role="tabpanel"
-    //hidden={value !== index}
-    //id={`simple-tabpanel-${index}`}
-    //aria-labelledby={`simple-tab-${index}`}
-    //{...other}
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
@@ -74,12 +69,6 @@ function TabPanel(props) {
   );
 }
 
-//function a11yProps(index) {
-//  return {
-//    id: `simple-tab-${index}`,
-//    "aria-controls": `simple-tabpanel-${index}`,
-//  };
-//}
 let maxTabIndex = 0;
 let alerttext = "";
 let alertsev = "info";
@@ -119,7 +108,6 @@ function Router() {
     } catch (e) {}
   }
 
-  // Handle Tab Button Click
   const [tabs, setAddTab] = useState([]);
   const [tabid, settabid] = useState(0);
   const handleTabChange = (event, newtabid) => {
@@ -150,18 +138,11 @@ function Router() {
       setformFields(data);
       syncup(data, "router");
       localStorage.router_data = JSON.stringify(data);
-      //let data2 = JSON.parse(localStorage.router_final);
-      //data2.push({ initial: "" });
-      //localStorage.router_final = JSON.stringify(data2);
       handleAddTab();
     } else {
-      setformFields(JSON.parse(localStorage.router_data))
       sessionStorage.router_tabid = newtabid;
       settabid(newtabid);
       run2();
-      setTimeout(() => {
-              setformFields(JSON.parse(localStorage.router_data));
-            }, 500);
     }
   };
 
@@ -210,6 +191,7 @@ function Router() {
 
   async function run2() {
     await sleep(350);
+    setformFields(JSON.parse(localStorage.router_data))
     setValue(value);
   }
 
