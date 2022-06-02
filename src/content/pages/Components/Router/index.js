@@ -470,7 +470,8 @@ function Router() {
                             sx={{ m: 1.5 }}
                             control={
                               <Switch
-                                name="Set clock"
+                                name="clock"
+                                label="Set clock"
                                 id="initial"
                                 checked={form.clock}
                                 onChange={(event) =>

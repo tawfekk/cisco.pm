@@ -2,8 +2,8 @@ export function Initial(index) {
   try {
     var today = new Date();
     var workingvar = "\nend\n";
-    var workingarr = JSON.parse(localStorage.router_data)[index]["initial"][0];
-    if (true == true) {
+    var form = JSON.parse(localStorage.router_data)[index]["initial"][0];
+    if (form.clock == true) {
       workingvar +=
         "clock set " +
         today.getHours() +
@@ -19,9 +19,12 @@ export function Initial(index) {
         today.getFullYear();
     }
     workingvar += "\nconfigure terminal";
-    workingvar += "\nhostname " + workingarr.hostname;
-    if (workingarr.motd != "") {
-      workingvar += "\nbanner motd #" + workingarr.motd + "#";
+    workingvar += "\nhostname " + form.hostname;
+    if (form.motd != "") {
+      workingvar += "\nbanner motd #" + form.motd + "#";
+
+
+      
       let workingdata = JSON.parse(localStorage.router_final);
       workingdata[index]["initial"] = workingvar;
       localStorage.router_final = JSON.stringify(workingdata);
