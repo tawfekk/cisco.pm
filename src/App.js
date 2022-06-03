@@ -34,6 +34,7 @@ if (!localStorage.router_data) {
         },
       ],
       staticroute: [{}],
+      ospf: [{ enabled: [], passive: []}],
     },
   ]);
 }

@@ -58,8 +58,7 @@ function TabPanel(props) {
   const { children, value, index } = props;
 
   return (
-    <div
-    >
+    <div>
       {value === index && (
         <Box sx={{ p: 3 }}>
           <Typography>{children}</Typography>
@@ -133,6 +132,7 @@ function Router() {
           },
         ],
         staticroute: [{}],
+        ospf: [{ enabled: [], passive: []}],
       };
       data.push(object);
       setformFields(data);
@@ -191,7 +191,7 @@ function Router() {
 
   async function run2() {
     await sleep(350);
-    setformFields(JSON.parse(localStorage.router_data))
+    setformFields(JSON.parse(localStorage.router_data));
     setValue(value);
   }
 
@@ -243,6 +243,8 @@ function Router() {
       porte: [],
       dhcp: [],
       hostname: "",
+      enabled: [],
+      passive: [],
     };
     data[sessionStorage.router_tabid][id].push(object);
     //workingarray = formFields[tabid]
@@ -260,6 +262,18 @@ function Router() {
   if (maxTabIndex == 0) {
     syncdown("router");
     onreloadtab();
+  }
+
+  function porte() {
+    try {
+      return RouterInterfaces(formFields[tabid]["initial"][0]["model"]).map(
+        (name) => (
+          <MenuItem key={name} value={name}>
+            {name}
+          </MenuItem>
+        )
+      );
+    } catch (e) {}
   }
 
   function ModalContent(func, id) {
@@ -350,7 +364,7 @@ function Router() {
           value={value}
           onChange={(event, newValue) => {
             setValue(newValue);
-            syncdown('router')
+            syncdown("router");
             setTimeout(() => {
               setformFields(JSON.parse(localStorage.router_data));
             }, 600);
@@ -362,7 +376,7 @@ function Router() {
           <Tab label="DHCP" />
           <Tab label="Static route" />
           <Tab label="FHRP" />
-          <Tab label="RIP" />
+          <Tab label="OSPF" />
           <Tab label="ACL" />
           <Tab label="Noter" />
         </Tabs>
@@ -385,7 +399,7 @@ function Router() {
                       <div key={0}>
                         <TextField
                           required
-                          error={form.hostname == ""}
+                          error={!form.hostname}
                           id="initial"
                           name="hostname"
                           label="Hostname"
@@ -716,6 +730,8 @@ function Router() {
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
                         <InputLabel id="interfaces">Porte</InputLabel>
                         <Select
+                          required
+                          error={!form.porte.length}
                           name="interfaces.porte"
                           multiple
                           value={form.porte}
@@ -723,13 +739,7 @@ function Router() {
                           input={<OutlinedInput label="Name" />}
                           MenuProps={MenuProps}
                         >
-                          {RouterInterfaces(
-                            formFields[tabid]["initial"][0]["model"]
-                          ).map((name) => (
-                            <MenuItem key={name} value={name}>
-                              {name}
-                            </MenuItem>
-                          ))}
+                          {porte()}
                         </Select>
                       </FormControl>
                       <FormControlLabel
@@ -874,11 +884,14 @@ function Router() {
           </Card>
         </TabPanel>
         <TabPanel value={value} index={4}>
+          {StatusComingSoon()}
+        </TabPanel>
+        <TabPanel value={value} index={6}>
           <Card sx={{ width: "100%" }}>
-            <CardHeader title="Static route" />
+            <CardHeader title="OSPF" />
             <Divider />
             <CardContent>
-              {formFields[tabid]["staticroute"].map((form, index) => {
+              {formFields[tabid]["ospf"].map((form, index) => {
                 return (
                   <div key={index}>
                     <Box // sx={{ width: '100%' }}
@@ -889,81 +902,71 @@ function Router() {
                     >
                       <IconButton
                         sx={{ float: "right", mt: 1.5 }}
-                        onClick={() => removeFields("staticroute", index)}
+                        onClick={() => removeFields("ospf", index)}
                       >
                         <DeleteIcon color="secondary" />
                       </IconButton>
                       <TextField
-                        name="destinationip"
-                        id="staticroute"
-                        label="Destination IP"
+                        name="processid"
+                        id="ospf"
+                        label="Process ID"
                         onChange={(event) => handleFormChange(event, index)}
-                        value={form.destinationip}
+                        value={form.processid}
                       />
                       <TextField
-                        name="destinationsubnet"
-                        id="staticroute"
-                        label="Destination subnet"
+                        name="override"
+                        id="ospf"
+                        label="Router ID override"
                         onChange={(event) => handleFormChange(event, index)}
-                        value={form.staticroute}
+                        value={form.override}
                       />
                       <TextField
-                        name="nexthopip"
-                        disabled={form.nexthopinterface}
-                        id="staticroute"
-                        label="Next-hop IP"
-                        onChange={(event) => {
-                          handleFormChange(event, index);
-                          element.nexthopinterface = "";
-                        }}
-                        value={form.nexthopip}
+                        name="area"
+                        id="ospf"
+                        label="Area"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.area}
                       />
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
-                        <InputLabel>Next-hop Interface</InputLabel>
+                        <InputLabel>Enabled interfaces</InputLabel>
                         <Select
-                          disabled={form.nexthopip}
-                          name="staticroute.nexthopinterface"
-                          value={form.nexthopinterface}
-                          onChange={(event) => {
-                            handleFormChange(event, index);
-                            element.nexthopip = "";
-                          }}
-                          input={<OutlinedInput label="Next-hop Interface" />}
+                          name="ospf.enabled"
+                          multiple
+                          value={form.enabled}
+                          onChange={(event) => handleFormChange(event, index)}
+                          input={<OutlinedInput label="Enabled interfaces" />}
+                          MenuProps={MenuProps}
                         >
-                          {RouterInterfaces(
-                            formFields[tabid]["initial"][0]["model"]
-                          ).map((name) => (
-                            <MenuItem key={name} value={name}>
-                              {name}
-                            </MenuItem>
-                          ))}
+                          {porte()}
                         </Select>
                       </FormControl>
-                      <TextField
-                        name="distance"
-                        label="Distance"
-                        id="staticroute"
-                        onChange={(event) => handleFormChange(event, index)}
-                        value={form.distance}
-                      />
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                        <InputLabel>Passive interfaces</InputLabel>
+                        <Select
+                          name="ospf.passive"
+                          multiple
+                          value={form.passive}
+                          onChange={(event) => handleFormChange(event, index)}
+                          input={<OutlinedInput label="Passive interfaces" />}
+                          MenuProps={MenuProps}
+                        >
+                          {porte()}
+                        </Select>
+                      </FormControl>
                       <FormControlLabel
                         labelPlacement="bottom"
                         control={
                           <Checkbox
                             color="warning"
-                            name="permanent"
-                            id="staticroute"
-                            checked={form.permanent}
+                            name="defaultroute"
+                            id="ospf"
+                            checked={form.defaultroute}
                             onChange={(event) => {
                               handleFormChange(event, index);
-                              handleClick(
-                                "warning",
-                                "Permanent ruter er typisk en dårlig ide, slå kun til hvis du ved hvad du laver"
-                              );
                             }}
                           />
                         }
-                        label="Permanent"
+                        label="Advertise default route"
                       />
                       <Divider sx={{ mt: 2, mb: 2 }} />
                     </Box>
@@ -975,9 +978,9 @@ function Router() {
                 sx={{ margin: 1 }}
                 size="medium"
                 color="primary"
-                onClick={() => addFields("staticroute")}
+                onClick={() => addFields("ospf")}
               >
-                Tilføj statisk rute
+                Tilføj OSPF process
               </Button>
               <Button
                 variant="outlined"
@@ -988,16 +991,10 @@ function Router() {
                 Vis config
               </Button>
               <Modal open={open} onClose={handleClose}>
-                {ModalContent(Staticroute, "staticroute")}
+                {ModalContent(Staticroute, "ospf")}
               </Modal>
             </CardContent>
           </Card>
-        </TabPanel>
-        <TabPanel value={value} index={5}>
-          {StatusComingSoon()}
-        </TabPanel>
-        <TabPanel value={value} index={6}>
-          {StatusComingSoon()}
         </TabPanel>
         <TabPanel value={value} index={7}>
           {StatusComingSoon()}
