@@ -1,7 +1,7 @@
-import { Container } from '@mui/material';
-import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
-import { Box } from '@mui/material';
+import { Container } from "@mui/material";
+import PropTypes from "prop-types";
+import { styled } from "@mui/material/styles";
+import { Box } from "@mui/material";
 
 const PageTitle = styled(Box)(
   ({ theme }) => `
@@ -20,7 +20,7 @@ const PageTitleWrapper = ({ children }) => {
 };
 
 PageTitleWrapper.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 export default PageTitleWrapper;

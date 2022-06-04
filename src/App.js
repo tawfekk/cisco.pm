@@ -16,7 +16,7 @@ sessionStorage.version = "pre-release";
 if (!localStorage.router_data) {
   localStorage.router_data = JSON.stringify([
     {
-      interfaces: [{ porte: [], subinterfaces: []}],
+      interfaces: [{ porte: [], subinterfaces: [] }],
       linterfaces: [],
       dhcp: [{ ip: "" }],
       initial: [
@@ -41,7 +41,14 @@ if (!localStorage.router_data) {
         },
       ],
       staticroute: [{}],
-      ospf: [{ processid: Math.floor(Math.random() * (65535 - 1 + 1)) + 1, enabled: [], passive: [], area: 0}],
+      ospf: [
+        {
+          processid: Math.floor(Math.random() * (65535 - 1 + 1)) + 1,
+          enabled: [],
+          passive: [],
+          area: 0,
+        },
+      ],
     },
   ]);
 }

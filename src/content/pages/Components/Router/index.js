@@ -886,7 +886,7 @@ function Router() {
           {formFields[tabid]["linterfaces"].map((form, index) => {
             return (
               <Card sx={{ width: "100%", mb: 3 }}>
-                <CardHeader title={"Loopback "+ form.id} />
+                <CardHeader title={"Loopback " + form.id} />
                 <Divider />
                 <CardContent>
                   <div key={index}>
@@ -909,9 +909,7 @@ function Router() {
                         error={!form.id || form.id != 0}
                         label="Loopback ID"
                         placeholder="1"
-                        onChange={(event) =>
-                          handleFormChange(event, index)
-                        }
+                        onChange={(event) => handleFormChange(event, index)}
                         value={form.id}
                       />
                       <TextField
@@ -921,9 +919,7 @@ function Router() {
                         label="IP"
                         helperText="må ikke være i 127.x.x.x"
                         placeholder="192.168.99.1"
-                        onChange={(event) =>
-                          handleFormChange(event, index)
-                        }
+                        onChange={(event) => handleFormChange(event, index)}
                         value={form.ip}
                       />
                       <TextField
@@ -932,9 +928,7 @@ function Router() {
                         error={!form.subnet}
                         label="Subnet"
                         placeholder="255.255.255.255"
-                        onChange={(event) =>
-                          handleFormChange(event, index)
-                        }
+                        onChange={(event) => handleFormChange(event, index)}
                         value={form.subnet}
                       />
                     </Box>
@@ -1378,7 +1372,7 @@ function Router() {
       </>
     );
   } catch (e) {
-    console.log(e)
+    console.log(e);
     //if (localStorage.router_data){
     //localStorage.setItem("router_data", 0);
     //window.location.reload()}

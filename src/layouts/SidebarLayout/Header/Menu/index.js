@@ -4,12 +4,12 @@ import {
   ListItem,
   ListItemText,
   Menu,
-  MenuItem
-} from '@mui/material';
-import { useRef, useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
-import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
+  MenuItem,
+} from "@mui/material";
+import { useRef, useState } from "react";
+import { NavLink } from "react-router-dom";
+import { styled } from "@mui/material/styles";
+import ExpandMoreTwoToneIcon from "@mui/icons-material/ExpandMoreTwoTone";
 
 const ListWrapper = styled(Box)(
   ({ theme }) => `
@@ -18,7 +18,7 @@ const ListWrapper = styled(Box)(
         }
 
         .MuiListItem-root {
-            transition: ${theme.transitions.create(['color', 'fill'])};
+            transition: ${theme.transitions.create(["color", "fill"])};
 
             &.MuiListItem-indicators {
                 padding: ${theme.spacing(1, 2)};
@@ -63,7 +63,6 @@ const ListWrapper = styled(Box)(
 );
 
 function HeaderMenu() {
-
   const ref = useRef(null);
   const [isOpen, setOpen] = useState(false);
 
@@ -80,7 +79,7 @@ function HeaderMenu() {
       <ListWrapper>
         <List disablePadding component={Box} display="flex">
           <ListItem
-            classes={{ root: 'MuiListItem-indicators' }}
+            classes={{ root: "MuiListItem-indicators" }}
             button
             ref={ref}
             onClick={handleOpen}
@@ -100,10 +99,18 @@ function HeaderMenu() {
         </List>
       </ListWrapper>
       <Menu anchorEl={ref.current} onClose={handleClose} open={isOpen}>
-        <MenuItem onClick={() => window.open("https://mads03.dk", '_blank')} sx={{ px: 3 }}>
+        <MenuItem
+          onClick={() => window.open("https://mads03.dk", "_blank")}
+          sx={{ px: 3 }}
+        >
           mads03.dk
         </MenuItem>
-        <MenuItem onClick={() => window.open("https://netacad.com/portal/saml_login", '_blank')} sx={{ px: 3 }}>
+        <MenuItem
+          onClick={() =>
+            window.open("https://netacad.com/portal/saml_login", "_blank")
+          }
+          sx={{ px: 3 }}
+        >
           Netacademy
         </MenuItem>
         <MenuItem sx={{ px: 3 }} component={NavLink} to="/status/coming-soon">

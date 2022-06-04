@@ -1,5 +1,5 @@
-import { Box, Container, Link, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Box, Container, Link, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 const FooterWrapper = styled(Box)(
   ({ theme }) => `
@@ -14,15 +14,22 @@ function Footer() {
       <Container maxWidth="lg">
         <Box
           py={3}
-          display={{ xs: 'block', md: 'flex' }}
+          display={{ xs: "block", md: "flex" }}
           alignItems="center"
-          textAlign={{ xs: 'center', md: 'left' }}
+          textAlign={{ xs: "center", md: "left" }}
           justifyContent="space-between"
         >
           <Box>
             <Typography variant="subtitle1">
               © cisco.pm -
-              <Link href="mailto:cisco.pm" target="_blank" rel="noopener noreferrer"> info@cisco.pm</Link>
+              <Link
+                href="mailto:cisco.pm"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {" "}
+                info@cisco.pm
+              </Link>
             </Typography>
           </Box>
           <Typography sx={{ pt: { xs: 2, md: 0 } }} variant="subtitle1">

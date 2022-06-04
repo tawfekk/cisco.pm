@@ -1,7 +1,6 @@
-import { Box, Hidden, Tooltip } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
-
+import { Box, Hidden, Tooltip } from "@mui/material";
+import { Link } from "react-router-dom";
+import { styled } from "@mui/material/styles";
 
 const LogoWrapper = styled(Link)(
   ({ theme }) => `
@@ -41,7 +40,6 @@ const LogoSign = styled(Box)(
 `
 );
 
-
 const LogoTextWrapper = styled(Box)(
   ({ theme }) => `
         padding-left: ${theme.spacing(1)};
@@ -70,27 +68,25 @@ const LogoText = styled(Box)(
 );
 
 export function Logo() {
-
-
   return (
     <LogoWrapper to="/components/oversigt">
       <LogoSignWrapper>
-        <LogoSign sx={{mt:5.7, ml:-7}}>
+        <LogoSign sx={{ mt: 5.7, ml: -7 }}>
           <img src="/static/images/logo/main.svg" />
         </LogoSign>
       </LogoSignWrapper>
-        <LogoTextWrapper sx={{ml:10, mt:6}}>
-            <VersionBadge>{sessionStorage.version}</VersionBadge>
-          <LogoText>cisco.pm</LogoText>
-        </LogoTextWrapper>
+      <LogoTextWrapper sx={{ ml: 10, mt: 6 }}>
+        <VersionBadge>{sessionStorage.version}</VersionBadge>
+        <LogoText>cisco.pm</LogoText>
+      </LogoTextWrapper>
     </LogoWrapper>
   );
 }
 
 export function LogoAlone() {
-return (
-      <LogoSign >
-        <img src="/static/images/logo/main.svg" />
-      </LogoSign>
-);
+  return (
+    <LogoSign>
+      <img src="/static/images/logo/main.svg" />
+    </LogoSign>
+  );
 }

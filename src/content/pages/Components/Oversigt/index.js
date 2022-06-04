@@ -20,7 +20,7 @@ import {
   Modal,
   IconButton,
   Snackbar,
-  Alert
+  Alert,
 } from "@mui/material";
 import SyncIcon from "@mui/icons-material/Sync";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
@@ -268,9 +268,7 @@ function Oversigt() {
         />
         <Button
           sx={{ float: "right", ml: 2, mt: -4 }}
-          onClick={() =>
-            window.location.reload()
-          }
+          onClick={() => window.location.reload()}
           startIcon={<SyncIcon />}
           variant="outlined"
           size="small"

@@ -1,9 +1,9 @@
-import { Suspense, lazy } from 'react';
-import { Navigate } from 'react-router-dom';
-import SidebarLayout from 'src/layouts/SidebarLayout';
-import BaseLayout from 'src/layouts/BaseLayout';
+import { Suspense, lazy } from "react";
+import { Navigate } from "react-router-dom";
+import SidebarLayout from "src/layouts/SidebarLayout";
+import BaseLayout from "src/layouts/BaseLayout";
 
-import SuspenseLoader from 'src/components/SuspenseLoader';
+import SuspenseLoader from "src/components/SuspenseLoader";
 
 const Loader = (Component) => (props) => (
   <Suspense fallback={<SuspenseLoader />}>
@@ -13,90 +13,87 @@ const Loader = (Component) => (props) => (
 
 // Pages
 
-const Overview = Loader(lazy(() => import('src/content/overview')));
-
+const Overview = Loader(lazy(() => import("src/content/overview")));
 
 // Components
-const Oversigt = Loader(lazy(() => import('src/content/pages/Components/Oversigt')));
-const VLAN = Loader(lazy(() => import('src/content/pages/Components/VLAN')));
-const Router = Loader(lazy(() => import('src/content/pages/Components/Router')));
-const Switch = Loader(lazy(() => import('src/content/pages/Components/Switch')));
+const Oversigt = Loader(
+  lazy(() => import("src/content/pages/Components/Oversigt"))
+);
+const VLAN = Loader(lazy(() => import("src/content/pages/Components/VLAN")));
+const Router = Loader(
+  lazy(() => import("src/content/pages/Components/Router"))
+);
+const Switch = Loader(
+  lazy(() => import("src/content/pages/Components/Switch"))
+);
 
 // Status
 
-const Status404 = Loader(lazy(() => import('src/content/pages/Status/Status404')));
-const StatusComingSoon = Loader(lazy(() => import('src/content/pages/Status/ComingSoon')));
+const Status404 = Loader(
+  lazy(() => import("src/content/pages/Status/Status404"))
+);
+const StatusComingSoon = Loader(
+  lazy(() => import("src/content/pages/Status/ComingSoon"))
+);
 
 const routes = [
   {
-    path: '*',
+    path: "*",
     element: <BaseLayout />,
     children: [
       {
-        path: '',
-        element: <Overview />
+        path: "",
+        element: <Overview />,
       },
       {
-        path: 'overview',
-        element: (
-          <Navigate
-            to=""
-            replace
-          />
-        )
+        path: "overview",
+        element: <Navigate to="" replace />,
       },
       {
-        path: 'status',
+        path: "status",
         children: [
           {
-            path: '',
-            element: (
-              <Navigate
-                to="404"
-                replace
-              />
-            )
+            path: "",
+            element: <Navigate to="404" replace />,
           },
           {
-            path: '404',
-            element: <Status404 />
+            path: "404",
+            element: <Status404 />,
           },
           {
-            path: 'coming-soon',
-            element: <StatusComingSoon />
+            path: "coming-soon",
+            element: <StatusComingSoon />,
           },
-        ]
+        ],
       },
       {
-        path: '*',
-        element: <Status404 />
+        path: "*",
+        element: <Status404 />,
       },
-    ]
+    ],
   },
   {
-    path: 'components',
-    element: (
-      <SidebarLayout />
-    ),
+    path: "components",
+    element: <SidebarLayout />,
     children: [
       {
-        path: 'oversigt',
-        element: <Oversigt />
+        path: "oversigt",
+        element: <Oversigt />,
       },
       {
-        path: 'vlan',
-        element: <VLAN />
+        path: "vlan",
+        element: <VLAN />,
       },
       {
-        path: 'router',
-        element: <Router />
+        path: "router",
+        element: <Router />,
       },
       {
-        path: 'switch',
-        element: <Switch />
+        path: "switch",
+        element: <Switch />,
       },
-    ]
-  }
+    ],
+  },
 ];
 
 export default routes;

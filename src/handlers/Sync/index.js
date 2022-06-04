@@ -29,16 +29,15 @@ export async function syncdown(type) {
   if (sessionStorage.sessionid) {
     const docRef = doc(db, sessionStorage.sessionid, type);
     const docSnap = await getDoc(docRef);
-    try{
-    if (docSnap.data()["data"] == 0) {
-      sessionStorage.clear(), localStorage.clear(), window.location.reload();
-    }
-    else {
-      localStorage.setItem(
-        type + "_data",
-        JSON.stringify(docSnap.data()["data"])
-      );
-    }
-  }catch(e){}
+    try {
+      if (docSnap.data()["data"] == 0) {
+        sessionStorage.clear(), localStorage.clear(), window.location.reload();
+      } else {
+        localStorage.setItem(
+          type + "_data",
+          JSON.stringify(docSnap.data()["data"])
+        );
+      }
+    } catch (e) {}
   }
 }

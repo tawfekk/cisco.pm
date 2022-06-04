@@ -1,45 +1,43 @@
-
-import AltRouteIcon from '@mui/icons-material/AltRoute';
-import HubOutlinedIcon from '@mui/icons-material/HubOutlined';
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import DeviceHubIcon from '@mui/icons-material/DeviceHub';
-
+import AltRouteIcon from "@mui/icons-material/AltRoute";
+import HubOutlinedIcon from "@mui/icons-material/HubOutlined";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import DeviceHubIcon from "@mui/icons-material/DeviceHub";
 
 const menuItems = [
   //{
   //  heading: '',
   //  items: [
-    //  {
-    //    name: 'Oversigt',
-    //    link: '/components/oversigt',
-      //  icon: ListAltIcon
-    //  }
-    //]
+  //  {
+  //    name: 'Oversigt',
+  //    link: '/components/oversigt',
+  //  icon: ListAltIcon
+  //  }
+  //]
   //},
   {
-    heading: 'Menu',
+    heading: "Menu",
     items: [
-    {
-      name: 'Oversigt',
-      icon: ListAltIcon,
-      link: '/components/oversigt'
-    },
       {
-        name: 'VLAN',
+        name: "Oversigt",
+        icon: ListAltIcon,
+        link: "/components/oversigt",
+      },
+      {
+        name: "VLAN",
         icon: AltRouteIcon,
-        link: '/components/vlan'
+        link: "/components/vlan",
       },
       {
-        name: 'Router',
+        name: "Router",
         icon: HubOutlinedIcon,
-        link: '/components/router'
+        link: "/components/router",
       },
       {
-        name: 'Switch',
+        name: "Switch",
         icon: DeviceHubIcon,
-        link: '/components/switch'
+        link: "/components/switch",
       },
-    ]
+    ],
   },
 ];
 

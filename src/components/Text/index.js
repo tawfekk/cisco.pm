@@ -1,9 +1,9 @@
-import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
+import PropTypes from "prop-types";
+import { styled } from "@mui/material/styles";
 
-const TextWrapper = styled('span')(
+const TextWrapper = styled("span")(
   ({ theme }) => `
-      
+
       &.MuiText {
 
         &-black {
@@ -13,23 +13,23 @@ const TextWrapper = styled('span')(
         &-primary {
           color: ${theme.palette.primary.main}
         }
-        
+
         &-secondary {
           color: ${theme.palette.secondary.main}
         }
-        
+
         &-success {
           color: ${theme.palette.success.main}
         }
-        
+
         &-warning {
           color: ${theme.palette.warning.main}
         }
-              
+
         &-error {
           color: ${theme.palette.error.main}
         }
-        
+
         &-info {
           color: ${theme.palette.info.main}
         }
@@ -37,9 +37,9 @@ const TextWrapper = styled('span')(
 `
 );
 
-const Text = ({ className = '', color = 'secondary', children, ...rest }) => {
+const Text = ({ className = "", color = "secondary", children, ...rest }) => {
   return (
-    <TextWrapper className={'MuiText-' + color} {...rest}>
+    <TextWrapper className={"MuiText-" + color} {...rest}>
       {children}
     </TextWrapper>
   );
@@ -49,14 +49,14 @@ Text.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   color: PropTypes.oneOf([
-    'primary',
-    'secondary',
-    'error',
-    'warning',
-    'success',
-    'info',
-    'black'
-  ])
+    "primary",
+    "secondary",
+    "error",
+    "warning",
+    "success",
+    "info",
+    "black",
+  ]),
 };
 
 export default Text;

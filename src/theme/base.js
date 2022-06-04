@@ -1,9 +1,9 @@
-import { MainTheme } from './schemes/MainTheme';
+import { MainTheme } from "./schemes/MainTheme";
 
 export function themeCreator(theme) {
   return themeMap[theme];
 }
 
 const themeMap = {
-  MainTheme
+  MainTheme,
 };

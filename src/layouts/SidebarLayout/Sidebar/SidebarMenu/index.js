@@ -1,9 +1,8 @@
-import { ListSubheader, List } from '@mui/material';
-import { useLocation, matchPath } from 'react-router-dom';
-import SidebarMenuItem from './item';
-import menuItems from './items';
-import { styled } from '@mui/material/styles';
-
+import { ListSubheader, List } from "@mui/material";
+import { useLocation, matchPath } from "react-router-dom";
+import SidebarMenuItem from "./item";
+import menuItems from "./items";
+import { styled } from "@mui/material/styles";
 
 const MenuWrapper = styled(List)(
   ({ theme }) => `
@@ -63,7 +62,7 @@ const SubMenuWrapper = styled(List)(
 
           .MuiButton-startIcon,
           .MuiButton-endIcon {
-            transition: ${theme.transitions.create(['color'])};
+            transition: ${theme.transitions.create(["color"])};
 
             .MuiSvgIcon-root {
               font-size: inherit;
@@ -125,32 +124,35 @@ const SubMenuWrapper = styled(List)(
 `
 );
 
-const renderSidebarMenuItems = ({
-  items,
-  path
-}) => (
+const renderSidebarMenuItems = ({ items, path }) => (
   <SubMenuWrapper>
     {items.reduce((ev, item) => reduceChildRoutes({ ev, item, path }), [])}
   </SubMenuWrapper>
 );
 
-const reduceChildRoutes = ({
-  ev,
-  path,
-  item
-}) => {
+const reduceChildRoutes = ({ ev, path, item }) => {
   const key = item.name;
 
-  const exactMatch = item.link ? !!matchPath({
-    path: item.link,
-    end: true
-  }, path) : false;
+  const exactMatch = item.link
+    ? !!matchPath(
+        {
+          path: item.link,
+          end: true,
+        },
+        path
+      )
+    : false;
 
   if (item.items) {
-    const partialMatch = item.link ? !!matchPath({
-      path: item.link,
-      end: false
-    }, path) : false;
+    const partialMatch = item.link
+      ? !!matchPath(
+          {
+            path: item.link,
+            end: false,
+          },
+          path
+        )
+      : false;
 
     ev.push(
       <SidebarMenuItem
@@ -161,7 +163,7 @@ const reduceChildRoutes = ({
       >
         {renderSidebarMenuItems({
           path,
-          items: item.items
+          items: item.items,
         })}
       </SidebarMenuItem>
     );
@@ -177,7 +179,7 @@ const reduceChildRoutes = ({
   }
 
   return ev;
-}
+};
 
 function SidebarMenu() {
   const location = useLocation();
@@ -189,12 +191,14 @@ function SidebarMenu() {
           key={section.heading}
           onClick={"this_is_a_string_on_purpose"}
           subheader={
-            <ListSubheader component="div" disableSticky>{section.heading}</ListSubheader>
+            <ListSubheader component="div" disableSticky>
+              {section.heading}
+            </ListSubheader>
           }
         >
           {renderSidebarMenuItems({
             items: section.items,
-            path: location.pathname
+            path: location.pathname,
           })}
         </MenuWrapper>
       ))}

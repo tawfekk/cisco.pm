@@ -12,9 +12,8 @@ import {
 import Modal from "@mui/material/Modal";
 import * as React from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
-import {syncup} from "src/handlers/Sync"
-import {syncdown} from "src/handlers/Sync"
-
+import { syncup } from "src/handlers/Sync";
+import { syncdown } from "src/handlers/Sync";
 
 const style = {
   position: "absolute",
@@ -27,8 +26,6 @@ const style = {
   p: 4,
 };
 
-
-
 function handleFormChange3() {
   sessionStorage.removeItem("sessionid");
   window.location.reload();
@@ -38,11 +35,12 @@ function handleFormChange4() {
   if (sessionStorage.t_sessionid) {
     localStorage.clear();
     sessionStorage.sessionid = sessionStorage.t_sessionid;
-    syncdown('router')
-    syncdown('vlan')
-    syncdown('switch')
-    setTimeout(() => { window.location.reload();}, 1000)
-
+    syncdown("router");
+    syncdown("vlan");
+    syncdown("switch");
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   }
 }
 
@@ -61,23 +59,22 @@ function HeaderButtons() {
   };
   const handleClose = () => setOpen(false);
 
-
   function handleFormChange(event) {
     if (!sessionStorage.getItem("sessionid")) {
       sessionStorage.sessionid = Math.floor(Math.random() * 90000) + 10000;
     }
-    syncup(JSON.parse(localStorage.getItem("router_data")), "router")
-    syncup(JSON.parse(localStorage.getItem("switch_data")), "switch")
-    handleClose()
+    syncup(JSON.parse(localStorage.getItem("router_data")), "router");
+    syncup(JSON.parse(localStorage.getItem("switch_data")), "switch");
+    handleClose();
   }
 
   function issessionshared() {
     if (!sessionStorage.sessionid) {
       return (
-                        <Tooltip arrow title="Du deler ikke din session med nogen">
-                        <Chip label="Session offline" variant="outlined" />
-                        </Tooltip>
-                      )
+        <Tooltip arrow title="Du deler ikke din session med nogen">
+          <Chip label="Session offline" variant="outlined" />
+        </Tooltip>
+      );
     } else {
       return (
         <Box component="span">
@@ -91,15 +88,15 @@ function HeaderButtons() {
             Stop session
           </Button>
           <Tooltip arrow title="Kopier til udklipsholder">
-          <Chip
-            label={sessionStorage.sessionid}
-            color="success"
-            onClick={() => {
-              navigator.clipboard.writeText(sessionStorage.sessionid);
-              handleClick();
-            }}
-            variant="contained"
-          />
+            <Chip
+              label={sessionStorage.sessionid}
+              color="success"
+              onClick={() => {
+                navigator.clipboard.writeText(sessionStorage.sessionid);
+                handleClick();
+              }}
+              variant="contained"
+            />
           </Tooltip>
           <Snackbar
             open={open2}
