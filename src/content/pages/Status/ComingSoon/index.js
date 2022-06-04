@@ -1,6 +1,5 @@
 import { Box, Typography, Container } from "@mui/material";
 import { Helmet } from "react-helmet-async";
-import Logo from "src/components/LogoSign";
 
 import { styled } from "@mui/material/styles";
 const MainContent = styled(Box)(
@@ -23,7 +22,6 @@ export function StatusComingSoon() {
       </Helmet>
       <MainContent>
         <Container maxWidth="md">
-          <Logo />
           <Box textAlign="center" mb={3}>
             <Container maxWidth="xs">
               <Typography variant="h1" sx={{ mt: 4, mb: 2 }}>

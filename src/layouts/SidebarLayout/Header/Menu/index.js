@@ -103,6 +103,9 @@ function HeaderMenu() {
         <MenuItem onClick={() => window.open("https://mads03.dk", '_blank')} sx={{ px: 3 }}>
           mads03.dk
         </MenuItem>
+        <MenuItem onClick={() => window.open("https://netacad.com/portal/saml_login", '_blank')} sx={{ px: 3 }}>
+          Netacademy
+        </MenuItem>
         <MenuItem sx={{ px: 3 }} component={NavLink} to="/status/coming-soon">
           Historik
         </MenuItem>

@@ -130,8 +130,9 @@ function Router() {
             disabledomainlookup: true,
             enablessh: true,
             cdp: true,
-            sshv2: false,
-            genereatersa: false,
+            sshv2: true,
+            genereatersa: true,
+            lldp: true,
             motd: "Må din dag være fyldt med Cisco",
             domæne: "network.internal",
             secret: "class",
@@ -453,7 +454,6 @@ function Router() {
                         <TextField
                           id="initial"
                           name="motd"
-                          InputLabelProps={{ shrink: true }}
                           label="MOTD"
                           value={form.motd}
                           placeholder="Authorized access only!"
@@ -886,7 +886,7 @@ function Router() {
           {formFields[tabid]["linterfaces"].map((form, index) => {
             return (
               <Card sx={{ width: "100%", mb: 3 }}>
-                <CardHeader title={"Loopback " + index} />
+                <CardHeader title={"Loopback "+ form.id} />
                 <Divider />
                 <CardContent>
                   <div key={index}>
@@ -903,6 +903,40 @@ function Router() {
                       >
                         <DeleteIcon color="secondary" />
                       </IconButton>
+                      <TextField
+                        name="id"
+                        id="linterfaces"
+                        error={!form.id || form.id != 0}
+                        label="Loopback ID"
+                        placeholder="1"
+                        onChange={(event) =>
+                          handleFormChange(event, index)
+                        }
+                        value={form.id}
+                      />
+                      <TextField
+                        name="ip"
+                        id="linterfaces"
+                        error={!form.ip}
+                        label="IP"
+                        helperText="må ikke være i 127.x.x.x"
+                        placeholder="192.168.99.1"
+                        onChange={(event) =>
+                          handleFormChange(event, index)
+                        }
+                        value={form.ip}
+                      />
+                      <TextField
+                        name="subnet"
+                        id="linterfaces"
+                        error={!form.subnet}
+                        label="Subnet"
+                        placeholder="255.255.255.255"
+                        onChange={(event) =>
+                          handleFormChange(event, index)
+                        }
+                        value={form.subnet}
+                      />
                     </Box>
                   </div>
                 </CardContent>
@@ -920,7 +954,7 @@ function Router() {
           </Button>
           <Button
             variant="contained"
-            sx={{ margin: 1 }}
+            sx={{ margin: 0.2 }}
             size="medium"
             color="primary"
             onClick={() => addFields("linterfaces")}
@@ -928,6 +962,7 @@ function Router() {
             Tilføj Loopback
           </Button>
           <Button
+            sx={{ margin: 1 }}
             variant="outlined"
             onClick={() => {
               handleOpen();
@@ -1200,7 +1235,7 @@ function Router() {
                       />
                       <TextField
                         required
-                        error={!form.area && form.area != 0}
+                        error={!form.area || form.area != 0}
                         name="area"
                         id="ospf"
                         label="Area"
