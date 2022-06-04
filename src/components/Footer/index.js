@@ -21,11 +21,12 @@ function Footer() {
         >
           <Box>
             <Typography variant="subtitle1">
-              &copy; 2022 - cisco.pm
+              © cisco.pm -
+              <Link href="mailto:cisco.pm" target="_blank" rel="noopener noreferrer"> info@cisco.pm</Link>
             </Typography>
           </Box>
           <Typography sx={{ pt: { xs: 2, md: 0 } }} variant="subtitle1">
-            <Link href="mailto:cisco.pm" target="_blank" rel="noopener noreferrer">info@cisco.pm</Link>
+            cisco.pm er <u>ikke</u> associeret med Cisco Systems, Inc.
           </Typography>
         </Box>
       </Container>

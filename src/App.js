@@ -16,11 +16,17 @@ sessionStorage.version = "pre-release";
 if (!localStorage.router_data) {
   localStorage.router_data = JSON.stringify([
     {
-      interfaces: [{ porte: [] }],
+      interfaces: [{ porte: [], subinterfaces: []}],
+      linterfaces: [],
       dhcp: [{ ip: "" }],
       initial: [
         {
           hostname: "R1",
+          motd: "Må din dag være fyldt med Cisco",
+          domæne: "network.internal",
+          secret: "class",
+          con0pass: "cisco",
+          vtypass: "cisco",
           clock: true,
           model: 4300,
           synchronuslogging: true,
@@ -34,7 +40,7 @@ if (!localStorage.router_data) {
         },
       ],
       staticroute: [{}],
-      ospf: [{ enabled: [], passive: []}],
+      ospf: [{ processid: Math.floor(Math.random() * (65535 - 1 + 1)) + 1, enabled: [], passive: [], area: 0}],
     },
   ]);
 }

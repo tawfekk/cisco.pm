@@ -8,12 +8,14 @@ import SyncIcon from "@mui/icons-material/Sync";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import Switch from "src/components/Switch";
-import { syncup } from "src/handlers/Sync";
-import { syncdown } from "src/handlers/Sync";
-import { Initial } from "src/handlers/ConfigGenerator/Router";
-import { Interfaces } from "src/handlers/ConfigGenerator/Router";
-import { DHCP } from "src/handlers/ConfigGenerator/Router";
-import { Staticroute } from "src/handlers/ConfigGenerator/Router";
+import { syncup, syncdown } from "src/handlers/Sync";
+import {
+  Initial,
+  DHCP,
+  OSPF,
+  Interfaces,
+  Staticroute,
+} from "src/handlers/ConfigGenerator/Router";
 import { StatusComingSoon } from "src/content/pages/Status/ComingSoon";
 import { RouterInterfaces } from "src/handlers/Interfaces";
 
@@ -114,7 +116,8 @@ function Router() {
       let workingtabindex = maxTabIndex + 2;
       let data = [...formFields];
       let object = {
-        interfaces: [{ porte: [] }],
+        interfaces: [{ porte: [], subinterfaces: [] }],
+        linterfaces: [],
         dhcp: [{ ip: "" }],
         initial: [
           {
@@ -129,10 +132,22 @@ function Router() {
             cdp: true,
             sshv2: false,
             genereatersa: false,
+            motd: "Må din dag være fyldt med Cisco",
+            domæne: "network.internal",
+            secret: "class",
+            con0pass: "cisco",
+            vtypass: "cisco",
           },
         ],
         staticroute: [{}],
-        ospf: [{ enabled: [], passive: []}],
+        ospf: [
+          {
+            processid: Math.floor(Math.random() * (65535 - 1 + 1)) + 1,
+            enabled: [],
+            passive: [],
+            area: 0,
+          },
+        ],
       };
       data.push(object);
       setformFields(data);
@@ -245,10 +260,35 @@ function Router() {
       hostname: "",
       enabled: [],
       passive: [],
+      subinterfaces: [],
+      processid: Math.floor(Math.random() * (65535 - 1 + 1)) + 1,
+      area: 0,
     };
     data[sessionStorage.router_tabid][id].push(object);
     //workingarray = formFields[tabid]
     setformFields(data);
+  };
+
+  const addNestedFields = (nest, index, id) => {
+    let data = [...formFields];
+    let object = {
+      porte: [],
+      dhcp: [],
+      hostname: "",
+      enabled: [],
+      passive: [],
+    };
+    data[sessionStorage.router_tabid][nest][index][id].push(object);
+    //workingarray = formFields[tabid]
+    setformFields(data);
+  };
+
+  const removeNestedFields = (nest, nestindex, id, index) => {
+    let data = [...formFields];
+    data[sessionStorage.router_tabid][nest][nestindex][id].splice(index, 1);
+    setformFields(data);
+    localStorage.router_data = JSON.stringify(data);
+    syncup(formFields, "router");
   };
 
   const removeFields = (id, index) => {
@@ -372,23 +412,21 @@ function Router() {
         >
           <Tab label="Generel     " />
           <Tab label="Interfaces" />
-          <Tab label="Subinterfaces" />
           <Tab label="DHCP" />
           <Tab label="Static route" />
           <Tab label="FHRP" />
           <Tab label="OSPF" />
           <Tab label="ACL" />
-          <Tab label="Noter" />
+          <Tab label="Samlet config" />
         </Tabs>
         <TabPanel value={value} index={0}>
           <Card>
-            <CardHeader title="Basale router indstillinger" />
-            <Divider />
             <CardContent>
               <Box
                 component="form"
                 sx={{
                   "& .MuiTextField-root": { m: 1, width: "25ch" },
+                  mt: 1,
                 }}
                 noValidate
                 autoComplete="off"
@@ -684,16 +722,17 @@ function Router() {
           </Card>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <Card sx={{ width: "100%" }}>
-            <CardHeader title="Interfaces" />
-            <Divider />
-            <CardContent>
-              {formFields[tabid]["interfaces"].map((form, index) => {
-                return (
+          {formFields[tabid]["interfaces"].map((form, index) => {
+            return (
+              <Card sx={{ width: "100%", mb: 3 }}>
+                <CardHeader title={"Interface " + index} />
+                <Divider />
+                <CardContent>
                   <div key={index}>
                     <Box // sx={{ width: '100%' }}
                       sx={{
                         "& .MuiTextField-root": { m: 1, width: "25ch" },
+                        mt: 1,
                       }}
                       autoComplete="off"
                     >
@@ -705,6 +744,7 @@ function Router() {
                       </IconButton>
                       <TextField
                         name="ip"
+                        error={form.subnet && !form.ip}
                         label="IP"
                         id="interfaces"
                         placeholder="192.168.1.1"
@@ -714,6 +754,7 @@ function Router() {
                       <TextField
                         name="subnet"
                         id="interfaces"
+                        error={form.ip && !form.subnet}
                         label="Subnet"
                         placeholder="255.255.255.0"
                         onChange={(event) => handleFormChange(event, index)}
@@ -755,49 +796,161 @@ function Router() {
                         }
                         label="Shutdown"
                       />
-
-                      <Divider sx={{ mt: 2, mb: 2 }} />
+                      {formFields[tabid]["interfaces"][index][
+                        "subinterfaces"
+                      ].map((form2, index2) => {
+                        return (
+                          <Card
+                            sx={{
+                              border: 2,
+                              borderColor: "#9EA4C1",
+                              borderRadius: "12px",
+                              ml: "12.5%",
+                              width: "75%",
+                              mb: 2,
+                              mt: 2,
+                            }}
+                          >
+                            <CardContent>
+                              <div key={index}>
+                                <IconButton
+                                  sx={{ float: "right", mt: 1 }}
+                                  onClick={() =>
+                                    removeNestedFields(
+                                      "interfaces",
+                                      index,
+                                      "subinterfaces",
+                                      index2
+                                    )
+                                  }
+                                >
+                                  <DeleteIcon color="secondary" />
+                                </IconButton>
+                                <TextField
+                                  name="subnet"
+                                  id="interfaces"
+                                  size="small"
+                                  error={form.ip && !form.subnet}
+                                  label="Subinterface ID"
+                                  placeholder="255.255.255.0"
+                                  onChange={(event) =>
+                                    handleFormChange(event, index2)
+                                  }
+                                  value={form.subnet}
+                                />
+                                <TextField
+                                  name="subnet"
+                                  id="interfaces"
+                                  size="small"
+                                  error={form.ip && !form.subnet}
+                                  label="IP"
+                                  placeholder="255.255.255.0"
+                                  onChange={(event) =>
+                                    handleFormChange(event, index2)
+                                  }
+                                  value={form.subnet}
+                                />
+                                <TextField
+                                  name="subnet"
+                                  id="interfaces"
+                                  size="small"
+                                  error={form.ip && !form.subnet}
+                                  label="Subnet"
+                                  placeholder="255.255.255.0"
+                                  onChange={(event) =>
+                                    handleFormChange(event, index2)
+                                  }
+                                  value={form.subnet}
+                                />
+                              </div>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
+                      <Divider sx={{ m: 2.5 }} />
+                      <Button
+                        size="small"
+                        color="primary"
+                        onClick={() =>
+                          addNestedFields("interfaces", index, "subinterfaces")
+                        }
+                      >
+                        Tilføj sub-interface
+                      </Button>
                     </Box>
                   </div>
-                );
-              })}
-              <Button
-                variant="contained"
-                sx={{ margin: 1 }}
-                size="medium"
-                color="primary"
-                onClick={() => addFields("interfaces")}
-              >
-                Tilføj interface
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  handleOpen();
-                }}
-              >
-                Vis config
-              </Button>
-              <Modal open={open} onClose={handleClose}>
-                {ModalContent(Interfaces, "interfaces")}
-              </Modal>
-            </CardContent>
-          </Card>
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          {StatusComingSoon()}
-        </TabPanel>
-        <TabPanel value={value} index={3}>
-          <Card sx={{ width: "100%" }}>
-            <CardHeader title="DHCP" />
-            <Divider />
-            <CardContent>
-              {formFields[tabid]["dhcp"].map((form, index) => {
-                return (
+                </CardContent>
+              </Card>
+            );
+          })}
+          {formFields[tabid]["linterfaces"].map((form, index) => {
+            return (
+              <Card sx={{ width: "100%", mb: 3 }}>
+                <CardHeader title={"Loopback " + index} />
+                <Divider />
+                <CardContent>
                   <div key={index}>
                     <Box // sx={{ width: '100%' }}
                       sx={{
                         "& .MuiTextField-root": { m: 1, width: "25ch" },
+                        mt: 1,
+                      }}
+                      autoComplete="off"
+                    >
+                      <IconButton
+                        sx={{ float: "right", mt: 1.5 }}
+                        onClick={() => removeFields("linterfaces", index)}
+                      >
+                        <DeleteIcon color="secondary" />
+                      </IconButton>
+                    </Box>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+          <Button
+            variant="contained"
+            sx={{ margin: 1 }}
+            size="medium"
+            color="primary"
+            onClick={() => addFields("interfaces")}
+          >
+            Tilføj interface
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ margin: 1 }}
+            size="medium"
+            color="primary"
+            onClick={() => addFields("linterfaces")}
+          >
+            Tilføj Loopback
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              handleOpen();
+            }}
+          >
+            Vis config
+          </Button>
+          <Modal open={open} onClose={handleClose}>
+            {ModalContent(Interfaces, "interfaces")}
+          </Modal>
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          {formFields[tabid]["dhcp"].map((form, index) => {
+            return (
+              <Card sx={{ width: "100%", mb: 3 }}>
+                <CardHeader title={"Pool " + index} />
+                <Divider />
+                <CardContent>
+                  <div key={index}>
+                    <Box // sx={{ width: '100%' }}
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                        mt: 1,
                       }}
                       autoComplete="off"
                     >
@@ -810,6 +963,7 @@ function Router() {
                       <TextField
                         name="navn"
                         id="dhcp"
+                        error={!form.navn}
                         label="Pool navn"
                         placeholder="pool1"
                         onChange={(event) => handleFormChange(event, index)}
@@ -818,6 +972,7 @@ function Router() {
                       <TextField
                         name="ip"
                         id="dhcp"
+                        error={!form.ip}
                         label="Netværk"
                         placeholder="192.168.1.0"
                         onChange={(event) => handleFormChange(event, index)}
@@ -826,6 +981,7 @@ function Router() {
                       <TextField
                         name="subnet"
                         id="dhcp"
+                        error={!form.subnet}
                         label="Subnet"
                         placeholder="255.255.255.0"
                         onChange={(event) => handleFormChange(event, index)}
@@ -834,6 +990,7 @@ function Router() {
                       <TextField
                         name="gateway"
                         label="Gateway"
+                        error={!form.gateway}
                         id="dhcp"
                         placeholder="192.168.1.1"
                         onChange={(event) => handleFormChange(event, index)}
@@ -855,44 +1012,162 @@ function Router() {
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.DNS}
                       />
-                      <Divider sx={{ mt: 2, mb: 2 }} />
                     </Box>
                   </div>
-                );
-              })}
-              <Button
-                variant="contained"
-                sx={{ margin: 1 }}
-                size="medium"
-                color="primary"
-                onClick={() => addFields("dhcp")}
-              >
-                Tilføj pool
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  handleOpen();
-                }}
-              >
-                Vis config
-              </Button>
-              <Modal open={open} onClose={handleClose}>
-                {ModalContent(DHCP, "dhcp")}
-              </Modal>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
+            );
+          })}
+          <Button
+            variant="contained"
+            sx={{ margin: 1 }}
+            size="medium"
+            color="primary"
+            onClick={() => addFields("dhcp")}
+          >
+            Tilføj pool
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              handleOpen();
+            }}
+          >
+            Vis config
+          </Button>
+          <Modal open={open} onClose={handleClose}>
+            {ModalContent(DHCP, "dhcp")}
+          </Modal>
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+          {formFields[tabid]["staticroute"].map((form, index) => {
+            return (
+              <Card sx={{ width: "100%", mb: 3 }}>
+                <CardHeader title={"Rute " + index} />
+                <Divider />
+                <CardContent>
+                  <div key={index}>
+                    <Box
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                      }}
+                      autoComplete="off"
+                    >
+                      <IconButton
+                        sx={{ float: "right", mt: 1.5 }}
+                        onClick={() => removeFields("staticroute", index)}
+                      >
+                        <DeleteIcon color="secondary" />
+                      </IconButton>
+                      <TextField
+                        name="destinationip"
+                        id="staticroute"
+                        error={!form.destinationip}
+                        label="Destination IP"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.destinationip}
+                      />
+                      <TextField
+                        name="destinationsubnet"
+                        id="staticroute"
+                        error={!form.destinationsubnet}
+                        label="Destination subnet"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.destinationsubnet}
+                      />
+                      <TextField
+                        name="nexthopip"
+                        id="staticroute"
+                        label="Next-hop IP"
+                        onChange={(event) => {
+                          handleFormChange(event, index);
+                          form.nexthopinterface = [];
+                        }}
+                        value={form.nexthopip}
+                      />
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                        <InputLabel>Next-hop Interface</InputLabel>
+                        <Select
+                          name="staticroute.nexthopinterface"
+                          value={form.nexthopinterface}
+                          onChange={(event) => {
+                            handleFormChange(event, index);
+                            form.nexthopip = "";
+                          }}
+                          input={<OutlinedInput label="Next-hop Interface" />}
+                        >
+                          {RouterInterfaces(
+                            formFields[tabid]["initial"][0]["model"]
+                          ).map((name) => (
+                            <MenuItem key={name} value={name}>
+                              {name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <TextField
+                        name="distance"
+                        label="Distance"
+                        id="staticroute"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.distance}
+                      />
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        control={
+                          <Checkbox
+                            color="warning"
+                            name="permanent"
+                            id="staticroute"
+                            checked={form.permanent}
+                            onChange={(event) => {
+                              handleFormChange(event, index);
+                              handleClick(
+                                "warning",
+                                "Permanent ruter er typisk en dårlig ide, slå kun til hvis du ved hvad du laver"
+                              );
+                            }}
+                          />
+                        }
+                        label="Permanent"
+                      />
+                    </Box>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+          <Button
+            variant="contained"
+            sx={{ margin: 1 }}
+            size="medium"
+            color="primary"
+            onClick={() => addFields("staticroute")}
+          >
+            Tilføj statisk rute
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              handleOpen();
+            }}
+          >
+            Vis config
+          </Button>
+          <Modal open={open} onClose={handleClose}>
+            {ModalContent(Staticroute, "staticroute")}
+          </Modal>
         </TabPanel>
         <TabPanel value={value} index={4}>
           {StatusComingSoon()}
         </TabPanel>
-        <TabPanel value={value} index={6}>
-          <Card sx={{ width: "100%" }}>
-            <CardHeader title="OSPF" />
-            <Divider />
-            <CardContent>
-              {formFields[tabid]["ospf"].map((form, index) => {
-                return (
+        <TabPanel value={value} index={5}>
+          {formFields[tabid]["ospf"].map((form, index) => {
+            return (
+              <Card sx={{ width: "100%", mb: 3 }}>
+                <CardHeader title={"Process " + form.processid} />
+                <Divider />
+                <CardContent>
                   <div key={index}>
                     <Box // sx={{ width: '100%' }}
                       sx={{
@@ -909,6 +1184,8 @@ function Router() {
                       <TextField
                         name="processid"
                         id="ospf"
+                        required
+                        error={!form.processid}
                         label="Process ID"
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.processid}
@@ -916,11 +1193,14 @@ function Router() {
                       <TextField
                         name="override"
                         id="ospf"
+                        placeholder="1.1.1.1"
                         label="Router ID override"
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.override}
                       />
                       <TextField
+                        required
+                        error={!form.area && form.area != 0}
                         name="area"
                         id="ospf"
                         label="Area"
@@ -968,38 +1248,37 @@ function Router() {
                         }
                         label="Advertise default route"
                       />
-                      <Divider sx={{ mt: 2, mb: 2 }} />
                     </Box>
                   </div>
-                );
-              })}
-              <Button
-                variant="contained"
-                sx={{ margin: 1 }}
-                size="medium"
-                color="primary"
-                onClick={() => addFields("ospf")}
-              >
-                Tilføj OSPF process
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  handleOpen();
-                }}
-              >
-                Vis config
-              </Button>
-              <Modal open={open} onClose={handleClose}>
-                {ModalContent(Staticroute, "ospf")}
-              </Modal>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
+            );
+          })}
+          <Button
+            variant="contained"
+            sx={{ margin: 1 }}
+            size="medium"
+            color="primary"
+            onClick={() => addFields("ospf")}
+          >
+            Tilføj OSPF process
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              handleOpen();
+            }}
+          >
+            Vis config
+          </Button>
+          <Modal open={open} onClose={handleClose}>
+            {ModalContent(OSPF, "ospf")}
+          </Modal>
         </TabPanel>
-        <TabPanel value={value} index={7}>
+        <TabPanel value={value} index={6}>
           {StatusComingSoon()}
         </TabPanel>
-        <TabPanel value={value} index={8}>
+        <TabPanel value={value} index={7}>
           <Card sx={{ width: "100%" }}>
             <CardHeader title="Noter" />
             <Divider />
@@ -1009,60 +1288,66 @@ function Router() {
       </div>
     );
   }
-
-  return (
-    <>
-      <Helmet>
-        <title>Router</title>
-      </Helmet>
-      <PageTitleWrapper>
-        <PageTitle
-          sx={{ mb: -2 }}
-          heading="Router"
-          //subHeading="Rouer konfiguration."
-        />
-      </PageTitleWrapper>
-      <Container maxWidth="lg">
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="stretch"
-          spacing={3}
-        >
-          <Grid item xs={12}>
-            <Box sx={{ mr: 6, float: "right" }}>
-              <Button
-                onClick={() => {
-                  run();
-                }}
-                startIcon={<SyncIcon />}
-                variant="outlined"
-              >
-                Synk
-              </Button>
-            </Box>
-            <Box sx={{ width: "100%" }}>
-              <Tabs
-                value={tabid}
-                onChange={handleTabChange}
-                variant="scrollable"
-                scrollButtons="auto"
-                sx={{ mb: 3 }}
-              >
-                <Tab label={tablabel(0)} />
-                {tabs.map((child) => child)}
-                <Tab icon={<AddIcon />} value="tabProperties" />
-              </Tabs>
-              <Divider />
-              <TabPanel tabid={tabid}>{Content()}</TabPanel>
-            </Box>
+  try {
+    return (
+      <>
+        <Helmet>
+          <title>Router</title>
+        </Helmet>
+        <PageTitleWrapper>
+          <PageTitle
+            sx={{ mb: -2 }}
+            heading="Router"
+            //subHeading="Rouer konfiguration."
+          />
+        </PageTitleWrapper>
+        <Container maxWidth="lg">
+          <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            alignItems="stretch"
+            spacing={3}
+          >
+            <Grid item xs={12}>
+              <Box sx={{ mr: 6, float: "right" }}>
+                <Button
+                  onClick={() => {
+                    run();
+                  }}
+                  startIcon={<SyncIcon />}
+                  variant="outlined"
+                >
+                  Synk
+                </Button>
+              </Box>
+              <Box sx={{ width: "100%" }}>
+                <Tabs
+                  value={tabid}
+                  onChange={handleTabChange}
+                  variant="scrollable"
+                  scrollButtons="auto"
+                  sx={{ mb: 3 }}
+                >
+                  <Tab label={tablabel(0)} />
+                  {tabs.map((child) => child)}
+                  <Tab icon={<AddIcon />} value="tabProperties" />
+                </Tabs>
+                <Divider />
+                <TabPanel tabid={tabid}>{Content()}</TabPanel>
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
-      </Container>
-      <Footer />
-    </>
-  );
+        </Container>
+        <Footer />
+      </>
+    );
+  } catch (e) {
+    console.log(e)
+    //if (localStorage.router_data){
+    //localStorage.setItem("router_data", 0);
+    //window.location.reload()}
+  }
 }
 
 export default Router;
