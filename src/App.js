@@ -16,7 +16,7 @@ sessionStorage.version = "pre-release";
 if (!localStorage.router_data) {
   localStorage.router_data = JSON.stringify([
     {
-      interfaces: [{ porte: [], subinterfaces: [] }],
+      interfaces: [{ subinterfaces: [] }],
       linterfaces: [],
       dhcp: [{ ip: "" }],
       initial: [
@@ -89,6 +89,7 @@ if (!localStorage.vlan_data) {
     },
   ]);
 }
+
 
 const App = () => {
   const content = useRoutes(routes);

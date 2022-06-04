@@ -116,7 +116,7 @@ function Router() {
       let workingtabindex = maxTabIndex + 2;
       let data = [...formFields];
       let object = {
-        interfaces: [{ porte: [], subinterfaces: [] }],
+        interfaces: [{ subinterfaces: [] }],
         linterfaces: [],
         dhcp: [{ ip: "" }],
         initial: [
@@ -253,10 +253,33 @@ function Router() {
     syncup(data, "router");
   };
 
+  const handleNestedFormChange = (nest, nestindex, event, index) => {
+    let data = [...formFields];
+    //if (data[0][event.target.id][index] == undefined) {data[0][event.target.id] = {}}
+    if (event.target.type == "checkbox") {
+      data[sessionStorage.router_tabid][nest][nestindex][event.target.id][
+        index
+      ][event.target.name] = event.target.checked;
+    } else if (event.target.type == "text") {
+      data[sessionStorage.router_tabid][nest][nestindex][event.target.id][
+        index
+      ][event.target.name] = event.target.value;
+    } //(Array.isArray(event.target.value))
+    else {
+      var parsed = event.target.name.split("."),
+        id = parsed[0],
+        name = parsed[1];
+      data[sessionStorage.router_tabid][nest][nestindex][id][index][name] =
+        event.target.value;
+    }
+    setformFields(data);
+    localStorage.router_data = JSON.stringify(data);
+    syncup(data, "router");
+  };
+
   const addFields = (id) => {
     let data = [...formFields];
     let object = {
-      porte: [],
       dhcp: [],
       hostname: "",
       enabled: [],
@@ -273,7 +296,6 @@ function Router() {
   const addNestedFields = (nest, index, id) => {
     let data = [...formFields];
     let object = {
-      porte: [],
       dhcp: [],
       hostname: "",
       enabled: [],
@@ -418,6 +440,7 @@ function Router() {
           <Tab label="FHRP" />
           <Tab label="OSPF" />
           <Tab label="ACL" />
+          <Tab label="NAT" />
           <Tab label="Samlet config" />
         </Tabs>
         <TabPanel value={value} index={0}>
@@ -769,13 +792,12 @@ function Router() {
                         value={form.description}
                       />
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
-                        <InputLabel id="interfaces">Porte</InputLabel>
+                        <InputLabel id="interfaces">Port</InputLabel>
                         <Select
                           required
-                          error={!form.porte.length}
+                          error={!form.porte}
                           name="interfaces.porte"
-                          multiple
-                          value={form.porte}
+                          value={form.port}
                           onChange={(event) => handleFormChange(event, index)}
                           input={<OutlinedInput label="Name" />}
                           MenuProps={MenuProps}
@@ -805,10 +827,9 @@ function Router() {
                               border: 2,
                               borderColor: "#9EA4C1",
                               borderRadius: "12px",
-                              ml: "12.5%",
-                              width: "75%",
-                              mb: 2,
-                              mt: 2,
+                              width: "100%",
+                              mb: 3,
+                              mt: 3,
                             }}
                           >
                             <CardContent>
@@ -827,40 +848,84 @@ function Router() {
                                   <DeleteIcon color="secondary" />
                                 </IconButton>
                                 <TextField
-                                  name="subnet"
-                                  id="interfaces"
+                                  name="id"
+                                  error={!form2.id}
+                                  id="subinterfaces"
                                   size="small"
-                                  error={form.ip && !form.subnet}
                                   label="Subinterface ID"
-                                  placeholder="255.255.255.0"
+                                  placeholder="1"
                                   onChange={(event) =>
-                                    handleFormChange(event, index2)
+                                    handleNestedFormChange(
+                                      "interfaces",
+                                      index,
+                                      event,
+                                      index2
+                                    )
                                   }
-                                  value={form.subnet}
+                                  value={form2.id}
                                 />
+                                <FormControl
+                                  sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}
+                                >
+                                  <InputLabel size="small" id="interfaces">
+                                    VLAN
+                                  </InputLabel>
+                                  <Select
+                                    name="subinterfaces.vlan"
+                                    value={form2.vlan}
+                                    size="small"
+                                    onChange={(event) =>
+                                      handleNestedFormChange(
+                                        "interfaces",
+                                        index,
+                                        event,
+                                        index2
+                                      )
+                                    }
+                                    input={<OutlinedInput label="VLAN" />}
+                                    MenuProps={MenuProps}
+                                  >
+                                    {JSON.parse(localStorage.vlan_data).map(({id}) => id).map((id) => (
+                                      <MenuItem
+                                        key={id}
+                                        value={id}
+                                      >
+                                        {id}
+                                      </MenuItem>
+                                    ))}
+                                  </Select>
+                                </FormControl>
                                 <TextField
-                                  name="subnet"
-                                  id="interfaces"
+                                  name="ip"
+                                  id="subinterfaces"
                                   size="small"
-                                  error={form.ip && !form.subnet}
                                   label="IP"
-                                  placeholder="255.255.255.0"
+                                  placeholder="192.168.x.1"
                                   onChange={(event) =>
-                                    handleFormChange(event, index2)
+                                    handleNestedFormChange(
+                                      "interfaces",
+                                      index,
+                                      event,
+                                      index2
+                                    )
                                   }
-                                  value={form.subnet}
+                                  value={form2.ip}
                                 />
                                 <TextField
                                   name="subnet"
-                                  id="interfaces"
+                                  id="subinterfaces"
                                   size="small"
-                                  error={form.ip && !form.subnet}
                                   label="Subnet"
                                   placeholder="255.255.255.0"
                                   onChange={(event) =>
-                                    handleFormChange(event, index2)
+                                    handleNestedFormChange(
+                                      "interfaces",
+                                      index,
+                                      event,
+                                      index2
+                                    )
                                   }
-                                  value={form.subnet}
+                                  value={form2.subnet}
                                 />
                               </div>
                             </CardContent>
@@ -1229,7 +1294,7 @@ function Router() {
                       />
                       <TextField
                         required
-                        error={!form.area || form.area != 0}
+                        error={form.area === undefined || form.area === ""}
                         name="area"
                         id="ospf"
                         label="Area"
@@ -1308,6 +1373,9 @@ function Router() {
           {StatusComingSoon()}
         </TabPanel>
         <TabPanel value={value} index={7}>
+          {StatusComingSoon()}
+        </TabPanel>
+        <TabPanel value={value} index={8}>
           <Card sx={{ width: "100%" }}>
             <CardHeader title="Noter" />
             <Divider />
