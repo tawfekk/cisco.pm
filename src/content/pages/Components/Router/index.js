@@ -17,6 +17,7 @@ import {
   Staticroute,
 } from "src/handlers/ConfigGenerator/Router";
 import { StatusComingSoon } from "src/content/pages/Status/ComingSoon";
+import { StatusError } from "src/content/pages/Status/Error";
 import { RouterInterfaces } from "src/handlers/Interfaces";
 
 import {
@@ -92,6 +93,7 @@ if (
 }
 
 var p = 0;
+let newtabs = false;
 
 function Router() {
   function tablabel(maxTabIndex) {
@@ -166,7 +168,10 @@ function Router() {
 
   function onreloadtab() {
     let tabdata = [...tabs];
-    if (JSON.parse(localStorage.router_data).length != 1) {
+    if (
+      JSON.parse(localStorage.router_data).length != 1 &&
+      JSON.parse(localStorage.router_data).length != tabdata.length + 1
+    ) {
       while (
         JSON.parse(localStorage.router_data).length !=
         tabdata.length + 1
@@ -175,6 +180,9 @@ function Router() {
         tabdata.push(<Tab label={tablabel(maxTabIndex)} key={maxTabIndex} />);
       }
       setAddTab(tabdata);
+      newtabs = true;
+    } else {
+      newtabs = false;
     }
   }
 
@@ -196,6 +204,9 @@ function Router() {
   async function run() {
     await sleep(350);
     onreloadtab();
+    if (newtabs) {
+      window.location.reload();
+    }
     setValue(value);
   }
 
@@ -795,8 +806,8 @@ function Router() {
                         <InputLabel id="interfaces">Port</InputLabel>
                         <Select
                           required
-                          error={!form.porte}
-                          name="interfaces.porte"
+                          error={!form.port}
+                          name="interfaces.port"
                           value={form.port}
                           onChange={(event) => handleFormChange(event, index)}
                           input={<OutlinedInput label="Name" />}
@@ -885,14 +896,13 @@ function Router() {
                                     input={<OutlinedInput label="VLAN" />}
                                     MenuProps={MenuProps}
                                   >
-                                    {JSON.parse(localStorage.vlan_data).map(({id}) => id).map((id) => (
-                                      <MenuItem
-                                        key={id}
-                                        value={id}
-                                      >
-                                        {id}
-                                      </MenuItem>
-                                    ))}
+                                    {JSON.parse(localStorage.vlan_data)
+                                      .map(({ id }) => id)
+                                      .map((id) => (
+                                        <MenuItem key={id} value={id}>
+                                          {id}
+                                        </MenuItem>
+                                      ))}
                                   </Select>
                                 </FormControl>
                                 <TextField
@@ -1018,7 +1028,7 @@ function Router() {
             color="primary"
             onClick={() => addFields("linterfaces")}
           >
-            Tilføj Loopback
+            Tilføj loopback
           </Button>
           <Button
             sx={{ margin: 1 }}
@@ -1440,10 +1450,7 @@ function Router() {
       </>
     );
   } catch (e) {
-    console.log(e);
-    //if (localStorage.router_data){
-    //localStorage.setItem("router_data", 0);
-    //window.location.reload()}
+    return StatusError("router");
   }
 }
 

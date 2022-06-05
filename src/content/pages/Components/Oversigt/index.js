@@ -28,6 +28,7 @@ import DangerousRoundedIcon from "@mui/icons-material/DangerousRounded";
 import { syncup } from "src/handlers/Sync";
 import { Runner } from "src/handlers/ConfigGenerator/Router";
 import { Runner2 } from "src/handlers/ConfigGenerator/Switch";
+import { StatusError } from "src/content/pages/Status/Error";
 
 function returner(type) {
   if (type == "router") {
@@ -129,6 +130,7 @@ function Oversigt() {
     } else {
       var data = [...formFields3];
     }
+
     return (
       <>
         <Divider sx={{ mb: -2 }} />
@@ -254,7 +256,7 @@ function Oversigt() {
   const handleClose2 = () => setOpen2(false);
   const vertical = "top";
   const horizontal = "center";
-
+  try{
   return (
     <>
       <Helmet>
@@ -332,7 +334,7 @@ function Oversigt() {
       </Container>
       <Footer />
     </>
-  );
+  );}catch(e){return (StatusError(""))}
 }
 
 export default Oversigt;

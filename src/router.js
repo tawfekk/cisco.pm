@@ -35,6 +35,9 @@ const Status404 = Loader(
 const StatusComingSoon = Loader(
   lazy(() => import("src/content/pages/Status/ComingSoon"))
 );
+const StatusReportError = Loader(
+  lazy(() => import("src/content/pages/Status/ReportError"))
+);
 
 const routes = [
   {
@@ -63,6 +66,10 @@ const routes = [
           {
             path: "coming-soon",
             element: <StatusComingSoon />,
+          },
+          {
+            path: "report-error",
+            element: <StatusReportError />,
           },
         ],
       },

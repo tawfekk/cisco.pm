@@ -119,6 +119,9 @@ function HeaderMenu() {
         <MenuItem sx={{ px: 3 }} component={NavLink} to="/status/coming-soon">
           Dokumentation
         </MenuItem>
+        <MenuItem sx={{ px: 3 }} component={NavLink} to="/status/report-error">
+          Fejlrapporting
+        </MenuItem>
       </Menu>
     </>
   );

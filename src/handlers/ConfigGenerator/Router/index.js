@@ -90,8 +90,8 @@ export function Interfaces(index) {
     for (const element of JSON.parse(localStorage.router_data)[index][
       "interfaces"
     ]) {
-      if (element.porte.length) {
-        workingvar += "\ninterface range " + element.porte.toString();
+      if (element.port) {
+        workingvar += "\n\ninterface " + element.port;
         if (element.ip && element.subnet) {
           workingvar += "\nip address " + element.ip + " " + element.subnet;
         }
@@ -102,6 +102,23 @@ export function Interfaces(index) {
           workingvar += "\nshutdown";
         } else {
           workingvar += "\nno shutdown";
+        }
+        workingvar += "\nexit";
+      }
+      var elememt = element;
+      for (const elem of elememt["subinterfaces"]) {
+        workingvar +=
+          "\n\ninterface " +
+          element.port +
+          "." +
+          elem.id +
+          "\ndescription subinterface for " +
+          JSON.parse(localStorage.vlan_data).find((x) => x.id == elem.vlan)
+            .navn +
+          "\nencapsulation dot1Q " +
+          elem.vlan;
+        if (elem.ip && elem.subnet) {
+          workingvar += "\nip address " + elem.ip + " " + elem.subnet;
         }
         workingvar += "\nexit";
       }

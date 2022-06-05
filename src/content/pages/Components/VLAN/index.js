@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet-async";
-
+import { StatusError } from "src/content/pages/Status/Error";
 import PageTitle from "src/components/PageTitle";
 import PageTitleWrapper from "src/components/PageTitleWrapper";
 import {
@@ -91,7 +91,7 @@ function VLAN() {
       console.log(e);
     }
   }
-
+  try{
   return (
     <>
       <Container maxWidth="md">
@@ -102,8 +102,7 @@ function VLAN() {
           <PageTitle sx={{ mb: -1 }} heading="VLAN" />
         </PageTitleWrapper>
         <Card>
-          <CardHeader title="VLAN" />
-          <Divider />
+
           <CardContent>
             {formFields.map((form, index) => {
               return (
@@ -163,7 +162,7 @@ function VLAN() {
       </Container>
       <Footer />
     </>
-  );
+  );}catch(e){StatusError("vlan")}
 }
 
 export default VLAN;
