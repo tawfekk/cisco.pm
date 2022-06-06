@@ -55,7 +55,7 @@ const colors = {
       background: themeColors.primaryAlt,
       textColor: themeColors.secondary,
       //dividerBg: '#272C48',
-      dividerBg: "#FFC13D",
+      dividerBg: "#8C7CF0",
       menuItemColor: "#9EA4C1",
       menuItemColorActive: "#ffffff",
       menuItemBg: "transparent",

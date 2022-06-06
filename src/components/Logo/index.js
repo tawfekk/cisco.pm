@@ -17,15 +17,12 @@ const LogoSignWrapper = styled(Box)(
   () => `
         width: 52px;
         height: 38px;
-        margin-top: 4px;
-        transform: scale(.4);
+        transform:scale(0.7)
 `
 );
 
 const LogoSign = styled(Box)(
   ({ theme }) => `
-    width: ${theme.spacing(48)};
-    height: ${theme.spacing(21)};
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -37,6 +34,10 @@ const LogoSign = styled(Box)(
       height: 100%;
       display: block;
     }
+    background: #8C7CF0;
+    width: 215px;
+    height: 60px;
+
 `
 );
 
@@ -71,13 +72,12 @@ export function Logo() {
   return (
     <LogoWrapper to="/components/oversigt">
       <LogoSignWrapper>
-        <LogoSign sx={{ mt: 5.7, ml: -7 }}>
+        <LogoSign sx={{ mt: 6 }}>
           <img src="/static/images/logo/main.svg" />
         </LogoSign>
       </LogoSignWrapper>
-      <LogoTextWrapper sx={{ ml: 10, mt: 6 }}>
+      <LogoTextWrapper sx={{ ml: 14, mt: 5.7 }}>
         <VersionBadge>{sessionStorage.version}</VersionBadge>
-        <LogoText>cisco.pm</LogoText>
       </LogoTextWrapper>
     </LogoWrapper>
   );

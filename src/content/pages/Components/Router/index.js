@@ -12,6 +12,7 @@ import { syncup, syncdown } from "src/handlers/Sync";
 import {
   Initial,
   DHCP,
+  NAT,
   OSPF,
   Interfaces,
   Staticroute,
@@ -35,6 +36,7 @@ import {
   CardContent,
   Divider,
   Tabs,
+  Tooltip,
   Tab,
   Typography,
   Box,
@@ -119,6 +121,9 @@ function Router() {
       let data = [...formFields];
       let object = {
         interfaces: [{ subinterfaces: [] }],
+        dynamicnatport: [],
+        dynamicnat: [],
+        staticnat: [],
         linterfaces: [],
         dhcp: [{ ip: "" }],
         initial: [
@@ -295,12 +300,15 @@ function Router() {
       hostname: "",
       enabled: [],
       passive: [],
+      overload: "true",
+      externalinterface: [],
+      internalinterface: [],
       subinterfaces: [],
       processid: Math.floor(Math.random() * (65535 - 1 + 1)) + 1,
       area: 0,
+      index: data[sessionStorage.router_tabid][id].length
     };
     data[sessionStorage.router_tabid][id].push(object);
-    //workingarray = formFields[tabid]
     setformFields(data);
   };
 
@@ -1383,7 +1391,321 @@ function Router() {
           {StatusComingSoon()}
         </TabPanel>
         <TabPanel value={value} index={7}>
-          {StatusComingSoon()}
+          {formFields[tabid]["dynamicnat"].map((form, index) => {
+            return (
+              <Card sx={{ width: "100%", mb: 3 }}>
+                <CardHeader title={"Dynamisk NAT " + index} />
+                <Divider />
+                <CardContent>
+                  <div key={index}>
+                    <Box
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                      }}
+                      autoComplete="off"
+                    >
+                      <IconButton
+                        sx={{ float: "right", mt: 1.5 }}
+                        onClick={() => removeFields("dynamicnat", index)}
+                      >
+                        <DeleteIcon color="secondary" />
+                      </IconButton>
+                      <Typography sx={{ ml: "1%" }} color="secondary">
+                        Intern IP pool
+                      </Typography>
+                      <TextField
+                        name="interalip"
+                        id="dynamicnat"
+                        error={!form.interalip}
+                        label="Network identifier"
+                        placeholder="192.168.1.0"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.interalip}
+                      />
+                      <TextField
+                        name="internalsubnet"
+                        id="dynamicnat"
+                        error={!form.internalsubnet}
+                        label="Subnet"
+                        placeholder="255.255.255.0"
+                        onChange={(event) => {
+                          handleFormChange(event, index);
+                        }}
+                        value={form.internalsubnet}
+                      />
+                      <Divider sx={{ m: 3 }} />
+                      <Typography sx={{ ml: "1%" }} color="secondary">
+                        Ekstern IP pool
+                      </Typography>
+                      <TextField
+                        name="externalstartip"
+                        id="dynamicnat"
+                        error={!form.externalstartip}
+                        label="Start IP"
+                        placeholder="209.165.200.1"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.externalstartip}
+                      />
+                      <TextField
+                        name="externalendip"
+                        id="dynamicnat"
+                        error={!form.externalendip}
+                        label="Slut IP"
+                        placeholder="209.165.200.10"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.externalendip}
+                      />
+                      <TextField
+                        name="externalsubnet"
+                        id="dynamicnat"
+                        error={!form.externalsubnet}
+                        label="Subnet"
+                        placeholder="255.255.255.0"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.externalsubnet}
+                      />
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        sx={{ mt: 0.5 }}
+                        control={
+                          <Checkbox
+                            color="primary"
+                            name="overload"
+                            id="dynamicnat"
+                            checked={form.overload}
+                            onChange={(event) => {
+                              handleFormChange(event, index);
+                            }}
+                          />
+                        }
+                        label="NAT overload"
+                      />
+                      <Divider sx={{ m: 3 }} />
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                        <InputLabel>Internt interface</InputLabel>
+                        <Select
+                          error={!form.internalinterface.length}
+                          multiple
+                          MenuProps={MenuProps}
+                          name="dynamicnat.internalinterface"
+                          value={form.internalinterface}
+                          onChange={(event) => {
+                            handleFormChange(event, index);
+                          }}
+                          input={<OutlinedInput label="Internt interface" />}
+                        >
+                          {porte()}
+                        </Select>
+                      </FormControl>
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                        <InputLabel>Eksternt interface</InputLabel>
+                        <Select
+                          error={!form.externalinterface.length}
+                          multiple
+                          MenuProps={MenuProps}
+                          name="dynamicnat.externalinterface"
+                          value={form.externalinterface}
+                          onChange={(event) => {
+                            handleFormChange(event, index);
+                          }}
+                          input={<OutlinedInput label="Eksternt interface" />}
+                        >
+                          {porte()}
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+          {formFields[tabid]["dynamicnatport"].map((form, index) => {
+            return (
+              <Card sx={{ width: "100%", mb: 3 }}>
+                <CardHeader title={"Portbaseret dynamisk NAT " + index} />
+                <Divider />
+                <CardContent>
+                  <div key={index}>
+                    <Box
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                      }}
+                      autoComplete="off"
+                    >
+                      <IconButton
+                        sx={{ float: "right", mt: 1.5 }}
+                        onClick={() => removeFields("dynamicnatport", index)}
+                      >
+                        <DeleteIcon color="secondary" />
+                      </IconButton>
+                      <TextField
+                        name="interalip"
+                        id="dynamicnatport"
+                        error={!form.interalip}
+                        label="Intern netværksadresse"
+                        placeholder="192.168.1.1"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.interalip}
+                      />
+                      <TextField
+                        name="internalsubnet"
+                        id="dynamicnatport"
+                        error={!form.internalsubnet}
+                        label="Subnet"
+                        placeholder="255.255.255.0"
+                        onChange={(event) => {
+                          handleFormChange(event, index);
+                        }}
+                        value={form.internalsubnet}
+                      />
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                        <InputLabel>Internt interface</InputLabel>
+                        <Select
+                          error={!form.internalinterface.length}
+                          name="dynamicnatport.internalinterface"
+                          multiple
+                          value={form.internalinterface}
+                          MenuProps={MenuProps}
+                          onChange={(event) => {
+                            handleFormChange(event, index);
+                          }}
+                          input={<OutlinedInput label="Internt interface" />}
+                        >
+                          {porte()}
+                        </Select>
+                      </FormControl>
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                        <InputLabel>Eksternt interface</InputLabel>
+                        <Select
+                          error={!form.externalinterface_}
+                          name="dynamicnatport.externalinterface_"
+                          value={form.externalinterface_}
+                          onChange={(event) => {
+                            handleFormChange(event, index);
+                          }}
+                          input={<OutlinedInput label="Eksternt interface" />}
+                        >
+                          {porte()}
+                        </Select>
+                      </FormControl>
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        control={
+                          <Tooltip
+                            arrow
+                            placement="top"
+                            title="Overload er påkrævet"
+                          >
+                            <Checkbox color="primary" checked={true} />
+                          </Tooltip>
+                        }
+                        label="Overload"
+                      />
+                    </Box>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+          {formFields[tabid]["staticnat"].map((form, index) => {
+            return (
+              <Card sx={{ width: "100%", mb: 3 }}>
+                <CardHeader title={"Statisk NAT " + index} />
+                <Divider />
+                <CardContent>
+                  <div key={index}>
+                    <Box
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                      }}
+                      autoComplete="off"
+                    >
+                      <IconButton
+                        sx={{ float: "right", mt: 1.5 }}
+                        onClick={() => removeFields("staticnat", index)}
+                      >
+                        <DeleteIcon color="secondary" />
+                      </IconButton>
+                      <TextField
+                        name="interalip"
+                        id="staticnat"
+                        error={!form.interalip}
+                        label="Intern IP"
+                        placeholder="192.168.1.10"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.interalip}
+                      />
+                      <TextField
+                        name="externalip"
+                        id="staticnat"
+                        error={!form.externalip}
+                        label="Ekstern IP"
+                        placeholder="209.165.200.10"
+                        onChange={(event) => {
+                          handleFormChange(event, index);
+                        }}
+                        value={form.externalip}
+                      />
+                    </Box>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+          <Tooltip
+            arrow
+            title="NAT sker mellem af en pool af interne IP'er og en pool eksterne IP'er"
+          >
+            <Button
+              variant="contained"
+              sx={{ m: 1 }}
+              size="medium"
+              color="primary"
+              onClick={() => addFields("dynamicnat")}
+            >
+              Tilføj dynamisk NAT
+            </Button>
+          </Tooltip>
+          <Tooltip
+            arrow
+            title="NAT sker mellem en pool af interne IP'er og IP'en på en enkel ekstern port"
+          >
+            <Button
+              variant="contained"
+              sx={{ m: 1 }}
+              size="medium"
+              color="primary"
+              onClick={() => addFields("dynamicnatport")}
+            >
+              Tilføj portbaseret dynamisk NAT
+            </Button>
+          </Tooltip>
+          <Tooltip
+            arrow
+            title="NAT sker mellem en enkel intern IP & en enkel ekstern IP"
+          >
+            <Button
+              variant="contained"
+              sx={{ m: 1 }}
+              size="medium"
+              color="primary"
+              onClick={() => addFields("staticnat")}
+            >
+              Tilføj statisk NAT
+            </Button>
+          </Tooltip>
+          <Button
+            variant="outlined"
+            sx={{ ml: 2 }}
+            onClick={() => {
+              handleOpen();
+            }}
+          >
+            Vis config
+          </Button>
+          <Modal open={open} onClose={handleClose}>
+            {ModalContent(NAT, "nat")}
+          </Modal>
         </TabPanel>
         <TabPanel value={value} index={8}>
           <Card sx={{ width: "100%" }}>

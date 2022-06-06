@@ -87,29 +87,27 @@ export function Initial(index) {
 export function Interfaces(index) {
   try {
     var workingvar = "";
-    for (const element of JSON.parse(localStorage.router_data)[index][
-      "interfaces"
-    ]) {
-      if (element.port) {
-        workingvar += "\n\ninterface " + element.port;
-        if (element.ip && element.subnet) {
-          workingvar += "\nip address " + element.ip + " " + element.subnet;
+    for (const e of JSON.parse(localStorage.router_data)[index]["interfaces"]) {
+      if (e.port) {
+        workingvar += "\n\ninterface " + e.port;
+        if (e.ip && e.subnet) {
+          workingvar += "\nip address " + e.ip + " " + e.subnet;
         }
-        if (element.description) {
-          workingvar += "\ndescription " + element.description;
+        if (e.description) {
+          workingvar += "\ndescription " + e.description;
         }
-        if (element.shutdown) {
+        if (e.shutdown) {
           workingvar += "\nshutdown";
         } else {
           workingvar += "\nno shutdown";
         }
         workingvar += "\nexit";
       }
-      var elememt = element;
+      var elememt = e;
       for (const elem of elememt["subinterfaces"]) {
         workingvar +=
           "\n\ninterface " +
-          element.port +
+          e.port +
           "." +
           elem.id +
           "\ndescription subinterface for " +
@@ -123,12 +121,12 @@ export function Interfaces(index) {
         workingvar += "\nexit";
       }
     }
-    for (const element of JSON.parse(localStorage.router_data)[index][
+    for (const e of JSON.parse(localStorage.router_data)[index][
       "linterfaces"
     ]) {
-      workingvar += "\ninterface Loopback " + element.id;
-      if (element.ip && element.subnet) {
-        workingvar += "\nip address " + element.ip + " " + element.subnet;
+      workingvar += "\ninterface Loopback " + e.id;
+      if (e.ip && e.subnet) {
+        workingvar += "\nip address " + e.ip + " " + e.subnet;
       }
       workingvar += "\nno shutdown\nexit";
     }
@@ -142,23 +140,22 @@ export function Interfaces(index) {
 export function DHCP(index) {
   try {
     var workingvar = "";
-    for (const element of JSON.parse(localStorage.router_data)[index]["dhcp"]) {
-      if (element.navn && element.ip && element.subnet && element.gateway) {
+    for (const e of JSON.parse(localStorage.router_data)[index]["dhcp"]) {
+      if (e.navn && e.ip && e.subnet && e.gateway) {
         workingvar +=
-          '\nservice dhcp \nip dhcp pool "' +
-          element.navn +
-          '"' +
+          "\nservice dhcp \nip dhcp pool " +
+          e.navn +
           "\nnetwork " +
-          element.ip +
+          e.ip +
           " " +
-          element.subnet +
+          e.subnet +
           "\ndefault-router " +
-          element.gateway;
-        if (element.domæne) {
-          workingvar += "\ndomain-name " + element.domæne;
+          e.gateway;
+        if (e.domæne) {
+          workingvar += "\ndomain-name " + e.domæne;
         }
-        if (element.DNS) {
-          workingvar += "\ndns-server " + element.DNS;
+        if (e.DNS) {
+          workingvar += "\ndns-server " + e.DNS;
         }
         workingvar += "\nexit";
       }
@@ -173,25 +170,21 @@ export function DHCP(index) {
 export function Staticroute(index) {
   try {
     var workingvar = "";
-    for (const element of JSON.parse(localStorage.router_data)[index][
+    for (const e of JSON.parse(localStorage.router_data)[index][
       "staticroute"
     ]) {
-      if (element.destinationip && element.destinationsubnet) {
+      if (e.destinationip && e.destinationsubnet) {
         workingvar +=
-          "\nip route " +
-          element.destinationip +
-          " " +
-          element.destinationsubnet +
-          " ";
-        if (element.nexthopip) {
-          workingvar += element.nexthopip;
-        } else if (element.nexthopinterface) {
-          workingvar += element.nexthopinterface;
+          "\nip route " + e.destinationip + " " + e.destinationsubnet + " ";
+        if (e.nexthopip) {
+          workingvar += e.nexthopip;
+        } else if (e.nexthopinterface) {
+          workingvar += e.nexthopinterface;
         }
-        if (element.distance) {
-          workingvar += " " + element.distance;
+        if (e.distance) {
+          workingvar += " " + e.distance;
         }
-        if (element.permanent) {
+        if (e.permanent) {
           workingvar += " permanent";
         }
       }
@@ -206,44 +199,44 @@ export function Staticroute(index) {
 export function OSPF(index) {
   try {
     var workingvar = "";
-    for (const element of JSON.parse(localStorage.router_data)[index]["ospf"]) {
+    for (const e of JSON.parse(localStorage.router_data)[index]["ospf"]) {
       if (
-        element.override ||
-        element.passive.length ||
-        element.enabled.length ||
-        element.defaultroute
+        e.override ||
+        e.passive.length ||
+        e.enabled.length ||
+        e.defaultroute
       ) {
-        workingvar += "\nrouter ospf " + element.processid;
-        if (element.defaultroute) {
+        workingvar += "\nrouter ospf " + e.processid;
+        if (e.defaultroute) {
           workingvar += "\ndefault-information originate";
         } else {
           workingvar += "\nno default-information originate";
         }
-        if (element.override) {
-          workingvar += "\nrouter-id " + element.override;
+        if (e.override) {
+          workingvar += "\nrouter-id " + e.override;
         } else {
           workingvar += "\nno router-id";
         }
-        if (element.passive.length) {
-          for (const elem of element.passive) {
+        if (e.passive.length) {
+          for (const elem of e.passive) {
             workingvar += "\npassive-interface " + elem;
           }
         }
-        if (element.enabled.length) {
-          for (const elem of element.passive) {
+        if (e.enabled.length) {
+          for (const elem of e.passive) {
             workingvar += "\nno passive-interface " + elem;
           }
         }
         workingvar += "\nexit";
       }
-      if (element.enabled.length) {
+      if (e.enabled.length) {
         workingvar +=
           "\ninterface range " +
-          element.enabled.toString() +
+          e.enabled.toString() +
           "\nip ospf " +
-          element.processid +
+          e.processid +
           " area " +
-          element.area +
+          e.area +
           "\nexit";
       }
     }
@@ -254,10 +247,102 @@ export function OSPF(index) {
   } catch (e) {}
 }
 
+function ipinverter(data) {
+  let arr = data.split(".");
+  let x = 255 - arr[0] + ".";
+  x += 255 - arr[1] + ".";
+  x += 255 - arr[2] + ".";
+  x += 255 - arr[3];
+  return x;
+}
+
+export function NAT(index) {
+  try {
+    var workingvar = "";
+    for (const e of JSON.parse(localStorage.router_data)[index]["dynamicnat"]) {
+      if (
+        e.interalip &&
+        e.internalsubnet &&
+        e.externalendip &&
+        e.externalstartip &&
+        e.externalsubnet &&
+        e.internalinterface &&
+        e.externalinterface
+      ) {
+        workingvar +=
+          "\naccess-list " +
+          6 +
+          e.index +
+          " permit " +
+          e.interalip +
+          " " +
+          ipinverter(e.internalsubnet) +
+          "\nip nat pool ext_pool" +6+
+          e.index +
+          " " +
+          e.externalstartip +
+          " " +
+          e.externalendip +
+          " netmask " +
+          e.externalsubnet +
+          "\nno ip nat inside source list " +
+          6 +
+          e.index +
+          " pool ext_pool" +6+
+          e.index+
+          "\nip nat inside source list " +
+          6 +
+          e.index +
+          " pool ext_pool" +6+
+          e.index
+        if (e.overload){workingvar += ' overload'}
+        workingvar += "\ninterface range "+e.internalinterface.toString()+'\nno ip nat outside\nip nat inside\nexit\n interface range '+e.externalinterface.toString()+'\nno ip nat inside\nip nat outside\nexit'
+      }
+    }
+    for (const e of JSON.parse(localStorage.router_data)[index]["dynamicnatport"]) {
+      if (
+        e.interalip &&
+        e.internalsubnet &&
+        e.internalinterface &&
+        e.externalinterface_
+      ) {
+        workingvar +=
+          "\naccess-list " +
+          7 +
+          e.index +
+          " permit " +
+          e.interalip +
+          " " +
+          ipinverter(e.internalsubnet) +
+          "\nno ip nat inside source list " +
+          7 +
+          e.index +
+          "\nip nat inside source list " +
+          7 +
+          e.index + ' interface '+e.externalinterface_ +' overload'
+        if (e.overload){workingvar += ' overload'}
+        workingvar += "\ninterface range "+e.internalinterface.toString()+'\nno ip nat outside\nip nat inside\nexit\n interface '+e.externalinterface_+'\nno ip nat inside\nip nat outside\nexit'
+      }
+    }
+    for (const e of JSON.parse(localStorage.router_data)[index]["staticnat"]) {
+      if (
+        e.interalip && e.externalip
+      ) {
+        workingvar += '\nip nat inside source static '+ e.interalip+' '+e.externalip
+      }
+    }
+    let workingdata = JSON.parse(localStorage.router_final);
+    workingdata[index]["nat"] = workingvar;
+    localStorage.router_final = JSON.stringify(workingdata);
+    return workingvar;
+  } catch (error) {}
+}
+
 export function Runner(index) {
   Initial(index);
   Interfaces(index);
   DHCP(index);
   Staticroute(index);
   OSPF(index);
+  NAT(index);
 }
