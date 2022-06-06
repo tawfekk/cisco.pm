@@ -346,15 +346,25 @@ function Router() {
     onreloadtab();
   }
 
-  function porte() {
+  function porte(sort) {
     try {
-      return RouterInterfaces(formFields[tabid]["initial"][0]["model"]).map(
+      let workingvar = RouterInterfaces(formFields[tabid]["initial"][0]["model"])
+      if (!sort){
+      for (const elem of formFields[tabid]["linterfaces"]){
+        workingvar.push("loopback "+elem.id)
+      }
+      for (const elem of formFields[tabid]["interfaces"]){
+        for (const e of elem.subinterfaces){workingvar.push(elem.port+'.'+e.id)}
+      }
+      }
+      return workingvar.map(
         (name) => (
           <MenuItem key={name} value={name}>
             {name}
           </MenuItem>
         )
       );
+
     } catch (e) {}
   }
 
@@ -821,7 +831,7 @@ function Router() {
                           input={<OutlinedInput label="Name" />}
                           MenuProps={MenuProps}
                         >
-                          {porte()}
+                          {porte('phy')}
                         </Select>
                       </FormControl>
                       <FormControlLabel
@@ -989,7 +999,7 @@ function Router() {
                       <TextField
                         name="id"
                         id="linterfaces"
-                        error={!form.id || form.id != 0}
+                        error={!form.id && form.id != 0}
                         label="Loopback ID"
                         placeholder="1"
                         onChange={(event) => handleFormChange(event, index)}
@@ -1208,13 +1218,7 @@ function Router() {
                           }}
                           input={<OutlinedInput label="Next-hop Interface" />}
                         >
-                          {RouterInterfaces(
-                            formFields[tabid]["initial"][0]["model"]
-                          ).map((name) => (
-                            <MenuItem key={name} value={name}>
-                              {name}
-                            </MenuItem>
-                          ))}
+                        {porte()}
                         </Select>
                       </FormControl>
                       <TextField
