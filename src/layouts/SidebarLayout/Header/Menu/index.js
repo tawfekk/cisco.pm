@@ -100,12 +100,6 @@ function HeaderMenu() {
       </ListWrapper>
       <Menu anchorEl={ref.current} onClose={handleClose} open={isOpen}>
         <MenuItem
-          onClick={() => window.open("https://mads03.dk", "_blank")}
-          sx={{ px: 3 }}
-        >
-          mads03.dk
-        </MenuItem>
-        <MenuItem
           onClick={() =>
             window.open("https://netacad.com/portal/saml_login", "_blank")
           }
