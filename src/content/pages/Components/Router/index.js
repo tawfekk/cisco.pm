@@ -1766,7 +1766,7 @@ function Router() {
           >
             <Grid item xs="auto">
           <Card>
-            <CardHeader title="Indskyd custom konfiguration" />
+            <CardHeader title="Custom konfiguration" />
             <Divider />
             <CardContent sx={{ width: 500, justifyContent: "center" }}>
             <Box
@@ -1776,8 +1776,9 @@ function Router() {
               autoComplete="off"
             >
             <TextField
-              label="En linje ad gangen - tilføjet til sidst til den samlede konfiguration"
+              label="Tilføjes i bunden af den samlede konfiguration"
               multiline
+              placeholder='En linje ad gangen - du skal IKKE skrive "configure terminal"'
               maxRows={Infinity}
               minRows={5}
               inputProps={{ style: { color: "#FFC13D" } }}
