@@ -21,7 +21,7 @@ function Footer() {
         >
           <Box>
             <Typography variant="subtitle1">
-              <text>© cisco.pm - </text>
+              © cisco.pm -‎‎‏‏‎ ‎
               <Link
                 href="mailto:cisco.pm"
                 target="_blank"

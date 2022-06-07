@@ -227,6 +227,10 @@ export function OSPF(index) {
             workingvar += "\nno passive-interface " + elem;
           }
         }
+        if (e.referencebandwidth) {
+          workingvar +=
+            "\nauto-cost reference-bandwidth " + e.referencebandwidth;
+        }
         workingvar += "\nexit";
       }
       if (e.enabled.length) {
@@ -236,8 +240,16 @@ export function OSPF(index) {
           "\nip ospf " +
           e.processid +
           " area " +
-          e.area +
-          "\nexit";
+          e.area
+          if(e.hellointerval){workingvar += '\nip ospf hello-interval '+e.hellointerval}
+          if(e.priority){workingvar += '\nip ospf priority '+e.e.priority}
+          workingvar += "\nexit";
+      }
+      if (e.pointtopoint.length) {
+        workingvar +=
+          "\ninterface range " +
+          e.enabled.toString() +
+          "\nip ospf network point-to-point\nexit"
       }
     }
     let workingdata = JSON.parse(localStorage.router_final);
@@ -277,7 +289,8 @@ export function NAT(index) {
           e.interalip +
           " " +
           ipinverter(e.internalsubnet) +
-          "\nip nat pool ext_pool" +6+
+          "\nip nat pool ext_pool" +
+          6 +
           e.index +
           " " +
           e.externalstartip +
@@ -288,18 +301,29 @@ export function NAT(index) {
           "\nno ip nat inside source list " +
           6 +
           e.index +
-          " pool ext_pool" +6+
-          e.index+
+          " pool ext_pool" +
+          6 +
+          e.index +
           "\nip nat inside source list " +
           6 +
           e.index +
-          " pool ext_pool" +6+
-          e.index
-        if (e.overload){workingvar += ' overload'}
-        workingvar += "\ninterface range "+e.internalinterface.toString()+'\nno ip nat outside\nip nat inside\nexit\n interface range '+e.externalinterface.toString()+'\nno ip nat inside\nip nat outside\nexit'
+          " pool ext_pool" +
+          6 +
+          e.index;
+        if (e.overload) {
+          workingvar += " overload";
+        }
+        workingvar +=
+          "\ninterface range " +
+          e.internalinterface.toString() +
+          "\nno ip nat outside\nip nat inside\nexit\n interface range " +
+          e.externalinterface.toString() +
+          "\nno ip nat inside\nip nat outside\nexit";
       }
     }
-    for (const e of JSON.parse(localStorage.router_data)[index]["dynamicnatport"]) {
+    for (const e of JSON.parse(localStorage.router_data)[index][
+      "dynamicnatport"
+    ]) {
       if (
         e.interalip &&
         e.internalsubnet &&
@@ -319,16 +343,25 @@ export function NAT(index) {
           e.index +
           "\nip nat inside source list " +
           7 +
-          e.index + ' interface '+e.externalinterface_ +' overload'
-        if (e.overload){workingvar += ' overload'}
-        workingvar += "\ninterface range "+e.internalinterface.toString()+'\nno ip nat outside\nip nat inside\nexit\n interface '+e.externalinterface_+'\nno ip nat inside\nip nat outside\nexit'
+          e.index +
+          " interface " +
+          e.externalinterface_ +
+          " overload";
+        if (e.overload) {
+          workingvar += " overload";
+        }
+        workingvar +=
+          "\ninterface range " +
+          e.internalinterface.toString() +
+          "\nno ip nat outside\nip nat inside\nexit\n interface " +
+          e.externalinterface_ +
+          "\nno ip nat inside\nip nat outside\nexit";
       }
     }
     for (const e of JSON.parse(localStorage.router_data)[index]["staticnat"]) {
-      if (
-        e.interalip && e.externalip
-      ) {
-        workingvar += '\nip nat inside source static '+ e.interalip+' '+e.externalip
+      if (e.interalip && e.externalip) {
+        workingvar +=
+          "\nip nat inside source static " + e.interalip + " " + e.externalip;
       }
     }
     let workingdata = JSON.parse(localStorage.router_final);

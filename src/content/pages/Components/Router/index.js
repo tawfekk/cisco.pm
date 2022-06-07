@@ -154,6 +154,7 @@ function Router() {
             enabled: [],
             passive: [],
             area: 0,
+            pointtopoint: [],
           },
         ],
       };
@@ -300,6 +301,7 @@ function Router() {
       hostname: "",
       enabled: [],
       passive: [],
+      pointtopoint: [],
       overload: "true",
       externalinterface: [],
       internalinterface: [],
@@ -824,6 +826,7 @@ function Router() {
                         <InputLabel id="interfaces">Port</InputLabel>
                         <Select
                           required
+                          defaultValue = ""
                           error={!form.port}
                           name="interfaces.port"
                           value={form.port}
@@ -1212,6 +1215,7 @@ function Router() {
                         <Select
                           name="staticroute.nexthopinterface"
                           value={form.nexthopinterface}
+                          defaultValue = ""
                           onChange={(event) => {
                             handleFormChange(event, index);
                             form.nexthopip = "";
@@ -1323,11 +1327,36 @@ function Router() {
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.area}
                       />
-                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                      <TextField
+                        name="hellointerval"
+                        id="ospf"
+                        placeholder="30"
+                        label="hello interval"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.hellointerval}
+                      />
+                      <TextField
+                        name="referencebandwidth"
+                        id="ospf"
+                        placeholder="1000"
+                        label="Reference bandwidth (bits)"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.referencebandwidth}
+                      />
+                      <TextField
+                        name="priority"
+                        id="ospf"
+                        label="Priority"
+                        placeholder="50"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.priority}
+                      />
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
                         <InputLabel>Enabled interfaces</InputLabel>
                         <Select
                           name="ospf.enabled"
                           multiple
+                          error={!form.enabled.length}
                           value={form.enabled}
                           onChange={(event) => handleFormChange(event, index)}
                           input={<OutlinedInput label="Enabled interfaces" />}
@@ -1336,7 +1365,7 @@ function Router() {
                           {porte()}
                         </Select>
                       </FormControl>
-                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
                         <InputLabel>Passive interfaces</InputLabel>
                         <Select
                           name="ospf.passive"
@@ -1344,6 +1373,19 @@ function Router() {
                           value={form.passive}
                           onChange={(event) => handleFormChange(event, index)}
                           input={<OutlinedInput label="Passive interfaces" />}
+                          MenuProps={MenuProps}
+                        >
+                          {porte()}
+                        </Select>
+                      </FormControl>
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
+                        <InputLabel>Point-to-point interfaces</InputLabel>
+                        <Select
+                          name="ospf.pointtopoint"
+                          multiple
+                          value={form.pointtopoint}
+                          onChange={(event) => handleFormChange(event, index)}
+                          input={<OutlinedInput label="Point-to-point interfaces" />}
                           MenuProps={MenuProps}
                         >
                           {porte()}
@@ -1581,6 +1623,7 @@ function Router() {
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
                         <InputLabel>Eksternt interface</InputLabel>
                         <Select
+                          defaultValue = ""
                           error={!form.externalinterface_}
                           name="dynamicnatport.externalinterface_"
                           value={form.externalinterface_}

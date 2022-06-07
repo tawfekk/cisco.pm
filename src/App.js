@@ -50,6 +50,7 @@ if (!localStorage.router_data) {
           enabled: [],
           passive: [],
           area: 0,
+          pointtopoint: []
         },
       ],
     },
