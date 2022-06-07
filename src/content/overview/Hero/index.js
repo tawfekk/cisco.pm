@@ -67,6 +67,15 @@ function Hero() {
             Siden er stadig under opbygning
           </TypographyH1>
           <Button
+          onClick={() =>
+            window.open("https:/legacy.cisco.pm", "_blank")
+          }
+            size="small"
+            sx={{color:'#9EA4C1',mr:3}}
+          >
+            Gå til legacy version
+          </Button>
+          <Button
             component={RouterLink}
             to="/components/router"
             size="large"

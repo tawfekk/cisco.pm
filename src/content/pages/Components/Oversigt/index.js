@@ -194,8 +194,8 @@ function Oversigt() {
           multiline
           sx={{ mt: 2 }}
           inputProps={{ style: { color: "#FFC13D" } }}
-          maxRows={Infinity}
-          rows={5}
+          maxRows={20}
+          minRows={5}
           style={{ width: "100%" }}
           value={"conf terminal" + returner(type) + "\nend"}
         ></TextField>

@@ -123,6 +123,7 @@ function Router() {
         interfaces: [{ subinterfaces: [] }],
         dynamicnatport: [],
         dynamicnat: [],
+        misc: [{},{}],
         staticnat: [],
         linterfaces: [],
         dhcp: [{ ip: "" }],
@@ -380,8 +381,8 @@ function Router() {
           multiline
           sx={{ mt: 2 }}
           inputProps={{ style: { color: "#FFC13D" } }}
-          maxRows={Infinity}
-          rows={5}
+          maxRows={20}
+          minRows={5}
           style={{ width: "100%" }}
           value={
             "configure terminal" + func(sessionStorage.router_tabid) + "\nend"
@@ -472,7 +473,7 @@ function Router() {
           <Tab label="OSPF" />
           <Tab label="ACL" />
           <Tab label="NAT" />
-          <Tab label="Samlet config" />
+          <Tab label="Misc" />
         </Tabs>
         <TabPanel value={value} index={0}>
           <Card>
@@ -1755,11 +1756,75 @@ function Router() {
           </Modal>
         </TabPanel>
         <TabPanel value={value} index={8}>
-          <Card sx={{ width: "100%" }}>
+        <Container maxWidth="lg">
+          <Grid
+            container
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="stretch"
+            spacing={3}
+          >
+            <Grid item xs="auto">
+          <Card>
+            <CardHeader title="Indskyd custom konfiguration" />
+            <Divider />
+            <CardContent sx={{ width: 500, justifyContent: "center" }}>
+            <Box
+              sx={{
+                "& .MuiTextField-root": { m: 1, width: "25ch" },
+              }}
+              autoComplete="off"
+            >
+            <TextField
+              label="En linje ad gangen - tilføjet til sidst til den samlede konfiguration"
+              multiline
+              maxRows={Infinity}
+              minRows={5}
+              inputProps={{ style: { color: "#FFC13D" } }}
+              style={{width: '97%'}}
+              onChange={(event) => {
+                let data = [...formFields]
+                data[tabid]['misc'][0] = {"customconfig": event.target.value};
+                setformFields(data)
+                localStorage.router_data = JSON.stringify(data)
+              }}
+              value={formFields[tabid]['misc'][0]['customconfig']}
+            />
+            </Box>
+            </CardContent>
+          </Card>
+          </Grid>
+          <Grid item xs="auto">
+          <Card >
             <CardHeader title="Noter" />
             <Divider />
-            <CardContent></CardContent>
+            <CardContent sx={{ width: 500, justifyContent: "center" }}>
+            <Box
+              sx={{
+                "& .MuiTextField-root": { m: 1, width: "25ch" },
+              }}
+              autoComplete="off"
+            >
+            <TextField
+              label="Noter for routeren (medtages ikke i konfiguration)"
+              multiline
+              maxRows={Infinity}
+              minRows={5}
+              style={{width: '97%'}}
+              onChange={(event) => {
+                let data = [...formFields]
+                data[tabid]['misc'][1] = {"noter": event.target.value};
+                setformFields(data)
+                localStorage.router_data = JSON.stringify(data)
+              }}
+              value={formFields[tabid]['misc'][1]['noter']}
+            />
+            </Box>
+            </CardContent>
           </Card>
+          </Grid>
+          </Grid>
+        </Container>
         </TabPanel>
       </div>
     );

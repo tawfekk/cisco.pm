@@ -371,6 +371,16 @@ export function NAT(index) {
   } catch (error) {}
 }
 
+function Customconfig(index){
+  try {
+  let workingvar = '\n'+JSON.parse(localStorage.router_data)[index]['misc'][0]['customconfig']
+  let workingdata = JSON.parse(localStorage.router_final)
+  workingdata[index]["customconfig"] = workingvar;
+  localStorage.router_final = JSON.stringify(workingdata);
+  return workingvar;
+  } catch (error) {}
+}
+
 export function Runner(index) {
   Initial(index);
   Interfaces(index);
@@ -378,4 +388,5 @@ export function Runner(index) {
   Staticroute(index);
   OSPF(index);
   NAT(index);
+  Customconfig(index)
 }
