@@ -256,85 +256,88 @@ function Oversigt() {
   const handleClose2 = () => setOpen2(false);
   const vertical = "top";
   const horizontal = "center";
-  try{
-  return (
-    <>
-      <Helmet>
-        <title>Oversigt</title>
-      </Helmet>
-      <PageTitleWrapper>
-        <PageTitle
-          sx={{ mb: -1 }}
-          heading="Oversigt"
-          subHeading="Oversigt over oprettede router, switch & VLAN configs"
-        />
-        <Button
-          sx={{ float: "right", ml: 2, mt: -4 }}
-          onClick={() => window.location.reload()}
-          startIcon={<SyncIcon />}
-          variant="outlined"
-          size="small"
-        >
-          Synk
-        </Button>
-        <Tooltip arrow title="Denne handling er permanent">
+  try {
+    return (
+      <>
+        <Helmet>
+          <title>Oversigt</title>
+        </Helmet>
+        <PageTitleWrapper>
+          <PageTitle
+            sx={{ mb: -1 }}
+            heading="Oversigt"
+            subHeading="Oversigt over oprettede router, switch & VLAN configs"
+          />
           <Button
-            size="small"
-            sx={{ float: "right", mt: -4 }}
+            sx={{ float: "right", ml: 2, mt: -4 }}
+            onClick={() => window.location.reload()}
+            startIcon={<SyncIcon />}
             variant="outlined"
-            color="error"
-            startIcon=<DangerousRoundedIcon />
-            onClick={() => {
-              syncup(0, "router");
-              syncup(0, "switch");
-              syncup(0, "vlan");
-              localStorage.clear();
-              setTimeout(() => {
-                window.location.reload();
-              }, 600);
-            }}
+            size="small"
           >
-            Slet al data
+            Synk
           </Button>
-        </Tooltip>
-      </PageTitleWrapper>
-      <Container maxWidth="lg">
-        <Grid
-          container
-          direction="row"
-          justifyContent="flex-start"
-          alignItems="stretch"
-          spacing={3}
-        >
-          <Grid item xs="auto">
-            <Card>
-              <CardHeader title="VLAN" />
-              {Content("vlan")}
-            </Card>
+          <Tooltip arrow title="Denne handling er permanent">
+            <Button
+              size="small"
+              sx={{ float: "right", mt: -4 }}
+              variant="outlined"
+              color="error"
+              startIcon=<DangerousRoundedIcon />
+              onClick={() => {
+                syncup(0, "router");
+                syncup(0, "switch");
+                syncup(0, "vlan");
+                localStorage.clear();
+                setTimeout(() => {
+                  window.location.reload();
+                }, 600);
+              }}
+            >
+              Slet al data
+            </Button>
+          </Tooltip>
+        </PageTitleWrapper>
+        <Container maxWidth="lg">
+          <Grid
+            container
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="stretch"
+            spacing={3}
+          >
+            <Grid item xs="auto">
+              <Card>
+                <CardHeader title="VLAN" />
+                {Content("vlan")}
+              </Card>
+            </Grid>
+            <Grid item xs="auto">
+              <Card>
+                <CardHeader title="Router" />
+                {Content("router")}
+                <Modal open={open0} onClose={handleClose0}>
+                  {ModalContent("router")}
+                </Modal>
+              </Card>
+            </Grid>
+            <Grid item xs="auto">
+              <Card>
+                <CardHeader title="Switch" />
+                {Content("switch")}
+                <Modal open={open} onClose={handleClose}>
+                  {ModalContent("switch")}
+                </Modal>
+              </Card>
+            </Grid>
           </Grid>
-          <Grid item xs="auto">
-            <Card>
-              <CardHeader title="Router" />
-              {Content("router")}
-              <Modal open={open0} onClose={handleClose0}>
-                {ModalContent("router")}
-              </Modal>
-            </Card>
-          </Grid>
-          <Grid item xs="auto">
-            <Card>
-              <CardHeader title="Switch" />
-              {Content("switch")}
-              <Modal open={open} onClose={handleClose}>
-                {ModalContent("switch")}
-              </Modal>
-            </Card>
-          </Grid>
-        </Grid>
-      </Container>
-      <Footer />
-    </>
-  );}catch(e){return (StatusError(""))}
+        </Container>
+        <Footer />
+      </>
+    );
+  } catch (e) {
+    return StatusError("");
+  }
 }
 
 export default Oversigt;

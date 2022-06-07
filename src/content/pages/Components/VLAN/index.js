@@ -91,78 +91,80 @@ function VLAN() {
       console.log(e);
     }
   }
-  try{
-  return (
-    <>
-      <Container maxWidth="md">
-        <Helmet>
-          <title>VLAN</title>
-        </Helmet>
-        <PageTitleWrapper>
-          <PageTitle sx={{ mb: -1 }} heading="VLAN" />
-        </PageTitleWrapper>
-        <Card>
-
-          <CardContent>
-            {formFields.map((form, index) => {
-              return (
-                <div key={index}>
-                  <Box
-                    sx={{
-                      "& .MuiTextField-root": { m: 1, width: "25ch" },
-                    }}
-                    autoComplete="off"
-                  >
-                    <IconButton
-                      sx={{ float: "right", mt: 1.5 }}
-                      onClick={() => removeFields(index)}
+  try {
+    return (
+      <>
+        <Container maxWidth="md">
+          <Helmet>
+            <title>VLAN</title>
+          </Helmet>
+          <PageTitleWrapper>
+            <PageTitle sx={{ mb: -1 }} heading="VLAN" />
+          </PageTitleWrapper>
+          <Card>
+            <CardContent>
+              {formFields.map((form, index) => {
+                return (
+                  <div key={index}>
+                    <Box
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                      }}
+                      autoComplete="off"
                     >
-                      <DeleteIcon color="secondary" />
-                    </IconButton>
-                    <TextField
-                      name="id"
-                      label="VlAN ID"
-                      placeholder="999"
-                      onChange={(event) => handleFormChange(event, index)}
-                      value={form.id}
-                    />
-                    <TextField
-                      name="navn"
-                      label="VLAN navn"
-                      placeholder="Production"
-                      onChange={(event) => handleFormChange(event, index)}
-                      value={form.navn}
-                    />
-                    <Divider sx={{ mt: 2, mb: 2 }} />
-                  </Box>
-                </div>
-              );
-            })}
-            <Button
-              variant="contained"
-              sx={{ margin: 1 }}
-              size="medium"
-              color="primary"
-              onClick={() => addFields()}
-            >
-              Tilføj VLAN
-            </Button>
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => {
-                localStorage.removeItem("vlan_data");
-                window.location.reload();
-              }}
-            >
-              Ryd alle VLAN
-            </Button>
-          </CardContent>
-        </Card>
-      </Container>
-      <Footer />
-    </>
-  );}catch(e){StatusError("vlan")}
+                      <IconButton
+                        sx={{ float: "right", mt: 1.5 }}
+                        onClick={() => removeFields(index)}
+                      >
+                        <DeleteIcon color="secondary" />
+                      </IconButton>
+                      <TextField
+                        name="id"
+                        label="VlAN ID"
+                        placeholder="999"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.id}
+                      />
+                      <TextField
+                        name="navn"
+                        label="VLAN navn"
+                        placeholder="Production"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.navn}
+                      />
+                      <Divider sx={{ mt: 2, mb: 2 }} />
+                    </Box>
+                  </div>
+                );
+              })}
+              <Button
+                variant="contained"
+                sx={{ margin: 1 }}
+                size="medium"
+                color="primary"
+                onClick={() => addFields()}
+              >
+                Tilføj VLAN
+              </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => {
+                  localStorage.removeItem("vlan_data");
+                  window.location.reload();
+                }}
+              >
+                Ryd alle VLAN
+              </Button>
+            </CardContent>
+          </Card>
+        </Container>
+        <Footer />
+      </>
+    );
+  } catch (e) {
+    StatusError("vlan");
+  }
 }
 
 export default VLAN;

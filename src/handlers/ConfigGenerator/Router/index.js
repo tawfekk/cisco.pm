@@ -240,16 +240,20 @@ export function OSPF(index) {
           "\nip ospf " +
           e.processid +
           " area " +
-          e.area
-          if(e.hellointerval){workingvar += '\nip ospf hello-interval '+e.hellointerval}
-          if(e.priority){workingvar += '\nip ospf priority '+e.e.priority}
-          workingvar += "\nexit";
+          e.area;
+        if (e.hellointerval) {
+          workingvar += "\nip ospf hello-interval " + e.hellointerval;
+        }
+        if (e.priority) {
+          workingvar += "\nip ospf priority " + e.e.priority;
+        }
+        workingvar += "\nexit";
       }
       if (e.pointtopoint.length) {
         workingvar +=
           "\ninterface range " +
           e.enabled.toString() +
-          "\nip ospf network point-to-point\nexit"
+          "\nip ospf network point-to-point\nexit";
       }
     }
     let workingdata = JSON.parse(localStorage.router_final);
@@ -371,13 +375,15 @@ export function NAT(index) {
   } catch (error) {}
 }
 
-function Customconfig(index){
+function Customconfig(index) {
   try {
-  let workingvar = '\n\n'+JSON.parse(localStorage.router_data)[index]['misc'][0]['customconfig']
-  let workingdata = JSON.parse(localStorage.router_final)
-  workingdata[index]["customconfig"] = workingvar;
-  localStorage.router_final = JSON.stringify(workingdata);
-  return workingvar;
+    let workingvar =
+      "\n\n" +
+      JSON.parse(localStorage.router_data)[index]["misc"][0]["customconfig"];
+    let workingdata = JSON.parse(localStorage.router_final);
+    workingdata[index]["customconfig"] = workingvar;
+    localStorage.router_final = JSON.stringify(workingdata);
+    return workingvar;
   } catch (error) {}
 }
 
@@ -388,5 +394,5 @@ export function Runner(index) {
   Staticroute(index);
   OSPF(index);
   NAT(index);
-  Customconfig(index)
+  Customconfig(index);
 }

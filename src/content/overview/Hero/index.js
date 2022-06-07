@@ -1,21 +1,14 @@
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Typography
-} from '@mui/material';
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from "react-router-dom";
 
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 
 const TypographyH1 = styled(Typography)(
   ({ theme }) => `
     font-size: ${theme.typography.pxToRem(50)};
 `
 );
-
 
 const MuiAvatar = styled(Box)(
   ({ theme }) => `
@@ -58,20 +51,22 @@ const JsAvatar = styled(Box)(
 );
 
 function Hero() {
-
   return (
-    <Container maxWidth="lg" sx={{ textAlign: 'center' }}>
-      <Grid spacing={{ xs: 6, md: 10 }} justifyContent="center" alignItems="center" container>
+    <Container maxWidth="lg" sx={{ textAlign: "center" }}>
+      <Grid
+        spacing={{ xs: 6, md: 10 }}
+        justifyContent="center"
+        alignItems="center"
+        container
+      >
         <Grid item md={10} lg={8} mx="auto">
           <TypographyH1 sx={{ mb: 4 }} variant="h1">
             Siden er stadig under opbygning
           </TypographyH1>
           <Button
-          onClick={() =>
-            window.open("https:/legacy.cisco.pm", "_blank")
-          }
+            onClick={() => window.open("https:/legacy.cisco.pm", "_blank")}
             size="small"
-            sx={{color:'#9EA4C1',mr:3}}
+            sx={{ color: "#9EA4C1", mr: 3 }}
           >
             Gå til legacy version
           </Button>
@@ -86,18 +81,28 @@ function Hero() {
           <Grid container spacing={3} mt={5}>
             <Grid item md={6}>
               <MuiAvatar>
-                <img src="/static/images/logo/material-ui.svg" alt="Material-UI" />
+                <img
+                  src="/static/images/logo/material-ui.svg"
+                  alt="Material-UI"
+                />
               </MuiAvatar>
               <Typography variant="h4">
-                <Box sx={{ pb: 2 }}><b>Material-UI</b></Box>
+                <Box sx={{ pb: 2 }}>
+                  <b>Material-UI</b>
+                </Box>
               </Typography>
             </Grid>
             <Grid item md={6}>
               <JsAvatar>
-                <img src="/static/images/logo/javascript.svg" alt="javascript" />
+                <img
+                  src="/static/images/logo/javascript.svg"
+                  alt="javascript"
+                />
               </JsAvatar>
               <Typography variant="h4">
-                <Box sx={{ pb: 1 }}><b>React.js</b></Box>
+                <Box sx={{ pb: 1 }}>
+                  <b>React.js</b>
+                </Box>
               </Typography>
             </Grid>
           </Grid>

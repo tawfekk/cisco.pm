@@ -123,7 +123,7 @@ function Router() {
         interfaces: [{ subinterfaces: [] }],
         dynamicnatport: [],
         dynamicnat: [],
-        misc: [{},{}],
+        misc: [{}, {}],
         staticnat: [],
         linterfaces: [],
         dhcp: [{ ip: "" }],
@@ -309,7 +309,7 @@ function Router() {
       subinterfaces: [],
       processid: Math.floor(Math.random() * (65535 - 1 + 1)) + 1,
       area: 0,
-      index: data[sessionStorage.router_tabid][id].length
+      index: data[sessionStorage.router_tabid][id].length,
     };
     data[sessionStorage.router_tabid][id].push(object);
     setformFields(data);
@@ -351,23 +351,24 @@ function Router() {
 
   function porte(sort) {
     try {
-      let workingvar = RouterInterfaces(formFields[tabid]["initial"][0]["model"])
-      if (!sort){
-      for (const elem of formFields[tabid]["linterfaces"]){
-        workingvar.push("loopback "+elem.id)
-      }
-      for (const elem of formFields[tabid]["interfaces"]){
-        for (const e of elem.subinterfaces){workingvar.push(elem.port+'.'+e.id)}
-      }
-      }
-      return workingvar.map(
-        (name) => (
-          <MenuItem key={name} value={name}>
-            {name}
-          </MenuItem>
-        )
+      let workingvar = RouterInterfaces(
+        formFields[tabid]["initial"][0]["model"]
       );
-
+      if (!sort) {
+        for (const elem of formFields[tabid]["linterfaces"]) {
+          workingvar.push("loopback " + elem.id);
+        }
+        for (const elem of formFields[tabid]["interfaces"]) {
+          for (const e of elem.subinterfaces) {
+            workingvar.push(elem.port + "." + e.id);
+          }
+        }
+      }
+      return workingvar.map((name) => (
+        <MenuItem key={name} value={name}>
+          {name}
+        </MenuItem>
+      ));
     } catch (e) {}
   }
 
@@ -827,7 +828,7 @@ function Router() {
                         <InputLabel id="interfaces">Port</InputLabel>
                         <Select
                           required
-                          defaultValue = ""
+                          defaultValue=""
                           error={!form.port}
                           name="interfaces.port"
                           value={form.port}
@@ -835,7 +836,7 @@ function Router() {
                           input={<OutlinedInput label="Name" />}
                           MenuProps={MenuProps}
                         >
-                          {porte('phy')}
+                          {porte("phy")}
                         </Select>
                       </FormControl>
                       <FormControlLabel
@@ -1216,14 +1217,14 @@ function Router() {
                         <Select
                           name="staticroute.nexthopinterface"
                           value={form.nexthopinterface}
-                          defaultValue = ""
+                          defaultValue=""
                           onChange={(event) => {
                             handleFormChange(event, index);
                             form.nexthopip = "";
                           }}
                           input={<OutlinedInput label="Next-hop Interface" />}
                         >
-                        {porte()}
+                          {porte()}
                         </Select>
                       </FormControl>
                       <TextField
@@ -1386,7 +1387,9 @@ function Router() {
                           multiple
                           value={form.pointtopoint}
                           onChange={(event) => handleFormChange(event, index)}
-                          input={<OutlinedInput label="Point-to-point interfaces" />}
+                          input={
+                            <OutlinedInput label="Point-to-point interfaces" />
+                          }
                           MenuProps={MenuProps}
                         >
                           {porte()}
@@ -1624,7 +1627,7 @@ function Router() {
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
                         <InputLabel>Eksternt interface</InputLabel>
                         <Select
-                          defaultValue = ""
+                          defaultValue=""
                           error={!form.externalinterface_}
                           name="dynamicnatport.externalinterface_"
                           value={form.externalinterface_}
@@ -1756,76 +1759,80 @@ function Router() {
           </Modal>
         </TabPanel>
         <TabPanel value={value} index={8}>
-        <Container maxWidth="lg">
-          <Grid
-            container
-            direction="row"
-            justifyContent="flex-start"
-            alignItems="stretch"
-            spacing={3}
-          >
-            <Grid item xs="auto">
-          <Card>
-            <CardHeader title="Custom konfiguration" />
-            <Divider />
-            <CardContent sx={{ width: 500, justifyContent: "center" }}>
-            <Box
-              sx={{
-                "& .MuiTextField-root": { m: 1, width: "25ch" },
-              }}
-              autoComplete="off"
+          <Container maxWidth="lg">
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="stretch"
+              spacing={3}
             >
-            <TextField
-              label="Tilføjes i bunden af den samlede konfiguration"
-              multiline
-              placeholder='En linje ad gangen - du skal IKKE skrive "configure terminal"'
-              maxRows={Infinity}
-              minRows={5}
-              inputProps={{ style: { color: "#FFC13D" } }}
-              style={{width: '97%'}}
-              onChange={(event) => {
-                let data = [...formFields]
-                data[tabid]['misc'][0] = {"customconfig": event.target.value};
-                setformFields(data)
-                localStorage.router_data = JSON.stringify(data)
-              }}
-              value={formFields[tabid]['misc'][0]['customconfig']}
-            />
-            </Box>
-            </CardContent>
-          </Card>
-          </Grid>
-          <Grid item xs="auto">
-          <Card >
-            <CardHeader title="Noter" />
-            <Divider />
-            <CardContent sx={{ width: 500, justifyContent: "center" }}>
-            <Box
-              sx={{
-                "& .MuiTextField-root": { m: 1, width: "25ch" },
-              }}
-              autoComplete="off"
-            >
-            <TextField
-              label="Noter for routeren (medtages ikke i konfiguration)"
-              multiline
-              maxRows={Infinity}
-              minRows={5}
-              style={{width: '97%'}}
-              onChange={(event) => {
-                let data = [...formFields]
-                data[tabid]['misc'][1] = {"noter": event.target.value};
-                setformFields(data)
-                localStorage.router_data = JSON.stringify(data)
-              }}
-              value={formFields[tabid]['misc'][1]['noter']}
-            />
-            </Box>
-            </CardContent>
-          </Card>
-          </Grid>
-          </Grid>
-        </Container>
+              <Grid item xs="auto">
+                <Card>
+                  <CardHeader title="Custom konfiguration" />
+                  <Divider />
+                  <CardContent sx={{ width: 500, justifyContent: "center" }}>
+                    <Box
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                      }}
+                      autoComplete="off"
+                    >
+                      <TextField
+                        label="Tilføjes i bunden af den samlede konfiguration"
+                        multiline
+                        placeholder='En linje ad gangen - du skal IKKE skrive "configure terminal"'
+                        maxRows={Infinity}
+                        minRows={5}
+                        inputProps={{ style: { color: "#FFC13D" } }}
+                        style={{ width: "97%" }}
+                        onChange={(event) => {
+                          let data = [...formFields];
+                          data[tabid]["misc"][0] = {
+                            customconfig: event.target.value,
+                          };
+                          setformFields(data);
+                          localStorage.router_data = JSON.stringify(data);
+                        }}
+                        value={formFields[tabid]["misc"][0]["customconfig"]}
+                      />
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs="auto">
+                <Card>
+                  <CardHeader title="Noter" />
+                  <Divider />
+                  <CardContent sx={{ width: 500, justifyContent: "center" }}>
+                    <Box
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                      }}
+                      autoComplete="off"
+                    >
+                      <TextField
+                        label="Noter for routeren (medtages ikke i konfiguration)"
+                        multiline
+                        maxRows={Infinity}
+                        minRows={5}
+                        style={{ width: "97%" }}
+                        onChange={(event) => {
+                          let data = [...formFields];
+                          data[tabid]["misc"][1] = {
+                            noter: event.target.value,
+                          };
+                          setformFields(data);
+                          localStorage.router_data = JSON.stringify(data);
+                        }}
+                        value={formFields[tabid]["misc"][1]["noter"]}
+                      />
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          </Container>
         </TabPanel>
       </div>
     );
@@ -1869,7 +1876,7 @@ function Router() {
                   onChange={handleTabChange}
                   variant="scrollable"
                   scrollButtons="auto"
-                  sx={{ mb: 3 }}
+                  sx={{ mb: 3}}
                 >
                   <Tab label={tablabel(0)} />
                   {tabs.map((child) => child)}
