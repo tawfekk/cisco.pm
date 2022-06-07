@@ -13,7 +13,7 @@ function Overview() {
         <title>cisco.pm</title>
       </Helmet>
       <Container sx={{ mt: '7%'}} maxWidth="lg">
-          <Box sx={{ mt: -5}}> <LogoAlone/> </Box>
+          <Box sx={{ mt: 5}}> <LogoAlone/> </Box>
           <Hero />
       </Container>
     </Box>

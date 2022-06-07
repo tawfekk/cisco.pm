@@ -1,7 +1,7 @@
 export function Initial(index) {
   try {
     var today = new Date();
-    var workingvar = "\nend\n";
+    var workingvar = "\n\nend\n";
     var form = JSON.parse(localStorage.router_data)[index]["initial"][0];
     if (form.clock == true) {
       workingvar +=
@@ -18,7 +18,7 @@ export function Initial(index) {
         " " +
         today.getFullYear();
     }
-    workingvar += "\nconfigure terminal";
+    workingvar += "\nconf t";
     workingvar += "\nhostname " + form.hostname;
     if (form.motd) {
       workingvar += "\nbanner motd #" + form.motd + "#";
@@ -143,7 +143,7 @@ export function DHCP(index) {
     for (const e of JSON.parse(localStorage.router_data)[index]["dhcp"]) {
       if (e.navn && e.ip && e.subnet && e.gateway) {
         workingvar +=
-          "\nservice dhcp \nip dhcp pool " +
+          "\n\nservice dhcp \nip dhcp pool " +
           e.navn +
           "\nnetwork " +
           e.ip +
@@ -175,7 +175,7 @@ export function Staticroute(index) {
     ]) {
       if (e.destinationip && e.destinationsubnet) {
         workingvar +=
-          "\nip route " + e.destinationip + " " + e.destinationsubnet + " ";
+          "\n\nip route " + e.destinationip + " " + e.destinationsubnet + " ";
         if (e.nexthopip) {
           workingvar += e.nexthopip;
         } else if (e.nexthopinterface) {
@@ -206,7 +206,7 @@ export function OSPF(index) {
         e.enabled.length ||
         e.defaultroute
       ) {
-        workingvar += "\nrouter ospf " + e.processid;
+        workingvar += "\n\nrouter ospf " + e.processid;
         if (e.defaultroute) {
           workingvar += "\ndefault-information originate";
         } else {
@@ -282,7 +282,7 @@ export function NAT(index) {
         e.externalinterface
       ) {
         workingvar +=
-          "\naccess-list " +
+          "\n\naccess-list " +
           6 +
           e.index +
           " permit " +
@@ -331,7 +331,7 @@ export function NAT(index) {
         e.externalinterface_
       ) {
         workingvar +=
-          "\naccess-list " +
+          "\n\naccess-list " +
           7 +
           e.index +
           " permit " +
@@ -373,7 +373,7 @@ export function NAT(index) {
 
 function Customconfig(index){
   try {
-  let workingvar = '\n'+JSON.parse(localStorage.router_data)[index]['misc'][0]['customconfig']
+  let workingvar = '\n\n'+JSON.parse(localStorage.router_data)[index]['misc'][0]['customconfig']
   let workingdata = JSON.parse(localStorage.router_final)
   workingdata[index]["customconfig"] = workingvar;
   localStorage.router_final = JSON.stringify(workingdata);
