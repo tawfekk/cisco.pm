@@ -1793,6 +1793,7 @@ function Router() {
                           };
                           setformFields(data);
                           localStorage.router_data = JSON.stringify(data);
+                          syncup(data, "router")
                         }}
                         value={formFields[tabid]["misc"][0]["customconfig"]}
                       />
@@ -1824,6 +1825,7 @@ function Router() {
                           };
                           setformFields(data);
                           localStorage.router_data = JSON.stringify(data);
+                          syncup(data, "router")
                         }}
                         value={formFields[tabid]["misc"][1]["noter"]}
                       />
