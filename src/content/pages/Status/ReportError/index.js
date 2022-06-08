@@ -57,27 +57,31 @@ export function StatusReportError() {
               >
                 1: Prøv først at nulstille al data på siden
               </Typography>
-              <Tooltip arrow placement="right" title="Denne handling er permanent">
-              <Button
-                size="small"
-                sx={{ m: 2 }}
-                variant="contained"
-                color="error"
-                startIcon=<DangerousRoundedIcon />
-                onClick={() => {
-                  syncup(0, "router");
-                  syncup(0, "switch");
-                  syncup(0, "vlan");
-                  localStorage.clear();
-                  setTimeout(() => {
-                    window.location.reload();
-                  }, 500);
-                }}
-                component={NavLink}
-                to="/components/oversigt"
+              <Tooltip
+                arrow
+                placement="right"
+                title="Denne handling er permanent"
               >
-                Nulstil al data
-              </Button>
+                <Button
+                  size="small"
+                  sx={{ m: 2 }}
+                  variant="contained"
+                  color="error"
+                  startIcon=<DangerousRoundedIcon />
+                  onClick={() => {
+                    syncup(0, "router");
+                    syncup(0, "switch");
+                    syncup(0, "vlan");
+                    localStorage.clear();
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 500);
+                  }}
+                  component={NavLink}
+                  to="/components/oversigt"
+                >
+                  Nulstil al data
+                </Button>
               </Tooltip>
               <Divider />
               <Typography

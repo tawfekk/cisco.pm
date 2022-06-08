@@ -47,25 +47,33 @@ export function StatusError(type) {
               >
                 1: Prøv først at nulstille al {type} data
               </Typography>
-              <Tooltip arrow placement="right" title="Denne handling er permanent">
-              <Button
-                size="small"
-                sx={{ m: 2 }}
-                variant="contained"
-                color="error"
-                startIcon=<DangerousRoundedIcon />
-                onClick={() => {
-                  syncup(0, "router");
-                  syncup(0, "switch");
-                  syncup(0, "vlan");
-                  if (type){localStorage.removeItem(type+"_data")}else{localStorage.clear()}
-                  setTimeout(() => {
-                    window.location.reload();
-                  }, 500);
-                }}
+              <Tooltip
+                arrow
+                placement="right"
+                title="Denne handling er permanent"
               >
-                Nulstil al {type} data
-              </Button>
+                <Button
+                  size="small"
+                  sx={{ m: 2 }}
+                  variant="contained"
+                  color="error"
+                  startIcon=<DangerousRoundedIcon />
+                  onClick={() => {
+                    syncup(0, "router");
+                    syncup(0, "switch");
+                    syncup(0, "vlan");
+                    if (type) {
+                      localStorage.removeItem(type + "_data");
+                    } else {
+                      localStorage.clear();
+                    }
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 500);
+                  }}
+                >
+                  Nulstil al {type} data
+                </Button>
               </Tooltip>
               <Divider />
               <Typography
@@ -74,8 +82,8 @@ export function StatusError(type) {
                 fontWeight="normal"
                 sx={{ mt: 2 }}
               >
-                2: Hvis denne side stadig dukker op, så opret et issue på GitHub eller send
-                en mail til{" "}
+                2: Hvis denne side stadig dukker op, så opret et issue på GitHub
+                eller send en mail til{" "}
                 <Link
                   href="mailto:cisco.pm"
                   target="_blank"

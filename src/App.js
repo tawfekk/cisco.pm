@@ -59,7 +59,7 @@ if (!localStorage.router_data) {
 }
 
 if (!localStorage.router_final) {
-  var times = 30;
+  var times = 20;
   let array = [];
   var element = {};
   for (var i = 0; i < times; i++) array.push(element);
@@ -77,7 +77,7 @@ if (!localStorage.switch_data) {
 }
 
 if (!localStorage.switch_final) {
-  var times = 30;
+  var times = 20;
   let array = [];
   var element = {
     initial: "",

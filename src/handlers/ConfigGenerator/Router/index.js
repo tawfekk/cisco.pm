@@ -377,13 +377,17 @@ export function NAT(index) {
 
 function Customconfig(index) {
   try {
-    let workingvar =
-      "\n\n" +
-      JSON.parse(localStorage.router_data)[index]["misc"][0]["customconfig"];
-    let workingdata = JSON.parse(localStorage.router_final);
-    workingdata[index]["customconfig"] = workingvar;
-    localStorage.router_final = JSON.stringify(workingdata);
-    return workingvar;
+    if (
+      JSON.parse(localStorage.router_data)[index]["misc"][0]["customconfig"]
+    ) {
+      let workingvar =
+        "\n\n" +
+        JSON.parse(localStorage.router_data)[index]["misc"][0]["customconfig"];
+      let workingdata = JSON.parse(localStorage.router_final);
+      workingdata[index]["customconfig"] = workingvar;
+      localStorage.router_final = JSON.stringify(workingdata);
+      return workingvar;
+    }
   } catch (error) {}
 }
 
