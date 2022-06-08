@@ -64,7 +64,7 @@ function Hero() {
             Siden er stadig under opbygning
           </TypographyH1>
           <Button
-            onClick={() => window.open("https:/legacy.cisco.pm", "_blank")}
+            onClick={() => window.open("https:/legacy.cisco.pm")}
             size="small"
             sx={{ color: "#9EA4C1", mr: 3 }}
           >

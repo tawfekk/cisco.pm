@@ -239,6 +239,9 @@ export function OSPF(index) {
         if (e.hellointerval) {
           workingvar += "\nip ospf hello-interval " + e.hellointerval;
         }
+        if (e.deadinterval) {
+          workingvar += "\nip ospf dead-interval " + e.deadinterval;
+        }
         if (e.priority) {
           workingvar += "\nip ospf priority " + e.priority;
         }

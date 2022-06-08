@@ -1365,9 +1365,17 @@ function Router() {
                         name="hellointerval"
                         id="ospf"
                         placeholder="30"
-                        label="hello interval"
+                        label="Hello interval"
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.hellointerval}
+                      />
+                      <TextField
+                        name="deadinterval"
+                        id="ospf"
+                        placeholder="120"
+                        label="Dead interval"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.deadinterval}
                       />
                       <TextField
                         name="referencebandwidth"
