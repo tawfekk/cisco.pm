@@ -11,7 +11,7 @@ syncdown("router");
 syncdown("vlan");
 syncdown("switch");
 
-sessionStorage.version = "0.0.9-alpha";
+sessionStorage.version = "0.01.0-beta";
 
 if (!localStorage.router_data) {
   localStorage.router_data = JSON.stringify([

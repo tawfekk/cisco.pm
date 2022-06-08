@@ -12,8 +12,7 @@ import {
 import Modal from "@mui/material/Modal";
 import * as React from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
-import { syncup } from "src/handlers/Sync";
-import { syncdown } from "src/handlers/Sync";
+import { syncup, syncdown } from "src/handlers/Sync";
 
 const style = {
   position: "absolute",
@@ -60,11 +59,11 @@ function HeaderButtons() {
   const handleClose = () => setOpen(false);
 
   function handleFormChange(event) {
-    if (!sessionStorage.getItem("sessionid")) {
+    if (!sessionStorage.sessionid) {
       sessionStorage.sessionid = Math.floor(Math.random() * 90000) + 10000;
     }
-    syncup(JSON.parse(localStorage.getItem("router_data")), "router");
-    syncup(JSON.parse(localStorage.getItem("switch_data")), "switch");
+    syncup(JSON.parse(localStorage.router_data), "router");
+    syncup(JSON.parse(localStorage.switch_data), "switch");
     handleClose();
   }
 

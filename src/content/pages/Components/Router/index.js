@@ -8,7 +8,7 @@ import SyncIcon from "@mui/icons-material/Sync";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import Switch from "src/components/Switch";
-import { syncup, syncdown } from "src/handlers/Sync";
+import { syncup, syncupchange, syncdown } from "src/handlers/Sync";
 import {
   Initial,
   DHCP,
@@ -215,6 +215,7 @@ function Router() {
       window.location.reload();
     }
     setValue(value);
+    setformFields(JSON.parse(localStorage.router_data));
   }
 
   async function run3() {
@@ -254,21 +255,29 @@ function Router() {
       data[sessionStorage.router_tabid][event.target.id][index][
         event.target.name
       ] = event.target.checked;
+      var id = event.target.id;
     } else if (event.target.type == "text") {
       data[sessionStorage.router_tabid][event.target.id][index][
         event.target.name
       ] = event.target.value;
-    } //(Array.isArray(event.target.value))
-    else {
+      var id = event.target.id;
+    } else {
       var parsed = event.target.name.split("."),
         id = parsed[0],
         name = parsed[1];
       data[sessionStorage.router_tabid][id][index][name] = event.target.value;
     }
-
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
-    syncup(data, "router");
+    if (sessionStorage.sessionid) {
+      syncupchange(
+        sessionStorage.router_tabid,
+        id,
+        data[sessionStorage.router_tabid][id],
+        "router"
+      );
+      //syncup(data, 'router')
+    }
   };
 
   const handleNestedFormChange = (nest, nestindex, event, index) => {
@@ -278,10 +287,12 @@ function Router() {
       data[sessionStorage.router_tabid][nest][nestindex][event.target.id][
         index
       ][event.target.name] = event.target.checked;
+      var id = event.target.id;
     } else if (event.target.type == "text") {
       data[sessionStorage.router_tabid][nest][nestindex][event.target.id][
         index
       ][event.target.name] = event.target.value;
+      var id = event.target.id;
     } //(Array.isArray(event.target.value))
     else {
       var parsed = event.target.name.split("."),
@@ -292,7 +303,18 @@ function Router() {
     }
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
-    syncup(data, "router");
+    if (sessionStorage.sessionid) {
+      syncupchange(
+        sessionStorage.router_tabid,
+        id,
+        data[sessionStorage.router_tabid][id],
+        "router",
+        nest,
+        nestindex,
+        object
+      );
+      //syncup(data, 'router')
+    }
   };
 
   const addFields = (id) => {
@@ -333,7 +355,14 @@ function Router() {
     data[sessionStorage.router_tabid][nest][nestindex][id].splice(index, 1);
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
-    syncup(formFields, "router");
+    syncupchange(
+      sessionStorage.router_tabid,
+      id,
+      "router",
+      nest,
+      nestindex,
+      index
+    );
   };
 
   const removeFields = (id, index) => {
@@ -341,12 +370,14 @@ function Router() {
     data[sessionStorage.router_tabid][id].splice(index, 1);
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
-    syncup(formFields, "router");
+    syncup(data, "router");
+    syncupchange(sessionStorage.router_tabid, id, "router", index);
   };
 
   if (maxTabIndex == 0) {
     syncdown("router");
     onreloadtab();
+    if (sessionStorage.sessionid){setformFields(JSON.parse(localStorage.router_data))}
   }
 
   function porte(sort) {
@@ -461,9 +492,10 @@ function Router() {
           onChange={(event, newValue) => {
             setValue(newValue);
             syncdown("router");
+            if(sessionStorage.sessionid){
             setTimeout(() => {
               setformFields(JSON.parse(localStorage.router_data));
-            }, 600);
+            }, 400);}
           }}
         >
           <Tab label="Generel     " />
@@ -1793,7 +1825,7 @@ function Router() {
                           };
                           setformFields(data);
                           localStorage.router_data = JSON.stringify(data);
-                          syncup(data, "router")
+                          syncup(data, "router");
                         }}
                         value={formFields[tabid]["misc"][0]["customconfig"]}
                       />
@@ -1825,7 +1857,7 @@ function Router() {
                           };
                           setformFields(data);
                           localStorage.router_data = JSON.stringify(data);
-                          syncup(data, "router")
+                          syncup(data, "router");
                         }}
                         value={formFields[tabid]["misc"][1]["noter"]}
                       />
@@ -1878,7 +1910,7 @@ function Router() {
                   onChange={handleTabChange}
                   variant="scrollable"
                   scrollButtons="auto"
-                  sx={{ mb: 3}}
+                  sx={{ mb: 3 }}
                 >
                   <Tab label={tablabel(0)} />
                   {tabs.map((child) => child)}

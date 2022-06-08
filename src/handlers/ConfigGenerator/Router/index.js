@@ -222,11 +222,6 @@ export function OSPF(index) {
             workingvar += "\npassive-interface " + elem;
           }
         }
-        if (e.enabled.length) {
-          for (const elem of e.passive) {
-            workingvar += "\nno passive-interface " + elem;
-          }
-        }
         if (e.referencebandwidth) {
           workingvar +=
             "\nauto-cost reference-bandwidth " + e.referencebandwidth;

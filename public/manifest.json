@@ -5,11 +5,4 @@
   "start_url": ".",
   "short_name": "cisco.pm",
   "name": "Cisco config generator",
-  "icons": [
-    {
-      "src": "/192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    }
-  ]
 }
