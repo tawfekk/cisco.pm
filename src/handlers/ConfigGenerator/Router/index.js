@@ -245,14 +245,14 @@ export function OSPF(index) {
           workingvar += "\nip ospf hello-interval " + e.hellointerval;
         }
         if (e.priority) {
-          workingvar += "\nip ospf priority " + e.e.priority;
+          workingvar += "\nip ospf priority " + e.priority;
         }
         workingvar += "\nexit";
       }
       if (e.pointtopoint.length) {
         workingvar +=
           "\ninterface range " +
-          e.enabled.toString() +
+          e.pointtopoint.toString() +
           "\nip ospf network point-to-point\nexit";
       }
     }
@@ -351,9 +351,6 @@ export function NAT(index) {
           " interface " +
           e.externalinterface_ +
           " overload";
-        if (e.overload) {
-          workingvar += " overload";
-        }
         workingvar +=
           "\ninterface range " +
           e.internalinterface.toString() +

@@ -19,6 +19,7 @@ export async function syncup(data, type) {
     await setDoc(doc(db, sessionStorage.sessionid, type), {
       data: data,
     });
+    console.log('synked')
     //  } catch (e) {
     //    console.log(e);
     //  }
