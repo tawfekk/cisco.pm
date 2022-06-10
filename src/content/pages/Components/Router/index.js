@@ -311,9 +311,7 @@ function Router() {
         "router",
         nest,
         nestindex,
-        object
       );
-      //syncup(data, 'router')
     }
   };
 
@@ -358,11 +356,13 @@ function Router() {
     syncupchange(
       sessionStorage.router_tabid,
       id,
+      0,
       "router",
       nest,
       nestindex,
       index
     );
+    console.log(index)
   };
 
   const removeFields = (id, index) => {
@@ -370,15 +370,18 @@ function Router() {
     data[sessionStorage.router_tabid][id].splice(index, 1);
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
-    syncup(data, "router");
-    syncupchange(sessionStorage.router_tabid, id, "router", index);
+    syncupchange(sessionStorage.router_tabid, id, 0, "router", 0, 0, index);
   };
 
   if (maxTabIndex == 0) {
     syncdown("router");
     onreloadtab();
-    if (sessionStorage.sessionid){setformFields(JSON.parse(localStorage.router_data))}
   }
+
+
+window.onload = (event) => {
+  if (sessionStorage.sessionid){ setTimeout(() => {setformFields(JSON.parse(localStorage.router_data))}, 400)}
+};
 
   function porte(sort) {
     try {
@@ -1833,7 +1836,14 @@ function Router() {
                           };
                           setformFields(data);
                           localStorage.router_data = JSON.stringify(data);
-                          syncup(data, "router");
+                          if (sessionStorage.sessionid) {
+                            syncupchange(
+                              sessionStorage.router_tabid,
+                              "misc",
+                              data[tabid]["misc"],
+                              "router"
+                            );
+                          }
                         }}
                         value={formFields[tabid]["misc"][0]["customconfig"]}
                       />
@@ -1865,7 +1875,14 @@ function Router() {
                           };
                           setformFields(data);
                           localStorage.router_data = JSON.stringify(data);
-                          syncup(data, "router");
+                          if (sessionStorage.sessionid) {
+                            syncupchange(
+                              sessionStorage.router_tabid,
+                              "misc",
+                              data[tabid]["misc"],
+                              "router"
+                            );
+                          }
                         }}
                         value={formFields[tabid]["misc"][1]["noter"]}
                       />

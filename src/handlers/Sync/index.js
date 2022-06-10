@@ -33,21 +33,18 @@ export async function syncupchange(
   value,
   type,
   nest,
-  nextindex,
+  nestindex,
   index
 ) {
   try {
     if (sessionStorage.sessionid) {
       const docSnap = await getDoc(doc(db, sessionStorage.sessionid, type));
-      //  await updateDoc(doc(db, sessionStorage.sessionid, type), {
-      //  [`data.${tabid}`]: {[`${id}`]:{[`${index}`]:{[`${name}`]:value}}}
-      //  });
       let workingdata = docSnap.data()["data"];
-      if (nest) {
+      if (nest && value) {
         workingdata[tabid][nest][nestindex][id] = value;
-      } else if (index && !nest) {
+      } else if (index != undefined && !nest && !value) {
         workingdata[tabid][id].splice(index, 1);
-      } else if (index && nest) {
+      } else if (index != undefined && nest) {
         workingdata[tabid][nest][nestindex][id].splice(index, 1);
       } else {
         workingdata[tabid][id] = value;
