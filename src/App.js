@@ -101,11 +101,15 @@ const App = () => {
   const content = useRoutes(routes);
   return (
     <ThemeProvider>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <CssBaseline />
-        {content}
-      </LocalizationProvider>
+      <CssBaseline />
+      {content}
     </ThemeProvider>
   );
 };
 export default App;
+
+//før:
+//<LocalizationProvider dateAdapter={AdapterDateFns}>
+//<CssBaseline />
+//{content}
+//</LocalizationProvider>
