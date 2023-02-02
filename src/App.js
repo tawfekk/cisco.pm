@@ -1,7 +1,7 @@
 import { useRoutes } from "react-router-dom";
 import routes from "./router";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 import ThemeProvider from "./theme/ThemeProvider";
 import { CssBaseline } from "@mui/material";
@@ -12,6 +12,7 @@ syncdown("vlan");
 syncdown("switch");
 
 sessionStorage.version = "0.01.1-beta";
+
 
 if (!localStorage.router_data) {
   localStorage.router_data = JSON.stringify([
