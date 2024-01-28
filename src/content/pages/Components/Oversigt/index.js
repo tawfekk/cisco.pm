@@ -269,7 +269,7 @@ function Oversigt() {
             subHeading="Oversigt over oprettede router, switch & VLAN configs"
           />
           <Button
-            sx={{ float: "right", ml: 2, mt: -4 }}
+            sx={{ float: "right", mt: -4 }}
             onClick={() => window.location.reload()}
             startIcon={<SyncIcon />}
             variant="outlined"
@@ -280,7 +280,7 @@ function Oversigt() {
           <Tooltip arrow title="Denne handling er permanent">
             <Button
               size="small"
-              sx={{ float: "right", mt: -4 }}
+              sx={{ float: "right", mr: 13, mt: -4 }}
               variant="outlined"
               color="error"
               startIcon=<DangerousRoundedIcon />
