@@ -1,8 +1,9 @@
 import { initializeApp } from "firebase/app";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { doc, getFirestore, setDoc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD3npySkxT-_E2ZESGzzftE6JZagBf-UHQ", //hack mig :-)
+  apiKey: "AIzaSyD3npySkxT-_E2ZESGzzftE6JZagBf-UHQ",
   authDomain: "cisco-pm.firebaseapp.com",
   projectId: "cisco-pm",
   storageBucket: "cisco-pm.appspot.com",
@@ -11,6 +12,10 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaEnterpriseProvider("6Ldd5F4pAAAAAHjxluUNt4Sukg5540Ifd-yYfTqJ"),
+  isTokenAutoRefreshEnabled: true // Set to true to allow auto-refresh.
+});
 const db = getFirestore(app);
 
 export async function syncup(data, type) {
