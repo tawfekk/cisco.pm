@@ -386,12 +386,54 @@ function Customconfig(index) {
   } catch (error) {}
 }
 
+export function FHRP(index) {
+  try {
+    var workingvar = "";
+ //   for (const e of JSON.parse(localStorage.router_data)[index][
+ //     "FHRP"
+ //   ]) {
+ //     if (e.destinationip && e.destinationsubnet) {
+ //       workingvar +=
+ //         "\n\nip route " + e.destinationip + " " + e.destinationsubnet + " ";
+ //       if (e.nexthopip) {
+ //         workingvar += e.nexthopip;
+ //       } else if (e.nexthopinterface) {
+ //         workingvar += e.nexthopinterface;
+ //       }
+ //       if (e.distance) {
+  //        workingvar += " " + e.distance;
+  //      }
+   //     if (e.permanent) {
+   //       workingvar += " permanent";
+   //     }
+   //   }
+   // }
+   // let workingdata = JSON.parse(localStorage.router_final);
+   // workingdata[index]["staticroute"] = workingvar;
+   // localStorage.router_final = JSON.stringify(workingdata);
+   // return workingvar;
+  } catch (e) {}
+}
+
+export function EIGRP(index) {
+  try {
+  } catch (e) {}
+}
+
+export function VPN(index) {
+  try {
+  } catch (e) {}
+}
+
 export function Runner(index) {
   Initial(index);
   Interfaces(index);
   DHCP(index);
   Staticroute(index);
   OSPF(index);
+  EIGRP(index);
   NAT(index);
+  FHRP(index);
+  VPN(index);
   Customconfig(index);
 }

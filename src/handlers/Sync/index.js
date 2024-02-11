@@ -12,11 +12,14 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+if (sessionStorage.sessionid) {
 const appCheck = initializeAppCheck(app, {
   provider: new ReCaptchaEnterpriseProvider("6Ldd5F4pAAAAAHjxluUNt4Sukg5540Ifd-yYfTqJ"),
-  isTokenAutoRefreshEnabled: true // Set to true to allow auto-refresh.
+  isTokenAutoRefreshEnabled: false // Set to true to allow auto-refresh.
 });
+}
 const db = getFirestore(app);
+
 
 export async function syncup(data, type) {
   if (sessionStorage.sessionid) {

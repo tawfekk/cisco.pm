@@ -11,7 +11,7 @@ syncdown("router");
 syncdown("vlan");
 syncdown("switch");
 
-sessionStorage.version = "0.01.1-beta";
+sessionStorage.version = "0.02.1-beta";
 
 
 if (!localStorage.router_data) {
@@ -23,6 +23,8 @@ if (!localStorage.router_data) {
       staticnat: [],
       interfaces: [{ subinterfaces: [] }],
       linterfaces: [],
+      hsrp: [],
+      vrrp: [],
       dhcp: [{ ip: "" }],
       initial: [
         {
@@ -55,6 +57,17 @@ if (!localStorage.router_data) {
           pointtopoint: []
         },
       ],
+      eigrp: [
+        {
+          processid: Math.floor(Math.random() * (65535 - 1 + 1)) + 1,
+          enabled: [],
+          passive: [],
+          area: 0,
+          pointtopoint: [],
+          redistributions: [],
+          networks: [] 
+        },
+      ]
     },
   ]);
 }
