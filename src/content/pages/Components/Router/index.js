@@ -134,7 +134,7 @@ function Router() {
         misc: [{}, {}],
         staticnat: [],
         linterfaces: [],
-        eigrp: [{ redistribtions: [], networks: [] }],
+        eigrp: [{ redistributions: [], networks: [], passive: [], enabled: [] }], 
         hsrp: [],
         vrrp: [],
         dhcp: [{ ip: "" }],
@@ -259,7 +259,7 @@ function Router() {
     JSON.parse(localStorage.router_data)
   );
 
-  const handleFormChange = (event, index) => {
+  const handleFormChange = (event, index, value) => {
     let data = [...formFields];
     //if (data[0][event.target.id][index] == undefined) {data[0][event.target.id] = {}}
     if (event.target.type == "checkbox") {
@@ -279,10 +279,16 @@ function Router() {
         data[sessionStorage.router_tabid][id][index][name] = event.target.value;
       }
     } else {
-      var parsed = event.target.name.split("."),
+      var splitcandidate = event.target.name
+      if (!splitcandidate){splitcandidate = event.target.id.split("-")[0]}
+
+      var valuecandidate = event.target.value;
+      if (!valuecandidate){valuecandidate = value}
+
+      var parsed = splitcandidate.split("."),
         id = parsed[0],
         name = parsed[1];
-      data[sessionStorage.router_tabid][id][index][name] = event.target.value;
+      data[sessionStorage.router_tabid][id][index][name] = valuecandidate;
     }
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
@@ -297,7 +303,7 @@ function Router() {
     }
   };
 
-  const handleNestedFormChange = (nest, nestindex, event, index) => {
+  const handleNestedFormChange = (nest, nestindex, event, index, value) => {
     let data = [...formFields];
     //if (data[0][event.target.id][index] == undefined) {data[0][event.target.id] = {}}
     if (event.target.type == "checkbox") {
@@ -306,17 +312,30 @@ function Router() {
       ][event.target.name] = event.target.checked;
       var id = event.target.id;
     } else if (event.target.type == "text") {
+      if(event.target.name){
       data[sessionStorage.router_tabid][nest][nestindex][event.target.id][
         index
       ][event.target.name] = event.target.value;
       var id = event.target.id;
+    }else{
+      var parsed = event.target.id.split("."),
+      id = parsed[0],
+      name = parsed[1];
+      data[sessionStorage.router_tabid][nest][nestindex][id][index][name] = event.target.value;
+    }
     } //(Array.isArray(event.target.value))
     else {
-      var parsed = event.target.name.split("."),
+      var splitcandidate = event.target.name
+      if (!splitcandidate){splitcandidate = event.target.id.split("-")[0]}
+
+      var valuecandidate = event.target.value;
+      if (!valuecandidate){valuecandidate = String(value)}
+
+      var parsed = splitcandidate.split("."),
         id = parsed[0],
         name = parsed[1];
       data[sessionStorage.router_tabid][nest][nestindex][id][index][name] =
-        event.target.value;
+        valuecandidate;
     }
     setformFields(data);
     localStorage.router_data = JSON.stringify(data);
@@ -341,10 +360,11 @@ function Router() {
       passive: [],
       pointtopoint: [],
       overload: "true",
+      networks: [],
       externalinterface: [],
       internalinterface: [],
       subinterfaces: [],
-      redistribtions: [],
+      redistributions: [],
       processid: Math.floor(Math.random() * (65535 - 1 + 1)) + 1,
       area: 0,
       index: data[sessionStorage.router_tabid][id].length,
@@ -408,16 +428,13 @@ window.onload = (event) => {
       if (!sort) {
         for (const elem of formFields[tabid]["interfaces"]) {
           if(!workingvar.includes(elem.port)) {workingvar.push(elem.port)};
-        }
-        for (const elem of formFields[tabid]["linterfaces"]) {
-          workingvar.push("loopback " + elem.id);
-        }
-        for (const elem of formFields[tabid]["interfaces"]) {
           for (const e of elem.subinterfaces) {
             workingvar.push(elem.port + "." + e.id);
           }
         }
-        
+        for (const elem of formFields[tabid]["linterfaces"]) {
+          workingvar.push("loopback " + elem.id);
+        }
       }
       if(sort == "custom"){
         return workingvar
@@ -429,6 +446,51 @@ window.onload = (event) => {
       ));}
     } catch (e) {}
   }
+
+
+  function networks(sort) {
+    try {
+    function calculateNetworkId(hostAddress, subnetMask) {
+      // Convert the host address and subnet mask to arrays of integers
+      const hostAddressArray = hostAddress.split('.').map(Number);
+      const subnetMaskArray = subnetMask.split('.').map(Number);
+    
+      // Calculate the network ID using bitwise AND operation
+      const networkIdArray = hostAddressArray.map((octet, index) => octet & subnetMaskArray[index]);
+    
+      // Convert the array back to a string
+      const networkId = networkIdArray.join('.');
+    
+      return networkId
+    }
+      let workingvar = [];
+      if (sort == "netid") {
+        for (const elem of formFields[tabid]["interfaces"]) {
+          workingvar.push(calculateNetworkId(elem.ip, elem.subnet));
+          for (const e of elem.subinterfaces) {
+            workingvar.push(calculateNetworkId(e.ip, e.subnet))
+          }
+        }
+        for (const elem of formFields[tabid]["linterfaces"]) {
+          workingvar.push(calculateNetworkId(elem.ip, elem.subnet));
+        } 
+        return workingvar;
+      }
+      else if(sort == "subnet"){
+        for (const elem of formFields[tabid]["interfaces"]) {
+          if(!workingvar.includes(String(elem.subnet))) {workingvar.push(String(elem.subnet))};
+          for (const e of elem.subinterfaces) {
+            if(!workingvar.includes(String(e.subnet))) {workingvar.push(String(e.subnet))};
+          }
+        }
+        for (const elem of formFields[tabid]["linterfaces"]) {
+          if(!workingvar.includes(String(elem.subnet))) {workingvar.push(String(elem.subnet))};
+        }
+        return workingvar;
+      }
+    } catch (e) {return [""]}
+  }
+
   function ModalContent(func, id) {
     return (
       <Box sx={style}>
@@ -902,10 +964,10 @@ window.onload = (event) => {
                         required
                         freeSolo
                         autoSelect
-                        //name="interfaces.port"
+                        name="interfaces.port"
                         id="interfaces.port"
-                        value={form.port}
-                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.port} 
+                        onChange={(event, value) => handleFormChange(event, index, value)}
                         options={porte("custom")}
                         renderInput={(params) => <TextField {...params} required={true} error={!form.port} label="Port" />}
                       />
@@ -1976,37 +2038,53 @@ window.onload = (event) => {
                                 >
                                   <DeleteIcon color="secondary" />
                                 </IconButton>
-                                <FormControl
-                                  sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}
-                                >
-                                  <InputLabel size="small" id="eigrp">
-                                    Route
-                                  </InputLabel>
-                                  <Select
-                                    name="networks.id"
-                                    value={form2.id || ''}
-                                    size="small"
-                                    onChange={(event) =>
-                                      handleNestedFormChange(
-                                        "eigrp",
-                                        index,
-                                        event,
-                                        index2
-                                      )
-                                    }
-                                    input={<OutlinedInput label="VLAN" />}
-                                    MenuProps={MenuProps}
-                                  >
-                                   {
-                                    ospfData && Array.isArray(ospfData) && ospfData.map(({ processid }) => (
-                                      <MenuItem key={processid} value={processid}>
-                                        {`OSPF ${processid}`}
-                                      </MenuItem>
-                                    ))
-                                  }
-
-                                  </Select>
-                                </FormControl>
+                                <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                      <Autocomplete
+                        sx={{ mr: -1, ml: -1.2, mt: -1, width: 220 }}
+                        required
+                        freeSolo
+                        autoSelect
+                        size="small"
+                        //name="networks.ip"
+                        id="networks.ip"
+                        value={form2.ip}
+                        onChange={(event, value) =>
+                          handleNestedFormChange(
+                            "eigrp",
+                            index,
+                            event,
+                            index2,
+                            value
+                          )
+                        }
+                        options={networks("netid")}
+                        getOptionLabel={(ip) => ip}
+                        renderInput={(params) => <TextField {...params} error={!form2.ip} required={true} label="IP" />}
+                      />
+                      </FormControl>
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                      <Autocomplete
+                        sx={{ mr: -1, ml: -1.2, mt: -1, width: 220 }}
+                        required
+                        freeSolo
+                        autoSelect
+                        size="small"
+                        //name="networks.ip"
+                        id="networks.subnet"
+                        value={form2.subnet}
+                        onChange={(event, value) =>
+                          handleNestedFormChange(
+                            "eigrp",
+                            index,
+                            event,
+                            index2,
+                            value
+                          )
+                        }
+                        options={networks("subnet")}
+                        renderInput={(params) => <TextField {...params} error={!form2.subnet} required={true} label="Subnet" />}
+                      />
+                      </FormControl>
                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
                                <TextField
                                   disabled={form2.defaultmetric}
