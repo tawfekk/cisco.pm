@@ -11,7 +11,7 @@ syncdown("router");
 syncdown("vlan");
 syncdown("switch");
 
-sessionStorage.version = "0.02.1-beta";
+sessionStorage.version = "0.02.1";
 
 
 if (!localStorage.router_data) {

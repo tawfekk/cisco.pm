@@ -48,6 +48,13 @@ const LogoTextWrapper = styled(Box)(
 `
 );
 
+const LogoText = styled(Box)(
+  ({ theme }) => `
+        font-size: ${theme.typography.pxToRem(15)};
+        font-weight: ${theme.typography.fontWeightBold};
+`
+);
+
 const VersionBadge = styled(Box)(
   ({ theme }) => `
         background: ${theme.palette.success.main};
@@ -57,28 +64,25 @@ const VersionBadge = styled(Box)(
         text-align: center;
         display: inline-block;
         line-height: 1;
-        font-size: ${theme.typography.pxToRem(11)};
+        float: right;
+        font-size: ${theme.typography.pxToRem(15)};
 `
 );
 
-const LogoText = styled(Box)(
-  ({ theme }) => `
-        font-size: ${theme.typography.pxToRem(15)};
-        font-weight: ${theme.typography.fontWeightBold};
-`
-);
+export function Version() {
+return (<VersionBadge sx={{ mt: "93em", ml:-1}} >{sessionStorage.version}</VersionBadge>)
+}
+
+
 
 export function Logo() {
   return (
     <LogoWrapper to="/components/oversigt">
       <LogoSignWrapper>
-        <LogoSign sx={{ mt: 7 }}>
+        <LogoSign sx={{ mt: -1, ml: 2 }}>
           <img src="/static/images/logo/main.svg" />
         </LogoSign>
       </LogoSignWrapper>
-      <LogoTextWrapper sx={{ ml: 12, mt: 5.9 }}>
-        <VersionBadge>{sessionStorage.version}</VersionBadge>
-      </LogoTextWrapper>
     </LogoWrapper>
   );
 }

@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { SidebarContext } from "src/contexts/SidebarContext";
 import { Logo } from "src/components/Logo";
+import { Version } from "src/components/Logo";
 
 import { Box, Drawer, Hidden } from "@mui/material";
 
@@ -35,6 +36,7 @@ const TopSection = styled(Box)(
 `
 );
 
+
 function Sidebar() {
   const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
   const closeSidebar = () => toggleSidebar();
@@ -46,6 +48,7 @@ function Sidebar() {
           <Scrollbars autoHide>
             <TopSection>
               <Logo />
+              <Version />
             </TopSection>
             <SidebarMenu />
           </Scrollbars>
