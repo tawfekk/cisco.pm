@@ -356,6 +356,21 @@ export const MainTheme = createTheme({
     },
     MuiCssBaseline: {
       styleOverrides: {
+        '*': {
+          'scrollbar-width': 'thin',
+          'scrollbar-color': 'rgba(158, 164, 193, 1) transparent',
+        },
+        '*::-webkit-scrollbar': {
+          width: '5px',
+        },
+        '*::-webkit-scrollbar-track': {
+          background: 'transparent',
+        },
+        '*::-webkit-scrollbar-thumb': {
+          backgroundColor: 'rgba(158, 164, 193, 1)',
+          borderRadius: '20px',
+          border: '3px solid transparent',
+        },
         "html, body, #root": {
           width: "100%",
           height: "100%",

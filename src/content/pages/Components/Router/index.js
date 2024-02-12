@@ -136,7 +136,7 @@ function Router() {
         staticnat: [],
         linterfaces: [],
         basicsecurity: [{}],
-        uRPF: [],
+        urpf: [],
         localaaa: [{users: []}],
         advancedaaa: [],
         eigrp: [{ redistributions: [], networks: [], passive: [], enabled: [] }], 
@@ -216,7 +216,7 @@ function Router() {
   const handleAddTab = () => {
     let tabdata = [...tabs];
     maxTabIndex = maxTabIndex + 1;
-    tabdata.push(<Tab label={tablabel(maxTabIndex)} key={maxTabIndex} />);
+    tabdata.push(<Tab label={tablabel(maxTabIndex)} key={maxTabIndex}/>);
     setAddTab(tabdata);
   };
 
@@ -583,11 +583,15 @@ window.onload = (event) => {
           </Alert>
         </Snackbar>
         <Tabs
-          variant="scrollable"
-          scrollButtons="auto"
+          variant="fullWidth"
+          //variant="scrollable"
+          //scrollButtons
+          //allowScrollButtonsMobile
+          //scrollButtons="auto"
           textColor="primary"
           indicatorColor="primary"
           value={value}
+          //style={{ width: '600px', display: "flex" }} 
           onChange={(event, newValue) => {
             setValue(newValue);
             syncdown("router");
@@ -3773,7 +3777,7 @@ window.onload = (event) => {
             //subHeading="Rouer konfiguration."
           />
         </PageTitleWrapper>
-        <Container maxWidth="lg">
+        <Container>
           <Grid
             container
             direction="row"
@@ -3782,7 +3786,7 @@ window.onload = (event) => {
             spacing={3}
           >
             <Grid item xs={12}>
-              <Box sx={{ mr: 6, float: "right"}}>
+              <Box sx={{ float: "right"}}>
                 <Button
                   onClick={() => {
                     run();
@@ -3793,17 +3797,18 @@ window.onload = (event) => {
                   Synk
                 </Button>
               </Box>
-              <Box sx={{ width: "100%" }}>
+              <Box>
                 <Tabs
                   value={tabid}
                   onChange={handleTabChange}
                   variant="scrollable"
-                  scrollButtons="auto"
+                  scrollButtons={true}
                   sx={{ mb: 3}}
+                  //style={{ width: "87%"}}
                 >
                   <Tab label={tablabel(0)} />
                   {tabs.map((child) => child)}
-                  <Tab icon={<AddIcon />} value="tabProperties" />
+                  <Tab icon={<AddIcon />} value="tabProperties" disabled={tabs.length > 12} />
                 </Tabs>
                 <Divider />
                 <TabPanel tabid={tabid}>{Content()}</TabPanel>
