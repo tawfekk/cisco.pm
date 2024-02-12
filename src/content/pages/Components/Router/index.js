@@ -18,7 +18,8 @@ import {
   Staticroute,
   FHRP,
   EIGRP,
-  VPN
+  VPN,
+  Security
   //EIGRP,
   //BGP,
   //ACL
@@ -134,10 +135,16 @@ function Router() {
         misc: [{}, {}],
         staticnat: [],
         linterfaces: [],
+        basicsecurity: [{}],
+        uRPF: [],
+        localaaa: [{users: []}],
+        advancedaaa: [],
         eigrp: [{ redistributions: [], networks: [], passive: [], enabled: [] }], 
         hsrp: [],
         vrrp: [],
         dhcp: [{ ip: "" }],
+        dhcpexclusion: [],
+        dhcphelper: [],
         initial: [
           {
             hostname: "R" + workingtabindex,
@@ -167,6 +174,8 @@ function Router() {
             passive: [],
             area: 0,
             pointtopoint: [],
+            redistributions: [],
+            networks: []
           },
         ],
       };
@@ -364,6 +373,7 @@ function Router() {
       externalinterface: [],
       internalinterface: [],
       subinterfaces: [],
+      users: [],
       redistributions: [],
       processid: Math.floor(Math.random() * (65535 - 1 + 1)) + 1,
       area: 0,
@@ -598,6 +608,7 @@ window.onload = (event) => {
           <Tab label="VPN" />
           <Tab label="ACL" />
           <Tab label="NAT" />
+          <Tab label="Security" />
           <Tab label="Misc" />
         </Tabs>
         <TabPanel value={value} index={0}>
@@ -934,6 +945,7 @@ window.onload = (event) => {
                         name="ip"
                         error={form.subnet && !form.ip}
                         label="IP"
+                        disabled={form.dhcp}
                         id="interfaces"
                         placeholder="192.168.1.1"
                         onChange={(event) => handleFormChange(event, index)}
@@ -943,6 +955,7 @@ window.onload = (event) => {
                       <TextField
                         name="subnet"
                         id="interfaces"
+                        disabled={form.dhcp}
                         error={form.ip && !form.subnet}
                         label="Subnet"
                         placeholder="255.0.0.0 (ipv4), /64(ipv6)"
@@ -969,7 +982,7 @@ window.onload = (event) => {
                         value={form.port} 
                         onChange={(event, value) => handleFormChange(event, index, value)}
                         options={porte("custom")}
-                        renderInput={(params) => <TextField {...params} required={true} error={!form.port} label="Port" />}
+                        renderInput={(params) => <TextField {...params} required={true} error={!form.port} label="Interface" />}
                       />
                       </FormControl>
                       <FormControlLabel
@@ -985,6 +998,21 @@ window.onload = (event) => {
                         }
                         label="Shutdown"
                       />
+                       <Tooltip arrow title="Lad interfacet få en dynamisk IP fra en DHCP server">
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        control={
+                          <Checkbox
+                            color="warning"
+                            name="dhcp"
+                            id="interfaces"
+                            checked={form.dhcp}
+                            onChange={(event) => handleFormChange(event, index)}
+                          />
+                        }
+                        label="Dynamic IP assignment"
+                      />
+                      </Tooltip>
                       {formFields[tabid]["interfaces"][index][
                         "subinterfaces"
                       ].map((form2, index2) => {
@@ -1280,6 +1308,96 @@ window.onload = (event) => {
               </Card>
             );
           })}
+          {formFields[tabid]["dhcpexclusion"].map((form, index) => {
+            return (
+              <Card sx={{ width: "100%", mb: 3 }}>
+                <CardHeader title={"Exclusion " +  index} />
+                <Divider />
+                <CardContent>
+                  <div key={index}>
+                    <Box // sx={{ width: '100%' }}
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                        mt: 1,
+                      }}
+                      autoComplete="off"
+                    >
+                      <IconButton
+                        sx={{ float: "right", mt: 1.5 }}
+                        onClick={() => removeFields("dhcpexclusion", index)}
+                      >
+                        <DeleteIcon color="secondary" />
+                      </IconButton>
+                      <TextField
+                        name="from"
+                        id="dhcpexclusion"
+                        label="From"
+                        placeholder="192.168.1.1"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.from}
+                      />
+                      <TextField
+                        name="to"
+                        id="lintdhcpexclusionerfaces"
+                        label="Subnet"
+                        placeholder="192.168.1.254"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.to}
+                      />
+                    </Box>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+          {formFields[tabid]["dhcphelper"].map((form, index) => {
+            return (
+              <Card sx={{ width: "100%", mb: 3 }}>
+                <CardHeader title={"Helper " +  index} />
+                <Divider />
+                <CardContent>
+                  <div key={index}>
+                    <Box // sx={{ width: '100%' }}
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                        mt: 1,
+                      }}
+                      autoComplete="off"
+                    >
+                      <IconButton
+                        sx={{ float: "right", mt: 1.5 }}
+                        onClick={() => removeFields("dhcphelper", index)}
+                      >
+                        <DeleteIcon color="secondary" />
+                      </IconButton>
+                      <TextField
+                        name="ip"
+                        id="dhcphelper"
+                        label="IP"
+                        placeholder="192.168.1.1"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.ip}
+                      />
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
+                        <InputLabel>Enabled interfaces</InputLabel>
+                        <Select
+                          name="dhcphelper.enabled"
+                          multiple
+                          error={!form.enabled.length}
+                          value={form.enabled}
+                          onChange={(event) => handleFormChange(event, index)}
+                          input={<OutlinedInput label="Enabled interfaces" />}
+                          MenuProps={MenuProps}
+                        >
+                          {porte()}
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}     
           <Button
             variant="contained"
             sx={{ margin: 1 }}
@@ -1288,6 +1406,24 @@ window.onload = (event) => {
             onClick={() => addFields("dhcp")}
           >
             Tilføj pool
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ margin: 0.2 }}
+            size="medium"
+            color="primary"
+            onClick={() => addFields("dhcpexclusion")}
+          >
+            Tilføj exclusion
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ margin: 1 }}
+            size="medium"
+            color="primary"
+            onClick={() => addFields("dhcphelper")}
+          >
+            Tilføj helper
           </Button>
           <Button
             variant="outlined"
@@ -1791,6 +1927,315 @@ window.onload = (event) => {
                         label="Advertise default route"
                       />
                       </Tooltip>
+                      {formFields[tabid]["ospf"][index][
+                        "networks"
+                      ].map((form2, index2) => {
+                        return (
+                          <Card
+                            sx={{
+                              border: 2,
+                              borderColor: "#8C7CF0",
+                              borderRadius: "12px",
+                              width: "100%",
+                              mb: 3,
+                              mt: 3,
+                            }}
+                          >
+                            <CardContent>
+                              <div key={index}>
+                                <IconButton
+                                  sx={{ float: "right", mt: 1 }}
+                                  onClick={() =>
+                                    removeNestedFields(
+                                      "ospf",
+                                      index,
+                                      "networks",
+                                      index2
+                                    )
+                                  }
+                                >
+                                  <DeleteIcon color="secondary" />
+                                </IconButton>
+                                <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                      <Autocomplete
+                        sx={{ mr: -1, ml: -1.2, mt: -1, width: 220 }}
+                        required
+                        freeSolo
+                        autoSelect
+                        size="small"
+                        //name="networks.ip"
+                        id="networks.ip"
+                        value={form2.ip}
+                        onChange={(event, value) =>
+                          handleNestedFormChange(
+                            "ospf",
+                            index,
+                            event,
+                            index2,
+                            value
+                          )
+                        }
+                        options={networks("netid")}
+                        getOptionLabel={(ip) => ip}
+                        renderInput={(params) => <TextField {...params} error={!form2.ip} required={true} label="IP" />}
+                      />
+                      </FormControl>
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                      <Autocomplete
+                        sx={{ mr: -1, ml: -1.2, mt: -1, width: 220 }}
+                        required
+                        freeSolo
+                        autoSelect
+                        size="small"
+                        //name="networks.ip"
+                        id="networks.subnet"
+                        value={form2.subnet}
+                        onChange={(event, value) =>
+                          handleNestedFormChange(
+                            "ospf",
+                            index,
+                            event,
+                            index2,
+                            value
+                          )
+                        }
+                        options={networks("subnet")}
+                        renderInput={(params) => <TextField {...params} error={!form2.subnet} required={true} label="Subnet" />}
+                      />
+                      </FormControl>
+                               <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <TextField
+                                  disabled={form2.defaultmetric}
+                                  error={form2.defaultmetric && form2.bandwidthmetric}
+                                  name="bandwidthmetric"
+                                  id="networks"
+                                  size="small"
+                                  label="Bandwidth metric"
+                                  placeholder="1000000"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "ospf",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.bandwidthmetric}
+                                />
+                                </Tooltip>
+                                  </div>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
+                      {formFields[tabid]["ospf"][index][
+                        "redistributions"
+                      ].map((form2, index2) => {
+                        return (
+                          <Card
+                            sx={{
+                              border: 2,
+                              borderColor: "#9EA4C1",
+                              borderRadius: "12px",
+                              width: "100%",
+                              mb: 3,
+                              mt: 3,
+                            }}
+                          >
+                            <CardContent>
+                              <div key={index}>
+                                <IconButton
+                                  sx={{ float: "right", mt: 1 }}
+                                  onClick={() =>
+                                    removeNestedFields(
+                                      "ospf",
+                                      index,
+                                      "redistributions",
+                                      index2
+                                    )
+                                  }
+                                >
+                                  <DeleteIcon color="secondary" />
+                                </IconButton>
+                                <FormControl
+                                  sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}
+                                >
+                                  <InputLabel size="small" id="eigrp">
+                                    Route
+                                  </InputLabel>
+                                  <Select
+                                    name="redistributions.id"
+                                    value={form2.id}
+                                    size="small"
+                                    onChange={(event) =>
+                                      handleNestedFormChange(
+                                        "ospf",
+                                        index,
+                                        event,
+                                        index2
+                                      )
+                                    }
+                                    input={<OutlinedInput label="VLAN" />}
+                                    MenuProps={MenuProps}
+                                  >
+                                   {
+                                    ospfData && Array.isArray(ospfData) && ospfData.map(({ processid }) => (
+                                      <MenuItem key={processid} value={`OSPF ${processid}`}>
+                                        {`OSPF ${processid}`}
+                                      </MenuItem>
+                                    ))
+                                  }
+
+                                  </Select>
+                                </FormControl>
+                               <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <TextField
+                                  disabled={form2.defaultmetric}
+                                  error={form2.defaultmetric && form2.bandwidthmetric}
+                                  name="bandwidthmetric"
+                                  id="redistributions"
+                                  size="small"
+                                  label="Bandwidth metric"
+                                  placeholder="1000000"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "ospf",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.bandwidthmetric}
+                                />
+                                </Tooltip>
+                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <TextField
+                                  disabled={form2.defaultmetric}
+                                  error={form2.defaultmetric && form2.delaymetric}
+                                  name="delaymetric"
+                                  id="redistributions"
+                                  size="small"
+                                  label="Delay metric"
+                                  placeholder="255.255.255.0"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "ospf",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.delaymetric}
+                                />
+                                </Tooltip>
+                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <TextField
+                                  disabled={form2.defaultmetric}
+                                  error={form2.defaultmetric && form2.reliabilitymetric}
+                                  name="reliabilitymetric"
+                                  id="redistributions"
+                                  size="small"
+                                  label="Reliability metric"
+                                  placeholder="255.255.255.0"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "ospf",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.reliabilitymetric}
+                                />
+                                </Tooltip>
+                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <TextField
+                                  disabled={form2.defaultmetric}
+                                  error={form2.defaultmetric && form2.loadmetric}
+                                  name="loadmetric"
+                                  id="redistributions"
+                                  size="small"
+                                  label="Load metric"
+                                  placeholder="255.255.255.0"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "ospf",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.loadmetric}
+                                />
+                                </Tooltip>
+                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <TextField
+                                  disabled={form2.defaultmetric}
+                                  error={form2.defaultmetric && form2.mtumetric}
+                                  name="mtumetric"
+                                  id="redistributions"
+                                  size="small"
+                                  label="MTU metric"
+                                  placeholder="255.255.255.0"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "ospf",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.mtumetric}
+                                />
+                                </Tooltip>
+                                <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                                  <FormControlLabel
+                                    sx = {{mt: 0}}
+                                    labelPlacement="bottom"
+                                    control={
+                                      <Checkbox
+                                        defaultChecked
+                                        color="warning"
+                                        name="defaultmetric"
+                                        id="redistributions"
+                                        checked={form2.defaultmetric}
+                                        onChange={(event) => 
+                                          handleNestedFormChange(
+                                            "ospf",
+                                            index,
+                                            event,
+                                            index2
+                                          )
+                                        }
+                                      />
+                                    }
+                                    label="Default metric"
+                                  />
+                                  </Tooltip>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
+                      <Divider sx={{ m: 2.5 }} />
+                      <Button
+                        size="small"
+                        color="primary"
+                        onClick={() =>
+                          addNestedFields("ospf", index, "networks")
+                        }
+                      >
+                        Tilføj netværk
+                      </Button>
+                      <Button
+                        size="small"
+                        color="primary"
+                        onClick={() =>
+                          addNestedFields("ospf", index, "redistributions")
+                        }
+                      >
+                        Tilføj redistribution
+                      </Button>
                     </Box>
                   </div>
                 </CardContent>
@@ -2673,6 +3118,554 @@ window.onload = (event) => {
           </Modal>
         </TabPanel>
         <TabPanel value={value} index={11}>
+        {formFields[tabid]["basicsecurity"].map((form, index) => {
+            return (
+              <Card sx={{ width: "100%", mb: 3 }}>
+                <CardHeader title={"Interface " + index} />
+                <Divider />
+                <CardContent>
+                  <div key={index}>
+                    <Box // sx={{ width: '100%' }}
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                        mt: 1,
+                      }}
+                      autoComplete="off"
+                    >
+                      <TextField
+                        name="ip"
+                        error={form.subnet && !form.ip}
+                        label="IP"
+                        id="basicsecurity"
+                        placeholder="192.168.1.1"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.ip}
+                      />
+                      <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >
+                      <TextField
+                        name="subnet"
+                        id="basicsecurity"
+                        error={form.ip && !form.subnet}
+                        label="Subnet"
+                        placeholder="255.0.0.0 (ipv4), /64(ipv6)"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.subnet}
+                      />
+                      </Tooltip>
+                      <TextField
+                        name="description"
+                        id="basicsecurity"
+                        label="Description"
+                        placeholder="portbeskrivelse"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.description}
+                      />
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                      <Autocomplete
+                        sx={{ mr: -1, ml: -1.2, mt: -1, width: 220 }}
+                        required
+                        freeSolo
+                        autoSelect
+                        name="basicsecurity.port"
+                        id="basicsecurity.port"
+                        value={form.port} 
+                        onChange={(event, value) => handleFormChange(event, index, value)}
+                        options={porte("custom")}
+                        renderInput={(params) => <TextField {...params} required={true} error={!form.port} label="Port" />}
+                      />
+                      </FormControl>
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        control={
+                          <Checkbox
+                            color="warning"
+                            name="shutdown"
+                            id="basicsecurity"
+                            checked={form.shutdown}
+                            onChange={(event) => handleFormChange(event, index)}
+                          />
+                        }
+                        label="Shutdown"
+                      />
+                    </Box>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+          {formFields[tabid]["localaaa"].map((form, index) => {
+            return (
+              <Card sx={{ width: "100%", mb: 3 }}>
+                <CardHeader title={"Local AAA " + index} />
+                <Divider />
+                <CardContent>
+                  <div key={index}>
+                    <Box // sx={{ width: '100%' }}
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                        mt: 1,
+                      }}
+                      autoComplete="off"
+                    >
+                      <IconButton
+                        sx={{ float: "right", mt: 1.5 }}
+                        onClick={() => removeFields("localaaa", index)}
+                      >
+                        <DeleteIcon color="secondary" />
+                      </IconButton>
+                      <TextField
+                        name="id"
+                        id="localaaa"
+                        error={!form.id && form.id != 0}
+                        label="Process name"
+                        placeholder="pro1"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.id}
+                      />
+                        <FormControlLabel
+                        labelPlacement="bottom"
+                        sx={{ m: 1.5 }}
+                        control={
+                          <Switch
+                            name="defaultcon0"
+                            id="localaaa"
+                            checked={form.defaultcon0}
+                            onChange={(event) => handleFormChange(event, index)}
+                          />
+                        }
+                        label="Apply for con0"
+                      />
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        sx={{ m: 1.5 }}
+                        control={
+                          <Switch
+                            name="defaultvty"
+                            id="localaaa"
+                            checked={form.defaultvty}
+                            onChange={(event) => handleFormChange(event, index)}
+                          />
+                        }
+                        label="Apply for vty"
+                      />
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        sx={{ m: 1.5 }}
+                        control={
+                          <Switch
+                            name="defaultaccounting"
+                            id="localaaa"
+                            checked={form.defaultaccounting}
+                            onChange={(event) => handleFormChange(event, index)}
+                          />
+                        }
+                        label="Default accounting"
+                      />
+                      {formFields[tabid]["localaaa"][index][
+                        "users"
+                      ].map((form2, index2) => {
+                        return (
+                          <Card
+                            sx={{
+                              border: 2,
+                              borderColor: "#9EA4C1",
+                              borderRadius: "12px",
+                              width: "100%",
+                              mb: 3,
+                              mt: 3,
+                            }}
+                          >
+                            <CardContent>
+                              <div key={index}>
+                                <IconButton
+                                  sx={{ float: "right", mt: 1 }}
+                                  onClick={() =>
+                                    removeNestedFields(
+                                      "localaaa",
+                                      index,
+                                      "users",
+                                      index2
+                                    )
+                                  }
+                                >
+                                  <DeleteIcon color="secondary" />
+                                </IconButton>
+                                <TextField
+                                  name="username"
+                                  error={!form2.username}
+                                  id="users"
+                                  size="small"
+                                  label="Username"
+                                  placeholder="1"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "localaaa",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.username}
+                                />
+                                <TextField
+                                  type="password"
+                                  name="password"
+                                  id="users"
+                                  size="small"
+                                  label="Password"
+                                  error={!form2.password}
+                                  placeholder="Kode1234!"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "localaaa",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.password}
+                                /> 
+                                     <Tooltip arrow title={
+                                      <Typography>
+                                        0: Limited commands.<br />
+                                        1-14: Gradual access increase.<br />
+                                        15: Full admin control.<br />
+                                      </Typography>
+                                    }>
+                                 <TextField
+                                  name="privilege"
+                                  id="users"
+                                  size="small"
+                                  label="Privilege"
+                                  error={!form2.privilege}
+                                  placeholder="5"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "localaaa",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.privilege}
+                                /> 
+                                </Tooltip>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
+                      <Divider sx={{ m: 2.5 }} />
+                      <Button
+                        size="small"
+                        color="primary"
+                        onClick={() =>
+                          addNestedFields("localaaa", index, "users")
+                        }
+                      >
+                        Tilføj user
+                      </Button>
+                    </Box>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+           {formFields[tabid]["advancedaaa"].map((form, index) => {
+            return (
+              <Card sx={{ width: "100%", mb: 3 }}>
+                <CardHeader title={form.protocol +" "+ index} />
+                <Divider />
+                <CardContent>
+                  <div key={index}>
+                    <Box // sx={{ width: '100%' }}
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                        mt: 1,
+                      }}
+                      autoComplete="off"
+                    >
+                      <IconButton
+                        sx={{ float: "right", mt: 1.5 }}
+                        onClick={() => removeFields("advancedaaa", index)}
+                      >
+                        <DeleteIcon color="secondary" />
+                      </IconButton>
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
+                      <InputLabel>Protokol</InputLabel>
+                      <Select
+                          defaultValue=""
+                          error={!form.id}
+                          name="advancedaaa.protocol"
+                          value={form.protocol}
+                          onChange={(event) => {
+                            handleFormChange(event, index);
+                          }}
+                          input={<OutlinedInput label="Protokol" />}
+                        >
+                              <MenuItem value={"radius"}>RADIUS</MenuItem>
+                              <MenuItem value={"tacacs"}>TACACS</MenuItem>
+                        </Select>
+                        </FormControl>
+                      <TextField
+                        name="id"
+                        id="advancedaaa"
+                        error={!form.id}
+                        label="Process name"
+                        placeholder="pro1"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.id}
+                      />
+                       <Tooltip arrow title={`${form.protocol} server IP`}>
+                      <TextField
+                        required
+                        name="ip"
+                        error={!form.id}
+                        id="advancedaaa"
+                        label="IP"
+                        placeholder="192.168.1.100"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.ip}
+                      />
+                      </Tooltip>
+                      <Tooltip arrow title={`${form.protocol} server port`}>
+                      <TextField
+                        required
+                        name="port"
+                        error={!form.port}
+                        id="advancedaaa"
+                        label="Port"
+                        placeholder={form.protocol === "radius" ? "1812" : "49"}
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.port}
+                      />
+                      </Tooltip>
+                      <Tooltip arrow title={`${form.protocol} secret key`}>
+                      <TextField
+                        name="secret"
+                        id="advancedaaa"
+                        label="Shared key"
+                        placeholder="mysecret"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.secret}
+                      />
+                      </Tooltip>
+                      <TextField
+                      label="Timeouts (seconds)"
+                      type="number"
+                      id="advancedaaa"
+                      InputProps={{ inputProps: { min: 0 } }}
+                      value={form.timeouts}
+                       onChange={(event) => handleFormChange(event, index)}
+                      />
+                       <Tooltip arrow placement="top" title={`Angiver interfacet til kommunikation med ${form.protocol} serveren`}>
+                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
+                      <InputLabel>Source interface</InputLabel>
+                       <Select
+                          name="advancedaaa.sourceinterface"
+                          value={form.sourceinterface}
+                          onChange={(event) => handleFormChange(event, index)}
+                          input={<OutlinedInput label="Source interface" />}
+                          MenuProps={MenuProps}
+                        >
+                          {porte()}
+                        </Select>
+                        </FormControl>
+                        </Tooltip>
+                      <Tooltip arrow title={`Fald tilbage til local authentication, hvis ${form.protocol} server ikke er tilgængelig`}>
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        sx={{ m: 1.5 }}
+                        control={
+                          <Switch
+                            name="fallback"
+                            id="advancedaaa"
+                            checked={form.fallback}
+                            onChange={(event) => handleFormChange(event, index)}
+                          />
+                        }
+                        label="Fallback"
+                      />
+                       </Tooltip>
+                        <FormControlLabel
+                        labelPlacement="bottom"
+                        sx={{ m: 1.5 }}
+                        control={
+                          <Switch
+                            name="defaultcon0"
+                            id="advancedaaa"
+                            checked={form.defaultcon0}
+                            onChange={(event) => handleFormChange(event, index)}
+                          />
+                        }
+                        label="Apply for con0"
+                      />
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        sx={{ m: 1.5 }}
+                        control={
+                          <Switch
+                            name="defaultvty"
+                            id="advancedaaa"
+                            checked={form.defaultvty}
+                            onChange={(event) => handleFormChange(event, index)}
+                          />
+                        }
+                        label="Apply for vty"
+                      />
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        sx={{ m: 1.5 }}
+                        control={
+                          <Switch
+                            name="defaultaccounting"
+                            id="advancedaaa"
+                            checked={form.defaultaccounting}
+                            onChange={(event) => handleFormChange(event, index)}
+                          />
+                        }
+                        label="Default accounting"
+                      />
+                        <FormControlLabel
+                        sx={{ m: 1.5 }}
+                        labelPlacement="bottom"
+                        control={
+                          <Switch
+                            name="accountingstartstop"
+                            id="advancedaaa"
+                            checked={form.accountingstartstop}
+                            onChange={(event) => handleFormChange(event, index)}
+                          />
+                        }
+                        label="Accounting Start-Stop"
+                      />
+                    </Box>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}          
+            {formFields[tabid]["urpf"].map((form, index) => {
+            return (
+              <Card sx={{ width: "100%", mb: 3 }}>
+                <CardHeader title={"urpf " + index} />
+                <Divider />
+                <CardContent>
+                  <div key={index}>
+                    <Box // sx={{ width: '100%' }}
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                        mt: 1,
+                      }}
+                      autoComplete="off"
+                    >
+                      <IconButton
+                        sx={{ float: "right", mt: 1.5 }}
+                        onClick={() => removeFields("urpf", index)}
+                      >
+                        <DeleteIcon color="secondary" />
+                      </IconButton>
+                      <TextField
+                        name="ip"
+                        error={form.subnet && !form.ip}
+                        label="IP"
+                        id="urpf"
+                        placeholder="192.168.1.1"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.ip}
+                      />
+                      <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >
+                      <TextField
+                        name="subnet"
+                        id="urpf"
+                        error={form.ip && !form.subnet}
+                        label="Subnet"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.subnet}
+                      />
+                      </Tooltip>
+                      <TextField
+                        name="description"
+                        id="urpf"
+                        label="Description"
+                        placeholder="portbeskrivelse"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.description}
+                      />
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                      <Autocomplete
+                        sx={{ mr: -1, ml: -1.2, mt: -1, width: 220 }}
+                        required
+                        freeSolo
+                        autoSelect
+                        name="urpf.port"
+                        id="urpf.port"
+                        value={form.port} 
+                        onChange={(event, value) => handleFormChange(event, index, value)}
+                        options={porte("custom")}
+                        renderInput={(params) => <TextField {...params} required={true} error={!form.port} label="Port" />}
+                      />
+                      </FormControl>
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        control={
+                          <Checkbox
+                            color="warning"
+                            name="shutdown"
+                            id="urpf"
+                            checked={form.shutdown}
+                            onChange={(event) => handleFormChange(event, index)}
+                          />
+                        }
+                        label="Shutdown"
+                      />
+                    </Box>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })} 
+          <Button
+            variant="contained"
+            sx={{ margin: 1 }}
+            size="medium"
+            color="primary"
+            onClick={() => addFields("localaaa")}
+          >
+            Tilføj Local AAA
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ margin: 1 }}
+            size="medium"
+            color="primary"
+            onClick={() => addFields("advancedaaa")}
+          >
+            Tilføj RADIUS/TACACS
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ margin: 0.2 }}
+            size="medium"
+            color="primary"
+            onClick={() => addFields("urpf")}
+          >
+            Tilføj uRPF
+          </Button>
+          <Button
+            sx={{ margin: 1 }}
+            variant="outlined"
+            onClick={() => {
+              handleOpen();
+            }}
+          >
+            Vis config
+          </Button>
+          <Modal open={open} onClose={handleClose}>
+            {ModalContent(Security, "security")}
+          </Modal>
+        </TabPanel>
+        <TabPanel value={value} index={12}>
           <Container maxWidth="lg">
             <Grid
               container
@@ -2789,7 +3782,7 @@ window.onload = (event) => {
             spacing={3}
           >
             <Grid item xs={12}>
-              <Box sx={{ mr: 6, float: "right" }}>
+              <Box sx={{ mr: 6, float: "right"}}>
                 <Button
                   onClick={() => {
                     run();
@@ -2806,7 +3799,7 @@ window.onload = (event) => {
                   onChange={handleTabChange}
                   variant="scrollable"
                   scrollButtons="auto"
-                  sx={{ mb: 3 }}
+                  sx={{ mb: 3}}
                 >
                   <Tab label={tablabel(0)} />
                   {tabs.map((child) => child)}

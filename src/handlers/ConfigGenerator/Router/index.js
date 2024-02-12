@@ -425,6 +425,11 @@ export function VPN(index) {
   } catch (e) {}
 }
 
+export function Security(index) {
+  try {
+  } catch (e) {}
+}
+
 export function Runner(index) {
   Initial(index);
   Interfaces(index);
@@ -435,5 +440,6 @@ export function Runner(index) {
   NAT(index);
   FHRP(index);
   VPN(index);
+  Security(index)
   Customconfig(index);
 }

@@ -54,7 +54,9 @@ if (!localStorage.router_data) {
           enabled: [],
           passive: [],
           area: 0,
-          pointtopoint: []
+          pointtopoint: [],
+          redistributions: [],
+          networks: []
         },
       ],
       eigrp: [
@@ -67,7 +69,13 @@ if (!localStorage.router_data) {
           redistributions: [],
           networks: [] 
         },
-      ]
+      ],
+      basicsecurity: [{}],
+      urpf: [],
+      localaaa: [{users: []}],
+      advancedaaa: [],
+      dhcpexclusion: [],
+      dhcphelper: [],
     },
   ]);
 }

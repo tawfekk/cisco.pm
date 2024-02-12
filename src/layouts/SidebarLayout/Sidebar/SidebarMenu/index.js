@@ -189,7 +189,7 @@ function SidebarMenu() {
       {menuItems.map((section) => (
         <MenuWrapper
           key={section.heading}
-          onClick={"this_is_a_string_on_purpose"}
+          onClick={"s"}
           subheader={
             <ListSubheader component="div" disableSticky>
               {section.heading}
