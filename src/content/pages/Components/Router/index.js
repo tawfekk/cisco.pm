@@ -3066,6 +3066,7 @@ window.onload = (event) => {
                                 <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
                                <TextField
                                   name="peerprefixlimit"
+                                  type="number"
                                   id="neighbours"
                                   size="small"
                                   label="Prefix limit"
