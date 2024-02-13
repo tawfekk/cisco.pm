@@ -1841,6 +1841,7 @@ window.onload = (event) => {
                       <TextField
                         required
                         error={form.area === undefined || form.area === ""}
+                        type="number"
                         name="area"
                         id="ospf"
                         label="Area"
@@ -1851,6 +1852,7 @@ window.onload = (event) => {
                       <Tooltip arrow title="Tidsinterval mellem udsendelse af OSPF 'Hello' beskeder for at opdage naboer. Standardværdi er 10 sekunder. Øg intervallet forsigtigt for at mindske belastningen.">
                       <TextField
                         name="hellointerval"
+                        type="number"
                         id="ospf"
                         placeholder="30"
                         label="Hello interval"
@@ -1862,6 +1864,7 @@ window.onload = (event) => {
                       <TextField
                         name="deadinterval"
                         id="ospf"
+                        type="number"
                         placeholder="120"
                         label="Dead interval"
                         onChange={(event) => handleFormChange(event, index)}
@@ -1871,6 +1874,7 @@ window.onload = (event) => {
                       <Tooltip arrow title="Referencebåndbredde, der bruges til at beregne OSPF-metrisk for interne ruter.">
                       <TextField
                         name="referencebandwidth"
+                        type="number"
                         id="ospf"
                         placeholder="1000"
                         label="Reference bandwidth (bits)"
@@ -1882,6 +1886,7 @@ window.onload = (event) => {
                       <TextField
                         name="priority"
                         id="ospf"
+                        type="number"
                         label="Priority"
                         placeholder="50"
                         onChange={(event) => handleFormChange(event, index)}
@@ -2312,6 +2317,7 @@ window.onload = (event) => {
                       <TextField
                         name="as"
                         id="eigrp"
+                        type="number"
                         required
                         error={!form.as}
                         label="AS"
@@ -2343,6 +2349,7 @@ window.onload = (event) => {
                       <Tooltip arrow placement="top" enterDelay={1000} leaveDelay={0}  title="Tidsinterval mellem udsendelse af EIGRP 'Hello' beskeder for at opdage naboer. Standardværdi er 10 sekunder. Øg intervallet forsigtigt for at mindske belastningen.">
                       <TextField
                         name="hellointerval"
+                        type="number"
                         id="eigrp"
                         placeholder="30"
                         label="Hello interval"
@@ -2364,6 +2371,7 @@ window.onload = (event) => {
                       <TextField
                         name="kvalues"
                         id="eigrp"
+                        type="number"
                         placeholder="1000"
                         label="K-values (Metric Weights)"
                         onChange={(event) => handleFormChange(event, index)}
@@ -2560,6 +2568,7 @@ window.onload = (event) => {
                                   disabled={form2.defaultmetric}
                                   error={form2.defaultmetric && form2.bandwidthmetric}
                                   name="bandwidthmetric"
+                                  type="number"
                                   id="networks"
                                   size="small"
                                   label="Bandwidth metric"
@@ -2667,6 +2676,7 @@ window.onload = (event) => {
                                   name="delaymetric"
                                   id="redistributions"
                                   size="small"
+                                  type="number"
                                   label="Delay metric"
                                   placeholder="255.255.255.0"
                                   onChange={(event) =>
@@ -2687,6 +2697,7 @@ window.onload = (event) => {
                                   name="reliabilitymetric"
                                   id="redistributions"
                                   size="small"
+                                  type="number"
                                   label="Reliability metric"
                                   placeholder="255.255.255.0"
                                   onChange={(event) =>
@@ -2707,6 +2718,7 @@ window.onload = (event) => {
                                   name="loadmetric"
                                   id="redistributions"
                                   size="small"
+                                  type="number"
                                   label="Load metric"
                                   placeholder="255.255.255.0"
                                   onChange={(event) =>
@@ -2727,6 +2739,7 @@ window.onload = (event) => {
                                   name="mtumetric"
                                   id="redistributions"
                                   size="small"
+                                  type="number"
                                   label="MTU metric"
                                   placeholder="255.255.255.0"
                                   onChange={(event) =>
@@ -2835,11 +2848,12 @@ window.onload = (event) => {
                       >
                         <DeleteIcon color="secondary" />
                       </IconButton>
-                      <Tooltip arrow placement="left" enterDelay={100} leaveDelay={0} title="Det autonome systemnummer, der identificerer EIGRP-routingdomænet">
+                      <Tooltip arrow placement="left" enterDelay={100} leaveDelay={0} title="Det autonome systemnummer, der identificerer BGP-routingdomænet">
                       <TextField
                         name="as"
                         id="bgp"
                         required
+                        type="number"
                         error={!form.as}
                         label="AS"
                         onChange={(event) => handleFormChange(event, index)}
@@ -2858,19 +2872,23 @@ window.onload = (event) => {
                       </Tooltip>
                       <Tooltip arrow placement="top" enterDelay={1000} leaveDelay={0}  title="Tidsinterval mellem udsendelse af EIGRP 'Hello' beskeder for at opdage naboer. Standardværdi er 10 sekunder. Øg intervallet forsigtigt for at mindske belastningen.">
                       <TextField
-                        name="hellointerval"
+                        error={form.holdinterval && form.keepaliveinterval }
+                        name="keepaliveinterval"
                         id="bgp"
-                        placeholder="30"
-                        label="Hello interval"
+                        type="number"
+                        placeholder="60"
+                        label="Keepalive interval"
                         onChange={(event) => handleFormChange(event, index)}
-                        value={form.hellointerval}
+                        value={form.keepaliveinterval}
                       />
                        </Tooltip>
                        <Tooltip arrow placement="left" enterDelay={100} leaveDelay={0}  title="Tidsinterval, hvor en EIGRP-nabo ikke har udsendt 'Hello' besked, før den betragtes som nede. Anvend en værdi, der er større end Hello-interval for at undgå unødvendige nedetidsproblemer.">
                       <TextField
+                        error={form.holdinterval && !form.keepaliveinterval }
                         name="holdinterval"
                         id="bgp"
-                        placeholder="120"
+                        type="number"
+                        placeholder="180"
                         label="Hold interval"
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.holdinterval}
@@ -2880,6 +2898,7 @@ window.onload = (event) => {
                       <TextField
                         name="kvalues"
                         id="bgp"
+                        type="number"
                         placeholder="1000"
                         label="K-values (Metric Weights)"
                         onChange={(event) => handleFormChange(event, index)}
@@ -2912,7 +2931,7 @@ window.onload = (event) => {
                         </Select>
                       </FormControl>
                       </Tooltip>
-                      <Tooltip arrow placement="top" enterDelay={5000} leaveDelay={0} title="Aktiver for at lade EIGRP fungere i passiv tilstand på de valgte grænseflader. Passive grænseflader deltager ikke aktivt i ruteberegninger men lytter stadig til annoncerede ruter fra naboer. Nyttigt for at begrænse trafik uden at deaktivere EIGRP helt.">
+                      <Tooltip arrow placement="top" enterDelay={5000} leaveDelay={0} title="Aktiver for at lade BGP fungere i passiv tilstand på de valgte grænseflader. Passive grænseflader deltager ikke aktivt i ruteberegninger men lytter stadig til annoncerede ruter fra naboer. Nyttigt for at begrænse trafik uden at deaktivere EIGRP helt.">
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
                         <InputLabel>Passive interfaces</InputLabel>
                         <Select
@@ -3048,6 +3067,7 @@ window.onload = (event) => {
                                <TextField
                                   required
                                   name="peeras"
+                                  type="number"
                                   id="neighbours"
                                   size="small"
                                   label="Peer AS"
@@ -3193,6 +3213,7 @@ window.onload = (event) => {
                                   error={form2.defaultmetric && form2.bandwidthmetric}
                                   name="bandwidthmetric"
                                   id="networks"
+                                  type="number"
                                   size="small"
                                   label="Bandwidth metric"
                                   placeholder="1000000"
