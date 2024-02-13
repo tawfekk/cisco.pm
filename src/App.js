@@ -11,7 +11,7 @@ syncdown("router");
 syncdown("vlan");
 syncdown("switch");
 
-sessionStorage.version = "0.02.1";
+sessionStorage.version = "v0.02.1-beta";
 
 
 if (!localStorage.router_data) {
@@ -61,13 +61,19 @@ if (!localStorage.router_data) {
       ],
       eigrp: [
         {
-          processid: Math.floor(Math.random() * (65535 - 1 + 1)) + 1,
           enabled: [],
           passive: [],
-          area: 0,
-          pointtopoint: [],
           redistributions: [],
           networks: [] 
+        },
+      ],
+      bgp: [
+        {
+          enabled: [],
+          passive: [],
+          redistributions: [],
+          networks: [],
+          neighbours: []
         },
       ],
       basicsecurity: [{}],

@@ -19,9 +19,8 @@ import {
   FHRP,
   EIGRP,
   VPN,
-  Security
-  //EIGRP,
-  //BGP,
+  Security,
+  BGP
   //ACL
 } from "src/handlers/ConfigGenerator/Router";
 import { StatusComingSoon } from "src/content/pages/Status/ComingSoon";
@@ -140,6 +139,7 @@ function Router() {
         localaaa: [{users: []}],
         advancedaaa: [],
         eigrp: [{ redistributions: [], networks: [], passive: [], enabled: [] }], 
+        bgp: [{ redistributions: [], networks: [], passive: [], enabled: [], neighbours: [] }], 
         hsrp: [],
         vrrp: [],
         dhcp: [{ ip: "" }],
@@ -369,6 +369,7 @@ function Router() {
       passive: [],
       pointtopoint: [],
       overload: "true",
+      neighbours: [],
       networks: [],
       externalinterface: [],
       internalinterface: [],
@@ -2229,7 +2230,7 @@ window.onload = (event) => {
                           addNestedFields("ospf", index, "networks")
                         }
                       >
-                        Tilføj netværk
+                        Tilføj netværk advertisment
                       </Button>
                       <Button
                         size="small"
@@ -2756,7 +2757,7 @@ window.onload = (event) => {
                           addNestedFields("eigrp", index, "networks")
                         }
                       >
-                        Tilføj netværk
+                        Tilføj netværk advertisment
                       </Button>
                       <Button
                         size="small"
@@ -2795,7 +2796,603 @@ window.onload = (event) => {
           </Modal>
         </TabPanel>
         <TabPanel value={value} index={7}>
-          {StatusComingSoon()}
+        {formFields[tabid]["bgp"].map((form, index) => {
+            return (
+              <Card sx={{ width: "100%", mb: 3 }}>
+                <CardHeader title={"AS " + form.as} />
+                <Divider />
+                <CardContent>
+                  <div key={index}>
+                    <Box // sx={{ width: '100%' }}
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                      }}
+                      autoComplete="off"
+                    >
+                      <IconButton
+                        sx={{ float: "right", mt: 1.5 }}
+                        onClick={() => removeFields("bgp", index)}
+                      >
+                        <DeleteIcon color="secondary" />
+                      </IconButton>
+                      <Tooltip arrow placement="left" enterDelay={100} leaveDelay={0} title="Det autonome systemnummer, der identificerer EIGRP-routingdomænet">
+                      <TextField
+                        name="as"
+                        id="bgp"
+                        required
+                        error={!form.as}
+                        label="AS"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.as}
+                      />
+                      </Tooltip>
+                      <Tooltip arrow placement="top" enterDelay={1000} leaveDelay={0}  title="Routerens ID er en 32-bit værdi, der bruges til at identificere routeren unikt inden for et AS">
+                      <TextField
+                        name="routerid"
+                        id="bgp"
+                        placeholder="1.1.1.1"
+                        label="Router ID"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.routerid}
+                      />
+                      </Tooltip>
+                      <Tooltip arrow placement="top" enterDelay={1000} leaveDelay={0}  title="Tidsinterval mellem udsendelse af EIGRP 'Hello' beskeder for at opdage naboer. Standardværdi er 10 sekunder. Øg intervallet forsigtigt for at mindske belastningen.">
+                      <TextField
+                        name="hellointerval"
+                        id="bgp"
+                        placeholder="30"
+                        label="Hello interval"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.hellointerval}
+                      />
+                       </Tooltip>
+                       <Tooltip arrow placement="left" enterDelay={100} leaveDelay={0}  title="Tidsinterval, hvor en EIGRP-nabo ikke har udsendt 'Hello' besked, før den betragtes som nede. Anvend en værdi, der er større end Hello-interval for at undgå unødvendige nedetidsproblemer.">
+                      <TextField
+                        name="holdinterval"
+                        id="bgp"
+                        placeholder="120"
+                        label="Hold interval"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.holdinterval}
+                      />
+                      </Tooltip>
+                      <Tooltip arrow title="Referencebåndbredde, der bruges til at beregne EIGRP-metrisk for interne ruter. Standardværdi er 100 Mbps. Ændr værdien, hvis netværket har højere båndbredde.">
+                      <TextField
+                        name="kvalues"
+                        id="bgp"
+                        placeholder="1000"
+                        label="K-values (Metric Weights)"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.kvalues}
+                      />
+                      </Tooltip>
+                      <Tooltip arrow title="">
+                      <TextField
+                        name="key"
+                        id="bgp"
+                        label="Authentication key"
+                        placeholder="mysecretkey"
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.key}
+                      />
+                      </Tooltip>
+                      <Tooltip arrow placement="top" enterDelay={1000} leaveDelay={0} title="Vælg eller angiv de interfaces, hvor EIGRP skal aktiveres.">
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
+                        <InputLabel>Enabled interfaces</InputLabel>
+                        <Select
+                          name="bgp.enabled"
+                          multiple
+                          //error={!form.enabled.length}
+                          value={form.enabled}
+                          onChange={(event) => handleFormChange(event, index)}
+                          input={<OutlinedInput label="Enabled interfaces" />}
+                          MenuProps={MenuProps}
+                        >
+                          {porte()}
+                        </Select>
+                      </FormControl>
+                      </Tooltip>
+                      <Tooltip arrow placement="top" enterDelay={5000} leaveDelay={0} title="Aktiver for at lade EIGRP fungere i passiv tilstand på de valgte grænseflader. Passive grænseflader deltager ikke aktivt i ruteberegninger men lytter stadig til annoncerede ruter fra naboer. Nyttigt for at begrænse trafik uden at deaktivere EIGRP helt.">
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
+                        <InputLabel>Passive interfaces</InputLabel>
+                        <Select
+                          name="bgp.passive"
+                          multiple
+                          value={form.passive}
+                          onChange={(event) => handleFormChange(event, index)}
+                          input={<OutlinedInput label="Passive interfaces" />}
+                          MenuProps={MenuProps}
+                        >
+                          {porte()}
+                        </Select>
+                      </FormControl>
+                      </Tooltip>
+                      <Tooltip arrow title="Bestemmer, om routeren skal annoncere en default route til andre EIGRP-routere. Aktiver kun, hvis denne router skal være gateway til andre netværk.">
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        control={
+                          <Checkbox
+                            color="warning"
+                            name="defaultroute"
+                            id="bgp"
+                            checked={form.defaultroute}
+                            onChange={(event) => {
+                              handleFormChange(event, index);
+                            }}
+                          />
+                        }
+                        label="Advertise default route"
+                      />
+                      </Tooltip>
+                      <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        control={
+                          <Checkbox
+                            color="warning"
+                            name="autosummary"
+                            id="bgp"
+                            checked={form.autosummary}
+                            onChange={(event) => {
+                              handleFormChange(event, index);
+                            }}
+                          />
+                        }
+                        label="Auto summarization"
+                      />
+                      </Tooltip>
+                      <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        control={
+                          <Checkbox
+                            color="warning"
+                            name="redistributeconnected"
+                            id="bgp"
+                            checked={form.redistributeconnected}
+                            onChange={(event) => {
+                              handleFormChange(event, index);
+                            }}
+                          />
+                        }
+                        label="Redistribute connected"
+                      />
+                      </Tooltip>
+                      <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        control={
+                          <Checkbox
+                            color="warning"
+                            name="redistributestatic"
+                            id="bgp"
+                            checked={form.redistributestatic}
+                            onChange={(event) => {
+                              handleFormChange(event, index);
+                            }}
+                          />
+                        }
+                        label="Redistribute static"
+                      />
+                      </Tooltip>
+                      {formFields[tabid]["bgp"][index][
+                        "neighbours"
+                      ].map((form2, index2) => {
+                        return (
+                          <Card
+                            sx={{
+                              border: 2,
+                              borderColor: "#FFC13D",
+                              borderRadius: "12px",
+                              width: "100%",
+                              mb: 3,
+                              mt: 3,
+                            }}
+                          >
+                            <CardContent>
+                              <div key={index}>
+                                <IconButton
+                                  sx={{ float: "right", mt: 1 }}
+                                  onClick={() =>
+                                    removeNestedFields(
+                                      "bgp",
+                                      index,
+                                      "neighbours",
+                                      index2
+                                    )
+                                  }
+                                >
+                                  <DeleteIcon color="secondary" />
+                                </IconButton>
+                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <TextField
+                                  disabled={form2.defaultmetric}
+                                  error={form2.defaultmetric && form2.bandwidthmetric}
+                                  name="peerip"
+                                  id="neighbours"
+                                  size="small"
+                                  label="Peer IP"
+                                  placeholder="1000000"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "bgp",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.peerip}
+                                />
+                                </Tooltip>
+                               <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <TextField
+                                  disabled={form2.defaultmetric}
+                                  error={form2.defaultmetric && form2.bandwidthmetric}
+                                  name="peeras"
+                                  id="neighbours"
+                                  size="small"
+                                  label="Peer AS"
+                                  placeholder="1000000"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "bgp",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.peeras}
+                                />
+                                </Tooltip>
+                                  </div>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
+                      {formFields[tabid]["bgp"][index][
+                        "networks"
+                      ].map((form2, index2) => {
+                        return (
+                          <Card
+                            sx={{
+                              border: 2,
+                              borderColor: "#8C7CF0",
+                              borderRadius: "12px",
+                              width: "100%",
+                              mb: 3,
+                              mt: 3,
+                            }}
+                          >
+                            <CardContent>
+                              <div key={index}>
+                                <IconButton
+                                  sx={{ float: "right", mt: 1 }}
+                                  onClick={() =>
+                                    removeNestedFields(
+                                      "bgp",
+                                      index,
+                                      "networks",
+                                      index2
+                                    )
+                                  }
+                                >
+                                  <DeleteIcon color="secondary" />
+                                </IconButton>
+                                <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                      <Autocomplete
+                        sx={{ mr: -1, ml: -1.2, mt: -1, width: 220 }}
+                        required
+                        freeSolo
+                        autoSelect
+                        size="small"
+                        //name="networks.ip"
+                        id="networks.ip"
+                        value={form2.ip}
+                        onChange={(event, value) =>
+                          handleNestedFormChange(
+                            "bgp",
+                            index,
+                            event,
+                            index2,
+                            value
+                          )
+                        }
+                        options={networks("netid")}
+                        getOptionLabel={(ip) => ip}
+                        renderInput={(params) => <TextField {...params} error={!form2.ip} required={true} label="IP" />}
+                      />
+                      </FormControl>
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                      <Autocomplete
+                        sx={{ mr: -1, ml: -1.2, mt: -1, width: 220 }}
+                        required
+                        freeSolo
+                        autoSelect
+                        size="small"
+                        //name="networks.ip"
+                        id="networks.subnet"
+                        value={form2.subnet}
+                        onChange={(event, value) =>
+                          handleNestedFormChange(
+                            "bgp",
+                            index,
+                            event,
+                            index2,
+                            value
+                          )
+                        }
+                        options={networks("subnet")}
+                        renderInput={(params) => <TextField {...params} error={!form2.subnet} required={true} label="Subnet" />}
+                      />
+                      </FormControl>
+                               <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <TextField
+                                  disabled={form2.defaultmetric}
+                                  error={form2.defaultmetric && form2.bandwidthmetric}
+                                  name="bandwidthmetric"
+                                  id="networks"
+                                  size="small"
+                                  label="Bandwidth metric"
+                                  placeholder="1000000"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "bgp",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.bandwidthmetric}
+                                />
+                                </Tooltip>
+                                  </div>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
+                      {formFields[tabid]["bgp"][index][
+                        "redistributions"
+                      ].map((form2, index2) => {
+                        return (
+                          <Card
+                            sx={{
+                              border: 2,
+                              borderColor: "#9EA4C1",
+                              borderRadius: "12px",
+                              width: "100%",
+                              mb: 3,
+                              mt: 3,
+                            }}
+                          >
+                            <CardContent>
+                              <div key={index}>
+                                <IconButton
+                                  sx={{ float: "right", mt: 1 }}
+                                  onClick={() =>
+                                    removeNestedFields(
+                                      "bgp",
+                                      index,
+                                      "redistributions",
+                                      index2
+                                    )
+                                  }
+                                >
+                                  <DeleteIcon color="secondary" />
+                                </IconButton>
+                                <FormControl
+                                  sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}
+                                >
+                                  <InputLabel size="small" id="bgp">
+                                    Route
+                                  </InputLabel>
+                                  <Select
+                                    name="redistributions.id"
+                                    value={form2.id}
+                                    size="small"
+                                    onChange={(event) =>
+                                      handleNestedFormChange(
+                                        "bgp",
+                                        index,
+                                        event,
+                                        index2
+                                      )
+                                    }
+                                    input={<OutlinedInput label="VLAN" />}
+                                    MenuProps={MenuProps}
+                                  >
+                                   {
+                                    ospfData && Array.isArray(ospfData) && ospfData.map(({ processid }) => (
+                                      <MenuItem key={processid} value={`OSPF ${processid}`}>
+                                        {`OSPF ${processid}`}
+                                      </MenuItem>
+                                    ))
+                                  }
+
+                                  </Select>
+                                </FormControl>
+                               <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <TextField
+                                  disabled={form2.defaultmetric}
+                                  error={form2.defaultmetric && form2.bandwidthmetric}
+                                  name="bandwidthmetric"
+                                  id="redistributions"
+                                  size="small"
+                                  label="Bandwidth metric"
+                                  placeholder="1000000"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "bgp",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.bandwidthmetric}
+                                />
+                                </Tooltip>
+                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <TextField
+                                  disabled={form2.defaultmetric}
+                                  error={form2.defaultmetric && form2.delaymetric}
+                                  name="delaymetric"
+                                  id="redistributions"
+                                  size="small"
+                                  label="Delay metric"
+                                  placeholder="255.255.255.0"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "bgp",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.delaymetric}
+                                />
+                                </Tooltip>
+                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <TextField
+                                  disabled={form2.defaultmetric}
+                                  error={form2.defaultmetric && form2.reliabilitymetric}
+                                  name="reliabilitymetric"
+                                  id="redistributions"
+                                  size="small"
+                                  label="Reliability metric"
+                                  placeholder="255.255.255.0"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "bgp",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.reliabilitymetric}
+                                />
+                                </Tooltip>
+                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <TextField
+                                  disabled={form2.defaultmetric}
+                                  error={form2.defaultmetric && form2.loadmetric}
+                                  name="loadmetric"
+                                  id="redistributions"
+                                  size="small"
+                                  label="Load metric"
+                                  placeholder="255.255.255.0"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "bgp",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.loadmetric}
+                                />
+                                </Tooltip>
+                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <TextField
+                                  disabled={form2.defaultmetric}
+                                  error={form2.defaultmetric && form2.mtumetric}
+                                  name="mtumetric"
+                                  id="redistributions"
+                                  size="small"
+                                  label="MTU metric"
+                                  placeholder="255.255.255.0"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "bgp",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.mtumetric}
+                                />
+                                </Tooltip>
+                                <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                                  <FormControlLabel
+                                    sx = {{mt: 0}}
+                                    labelPlacement="bottom"
+                                    control={
+                                      <Checkbox
+                                        defaultChecked
+                                        color="warning"
+                                        name="defaultmetric"
+                                        id="redistributions"
+                                        checked={form2.defaultmetric}
+                                        onChange={(event) => 
+                                          handleNestedFormChange(
+                                            "bgp",
+                                            index,
+                                            event,
+                                            index2
+                                          )
+                                        }
+                                      />
+                                    }
+                                    label="Default metric"
+                                  />
+                                  </Tooltip>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
+                      <Divider sx={{ m: 2.5 }} />
+                      <Button
+                        size="small"
+                        color="primary"
+                        onClick={() =>
+                          addNestedFields("bgp", index, "neighbours")
+                        }
+                      >
+                        Tilføj BGP peer
+                      </Button>
+                      <Button
+                        size="small"
+                        color="primary"
+                        onClick={() =>
+                          addNestedFields("bgp", index, "networks")
+                        }
+                      >
+                        Tilføj netværk advertisment
+                      </Button>
+                      <Button
+                        size="small"
+                        color="primary"
+                        onClick={() =>
+                          addNestedFields("bgp", index, "redistributions")
+                        }
+                      >
+                        Tilføj redistribution
+                      </Button>
+                    </Box>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+          <Button
+            variant="contained"
+            sx={{ margin: 1 }}
+            size="medium"
+            color="primary"
+            onClick={() => addFields("bgp")}
+          >
+            Tilføj BGP AS
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              handleOpen();
+            }}
+          >
+            Vis config
+          </Button>
+          <Modal open={open} onClose={handleClose}>
+            {ModalContent(BGP, "bgp")}
+          </Modal>
         </TabPanel>
         <TabPanel value={value} index={8}>
           {StatusComingSoon()}
@@ -3808,7 +4405,7 @@ window.onload = (event) => {
                 >
                   <Tab label={tablabel(0)} />
                   {tabs.map((child) => child)}
-                  <Tab icon={<AddIcon />} value="tabProperties" disabled={tabs.length > 12} />
+                  <Tab icon={<AddIcon />} value="tabProperties" disabled={tabs.length > 13} />
                 </Tabs>
                 <Divider />
                 <TabPanel tabid={tabid}>{Content()}</TabPanel>

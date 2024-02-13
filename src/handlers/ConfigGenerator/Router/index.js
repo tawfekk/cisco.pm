@@ -416,17 +416,21 @@ export function FHRP(index) {
 }
 
 export function EIGRP(index) {
-  try {
+  try {return "\n!! EIGRP config generation is not yet implemented."
   } catch (e) {}
 }
 
 export function VPN(index) {
-  try {
+  try {return "\n!! VPN config generation is not yet implemented."
   } catch (e) {}
 }
 
 export function Security(index) {
-  try {
+  try {return "\n!! Security config generation is not yet implemented."
+  } catch (e) {}
+}
+export function BGP(index) {
+  try {return "\n!! BGP config generation is not yet implemented."
   } catch (e) {}
 }
 
@@ -442,4 +446,5 @@ export function Runner(index) {
   VPN(index);
   Security(index)
   Customconfig(index);
+  BGP(index);
 }

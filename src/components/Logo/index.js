@@ -65,12 +65,12 @@ const VersionBadge = styled(Box)(
         display: inline-block;
         line-height: 1;
         float: right;
-        font-size: ${theme.typography.pxToRem(15)};
+        font-size: ${theme.typography.pxToRem(11)};
 `
 );
 
 export function Version() {
-return (<VersionBadge sx={{ mt: "93em", ml:-1}} >{sessionStorage.version}</VersionBadge>)
+return (<VersionBadge sx={{ mt: 1.3}} >{sessionStorage.version}</VersionBadge>)
 }
 
 
