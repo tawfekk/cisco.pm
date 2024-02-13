@@ -487,6 +487,18 @@ window.onload = (event) => {
         } 
         return workingvar;
       }
+      else if(sort == "gateway"){
+        for (const elem of formFields[tabid]["interfaces"]) {
+          workingvar.push(elem.ip);
+          for (const e of elem.subinterfaces) {
+            workingvar.push(e.ip)
+          }
+        }
+        for (const elem of formFields[tabid]["linterfaces"]) {
+          workingvar.push(elem.ip);
+        };
+        return workingvar
+      }
       else if(sort == "subnet"){
         for (const elem of formFields[tabid]["interfaces"]) {
           if(!workingvar.includes(String(elem.subnet))) {workingvar.push(String(elem.subnet))};
@@ -1264,33 +1276,42 @@ window.onload = (event) => {
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.navn}
                       />
-                      <TextField
-                        name="ip"
-                        id="dhcp"
-                        error={!form.ip}
-                        label="Netværk"
-                        placeholder="192.168.1.0"
-                        onChange={(event) => handleFormChange(event, index)}
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                      <Autocomplete
+                        required
+                        freeSolo
+                        autoSelect
+                        id="dhcp.ip"
                         value={form.ip}
+                        onChange={(event, value) => handleFormChange(event, index, value)}
+                        options={networks("netid")}
+                        renderInput={(params) => <TextField {...params} error={!form.ip} required={true} label="Netværk" placeholder="192.168.1.0" />}
                       />
-                      <TextField
-                        name="subnet"
-                        id="dhcp"
-                        error={!form.subnet}
-                        label="Subnet"
-                        placeholder="255.255.255.0"
-                        onChange={(event) => handleFormChange(event, index)}
+                      </FormControl>
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                      <Autocomplete
+                        required
+                        freeSolo
+                        autoSelect
+                        id="dhcp.subnet"
                         value={form.subnet}
+                        onChange={(event, value) => handleFormChange(event, index, value)}
+                        options={networks("subnet")}
+                        renderInput={(params) => <TextField {...params} error={!form.subnet} required={true} label="Subnet" placeholder="255.255.255.0" />}
                       />
-                      <TextField
-                        name="gateway"
-                        label="Gateway"
-                        error={!form.gateway}
-                        id="dhcp"
-                        placeholder="192.168.1.1"
-                        onChange={(event) => handleFormChange(event, index)}
+                      </FormControl>
+                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                      <Autocomplete
+                        required
+                        freeSolo
+                        autoSelect
+                        id="dhcp.gateway"
                         value={form.gateway}
+                        onChange={(event, value) => handleFormChange(event, index, value)}
+                        options={networks("gateway")}
+                        renderInput={(params) => <TextField {...params} error={!form.gateway} required={true} label="Subnet" placeholder="192.168.1.1" />}
                       />
+                      </FormControl>
                       <TextField
                         name="domæne"
                         label="Domæne"
@@ -1981,7 +2002,6 @@ window.onload = (event) => {
                           )
                         }
                         options={networks("netid")}
-                        getOptionLabel={(ip) => ip}
                         renderInput={(params) => <TextField {...params} error={!form2.ip} required={true} label="IP" />}
                       />
                       </FormControl>
@@ -2910,9 +2930,9 @@ window.onload = (event) => {
                       <Tooltip arrow title="Bestemmer, om routeren skal annoncere en default route til andre EIGRP-routere. Aktiver kun, hvis denne router skal være gateway til andre netværk.">
                       <FormControlLabel
                         labelPlacement="bottom"
+                        sx={{ m: 1.5 }}
                         control={
-                          <Checkbox
-                            color="warning"
+                          <Switch
                             name="defaultroute"
                             id="bgp"
                             checked={form.defaultroute}
@@ -2927,9 +2947,9 @@ window.onload = (event) => {
                       <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
                       <FormControlLabel
                         labelPlacement="bottom"
+                        sx={{ m: 1.5 }}
                         control={
-                          <Checkbox
-                            color="warning"
+                          <Switch
                             name="autosummary"
                             id="bgp"
                             checked={form.autosummary}
@@ -2944,9 +2964,9 @@ window.onload = (event) => {
                       <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
                       <FormControlLabel
                         labelPlacement="bottom"
+                        sx={{ m: 1.5 }}
                         control={
-                          <Checkbox
-                            color="warning"
+                          <Switch
                             name="redistributeconnected"
                             id="bgp"
                             checked={form.redistributeconnected}
@@ -2961,9 +2981,9 @@ window.onload = (event) => {
                       <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
                       <FormControlLabel
                         labelPlacement="bottom"
+                        sx={{ m: 1.5 }}
                         control={
-                          <Checkbox
-                            color="warning"
+                          <Switch
                             name="redistributestatic"
                             id="bgp"
                             checked={form.redistributestatic}
@@ -3006,13 +3026,13 @@ window.onload = (event) => {
                                 </IconButton>
                                 <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
                                <TextField
-                                  disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.bandwidthmetric}
+                                  error={form2.peerip}
+                                  required
                                   name="peerip"
                                   id="neighbours"
                                   size="small"
                                   label="Peer IP"
-                                  placeholder="1000000"
+                                  placeholder="192.168.1.1"
                                   onChange={(event) =>
                                     handleNestedFormChange(
                                       "bgp",
@@ -3026,13 +3046,12 @@ window.onload = (event) => {
                                 </Tooltip>
                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
                                <TextField
-                                  disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.bandwidthmetric}
+                                  required
                                   name="peeras"
                                   id="neighbours"
                                   size="small"
                                   label="Peer AS"
-                                  placeholder="1000000"
+                                  placeholder="27"
                                   onChange={(event) =>
                                     handleNestedFormChange(
                                       "bgp",
@@ -3044,6 +3063,48 @@ window.onload = (event) => {
                                   value={form2.peeras}
                                 />
                                 </Tooltip>
+                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <TextField
+                                  name="peerprefixlimit"
+                                  id="neighbours"
+                                  size="small"
+                                  label="Prefix limit"
+                                  placeholder="3000"
+                                  onChange={(event) =>
+                                    handleNestedFormChange(
+                                      "bgp",
+                                      index,
+                                      event,
+                                      index2
+                                    )
+                                  }
+                                  value={form2.peerprefixlimit}
+                                />
+                                </Tooltip>
+                                <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                                    <FormControlLabel
+                                      sx={{ m: 0.5 }}
+                                      labelPlacement="left"
+                                      control={
+                                        <Checkbox
+                                          color="warning"
+                                          disabled={!form2.peerprefixlimit}
+                                          name="warningonly"
+                                          id="bgp"
+                                          checked={form2.warningonly}
+                                          onChange={(event) =>
+                                            handleNestedFormChange(
+                                              "bgp",
+                                              index,
+                                              event,
+                                              index2
+                                            )
+                                          }
+                                        />
+                                      }
+                                      label="Warning only"
+                                    />
+                                    </Tooltip>
                                   </div>
                             </CardContent>
                           </Card>
