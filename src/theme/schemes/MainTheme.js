@@ -357,8 +357,8 @@ export const MainTheme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         '*': {
-          'scrollbar-width': 'thin',
-          'scrollbar-color': 'rgba(158, 164, 193, 1) transparent',
+          'scrollbarWidth': 'thin',
+          'scrollbarColor': 'rgba(158, 164, 193, 1) transparent',
         },
         '*::-webkit-scrollbar': {
           width: '5px',

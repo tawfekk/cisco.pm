@@ -181,6 +181,7 @@ const reduceChildRoutes = ({ ev, path, item }) => {
   return ev;
 };
 
+
 function SidebarMenu() {
   const location = useLocation();
 
@@ -189,7 +190,7 @@ function SidebarMenu() {
       {menuItems.map((section) => (
         <MenuWrapper
           key={section.heading}
-          onClick={"s"}
+          onClick={"this is a string on purpose"}
           subheader={
             <ListSubheader component="div" disableSticky>
               {section.heading}

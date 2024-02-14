@@ -6,7 +6,7 @@ export const ThemeContext = React.createContext((themeName) => {});
 
 const ThemeProviderWrapper = function (props) {
   return (
-    <ThemeContext.Provider>
+    <ThemeContext.Provider value={''}>
       <ThemeProvider theme={MainTheme}>{props.children}</ThemeProvider>
     </ThemeContext.Provider>
   );
