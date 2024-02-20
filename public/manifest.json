@@ -4,5 +4,5 @@
   "display": "standalone",
   "start_url": ".",
   "short_name": "cisco.pm",
-  "name": "Cisco config generator",
+  "name": "Cisco config generator"
 }

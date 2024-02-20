@@ -11,7 +11,7 @@ syncdown("router");
 syncdown("vlan");
 syncdown("switch");
 
-sessionStorage.version = "0.01.1-beta";
+sessionStorage.version = "v0.02.1-beta";
 
 
 if (!localStorage.router_data) {
@@ -23,6 +23,8 @@ if (!localStorage.router_data) {
       staticnat: [],
       interfaces: [{ subinterfaces: [] }],
       linterfaces: [],
+      hsrp: [],
+      vrrp: [],
       dhcp: [{ ip: "" }],
       initial: [
         {
@@ -52,9 +54,34 @@ if (!localStorage.router_data) {
           enabled: [],
           passive: [],
           area: 0,
-          pointtopoint: []
+          pointtopoint: [],
+          redistributions: [],
+          networks: []
         },
       ],
+      eigrp: [
+        {
+          enabled: [],
+          passive: [],
+          redistributions: [],
+          networks: [] 
+        },
+      ],
+      bgp: [
+        {
+          enabled: [],
+          passive: [],
+          redistributions: [],
+          networks: [],
+          neighbours: []
+        },
+      ],
+      basicsecurity: [{}],
+      urpf: [],
+      localaaa: [{users: []}],
+      advancedaaa: [],
+      dhcpexclusion: [],
+      dhcphelper: [],
     },
   ]);
 }
@@ -107,6 +134,7 @@ const App = () => {
   );
 };
 export default App;
+
 
 //før:
 //<LocalizationProvider dateAdapter={AdapterDateFns}>

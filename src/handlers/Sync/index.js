@@ -15,7 +15,9 @@ const appCheck = initializeAppCheck(app, {
   provider: new ReCaptchaEnterpriseProvider("6Ldwa3IpAAAAAJ_JY7-YCQP-LcFdS84gcqOAPlNb"),
   isTokenAutoRefreshEnabled: true // Set to true to allow auto-refresh.
 });
+
 const db = getFirestore(app);
+
 
 export async function syncup(data, type) {
   if (sessionStorage.sessionid) {

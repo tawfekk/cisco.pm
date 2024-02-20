@@ -10,6 +10,7 @@ import { useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import ExpandMoreTwoToneIcon from "@mui/icons-material/ExpandMoreTwoTone";
+import { Version } from "src/components/Logo";
 
 const ListWrapper = styled(Box)(
   ({ theme }) => `
@@ -77,6 +78,7 @@ function HeaderMenu() {
   return (
     <>
       <ListWrapper>
+      <Version />
         <List disablePadding component={Box} display="flex">
           <ListItem
             classes={{ root: "MuiListItem-indicators" }}

@@ -233,7 +233,7 @@ export const MainTheme = createTheme({
     menuItemIconColorActive: colors.layout.sidebar.menuItemIconColorActive,
     menuItemHeadingColor: colors.layout.sidebar.menuItemHeadingColor,
     boxShadow: "1px 0 0 #272C48",
-    width: "280px",
+    width: "200px",
   },
   header: {
     height: "88px",
@@ -356,6 +356,21 @@ export const MainTheme = createTheme({
     },
     MuiCssBaseline: {
       styleOverrides: {
+        '*': {
+          'scrollbarWidth': 'thin',
+          'scrollbarColor': 'rgba(158, 164, 193, 1) transparent',
+        },
+        '*::-webkit-scrollbar': {
+          width: '5px',
+        },
+        '*::-webkit-scrollbar-track': {
+          background: 'transparent',
+        },
+        '*::-webkit-scrollbar-thumb': {
+          backgroundColor: 'rgba(158, 164, 193, 1)',
+          borderRadius: '20px',
+          border: '3px solid transparent',
+        },
         "html, body, #root": {
           width: "100%",
           height: "100%",
