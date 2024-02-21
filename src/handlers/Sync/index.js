@@ -16,6 +16,8 @@ const appCheck = initializeAppCheck(app, {
   isTokenAutoRefreshEnabled: true // Set to true to allow auto-refresh.
 });
 
+firebase.appCheck().setTokenAutoRefreshEnabled(true)
+
 const db = getFirestore(app);
 
 
