@@ -24,7 +24,7 @@ import { initializeApp } from "firebase/app";
 import { doc, getFirestore, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD3npySkxT-_E2ZESGzzftE6JZagBf-UHQ", //hack mig :-)
+  apiKey: "AIzaSyD3npySkxT-_E2ZESGzzftE6JZagBf-UHQ", 
   authDomain: "cisco-pm.firebaseapp.com",
   projectId: "cisco-pm",
   storageBucket: "cisco-pm.appspot.com",
@@ -127,7 +127,7 @@ function VLAN() {
                       />
                       <TextField
                         name="navn"
-                        label="VLAN navn"
+                        label="VLAN name"
                         placeholder="Production"
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.navn}
@@ -144,7 +144,7 @@ function VLAN() {
                 color="primary"
                 onClick={() => addFields()}
               >
-                Tilføj VLAN
+                Add a VLAN
               </Button>
               <Button
                 variant="outlined"
@@ -154,7 +154,7 @@ function VLAN() {
                   window.location.reload();
                 }}
               >
-                Ryd alle VLAN
+                Remove all VLANs
               </Button>
             </CardContent>
           </Card>

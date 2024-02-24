@@ -61,7 +61,7 @@ function Hero() {
       >
         <Grid item md={10} lg={8} mx="auto">
           <TypographyH1 sx={{ mb: 4 }} variant="h1">
-            Siden er stadig under opbygning
+            This website is still in development
           </TypographyH1>
           <Button
             component={RouterLink}
@@ -69,7 +69,7 @@ function Hero() {
             size="large"
             variant="contained"
           >
-            Gå til live preview
+            View live preview
           </Button>
           <Grid container spacing={3} mt={5}>
             <Grid item md={6}>

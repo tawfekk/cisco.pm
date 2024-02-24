@@ -90,7 +90,7 @@ function HeaderMenu() {
               primaryTypographyProps={{ noWrap: true }}
               primary={
                 <Box display="flex" alignItems="center">
-                  Værktøjer
+                  Tools
                   <Box display="flex" alignItems="center" pl={0.3}>
                     <ExpandMoreTwoToneIcon fontSize="small" />
                   </Box>
@@ -110,13 +110,13 @@ function HeaderMenu() {
           Netacademy
         </MenuItem>
         <MenuItem sx={{ px: 3 }} component={NavLink} to="/status/coming-soon">
-          Historik
+          History
         </MenuItem>
         <MenuItem sx={{ px: 3 }} component={NavLink} to="/status/coming-soon">
-          Dokumentation
+          Documentation
         </MenuItem>
         <MenuItem sx={{ px: 3 }} component={NavLink} to="/status/report-error">
-          Fejlrapporting
+          Errors
         </MenuItem>
       </Menu>
     </>
