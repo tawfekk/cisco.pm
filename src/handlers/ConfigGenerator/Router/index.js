@@ -1,3 +1,18 @@
+function ipinverter(data) {
+  let arr = data.split(".");
+  let x = 255 - arr[0] + ".";
+  x += 255 - arr[1] + ".";
+  x += 255 - arr[2] + ".";
+  x += 255 - arr[3];
+  return x;
+}
+
+function isIPv6(address) {
+  // Regular expression to match IPv6 address
+  const ipv6Regex = /^(?:(?:[a-fA-F\d]{1,4}:){7}(?:[a-fA-F\d]{1,4}|:)|(?:[a-fA-F\d]{1,4}:){6}(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|:[a-fA-F\d]{1,4}|:)|(?:[a-fA-F\d]{1,4}:){5}(?::(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,2}|:)|(?:[a-fA-F\d]{1,4}:){4}(?:(?::[a-fA-F\d]{1,4}){0,1}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,3}|:)|(?:[a-fA-F\d]{1,4}:){3}(?:(?::[a-fA-F\d]{1,4}){0,2}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,4}|:)|(?:[a-fA-F\d]{1,4}:){2}(?:(?::[a-fA-F\d]{1,4}){0,3}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,5}|:)|(?:[a-fA-F\d]{1,4}:){1}(?:(?::[a-fA-F\d]{1,4}){0,4}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,6}|:)|(?::(?:(?::[a-fA-F\d]{1,4}){0,5}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,7}|:)))(?:%[0-9a-zA-Z]{1,})?$/gm;  
+    return ipv6Regex.test(address);
+}
+
 export function Initial(index) {
   try {
     var today = new Date();
@@ -90,8 +105,19 @@ export function Interfaces(index) {
     for (const e of JSON.parse(localStorage.router_data)[index]["interfaces"]) {
       if (e.port) {
         workingvar += "\n\ninterface " + e.port;
-        if (e.ip && e.subnet) {
+        if (!isIPv6(e.ip)) {
+        if (e.ip && e.subnet && e.interfacedhcp == false) {
           workingvar += "\nip address " + e.ip + " " + e.subnet;
+        }
+        if (e.interfacedhcp){
+          workingvar += "\nip address dhcp";
+        }}else{
+          if (e.ip && e.subnet && e.interfacedhcp == false) {
+            workingvar += "\nipv6 address " + e.ip + e.subnet;
+          }
+          if (e.interfacedhcp){
+            workingvar += "\nipv6 address dhcp";
+          }
         }
         if (e.description) {
           workingvar += "\ndescription " + e.description;
@@ -115,8 +141,14 @@ export function Interfaces(index) {
             .navn +
           "\nencapsulation dot1Q " +
           elem.vlan;
+
+        if (!isIPv6(elem.ip)) {
         if (elem.ip && elem.subnet) {
           workingvar += "\nip address " + elem.ip + " " + elem.subnet;
+        }}else{
+          if (elem.ip && elem.subnet) {
+            workingvar += "\nipv6 address " + elem.ip + elem.subnet;
+          }
         }
         workingvar += "\nexit";
       }
@@ -160,11 +192,75 @@ export function DHCP(index) {
         workingvar += "\nexit";
       }
     }
+    for (const e of JSON.parse(localStorage.router_data)[index]["dhcpexclusion"]) {
+      if (e.from && e.to) {
+        workingvar += "\nip dhcp excluded-address " + e.from + " " + e.to;
+      }
+    }
+    for (const e of JSON.parse(localStorage.router_data)[index]["dhcphelper"]) {
+      for (const elem of e.enabled) {
+        if (elem && e.ip) {
+        workingvar += "\ninterface " + elem + "\nip helper-address " + e.ip + "\nexit";
+        }
+      }
+    }
     let workingdata = JSON.parse(localStorage.router_final);
     workingdata[index]["dhcp"] = workingvar;
     localStorage.router_final = JSON.stringify(workingdata);
     return workingvar;
   } catch (error) {}
+}
+
+export function FHRP(index) {
+  try {
+    var workingvar = "";
+    for (const e of JSON.parse(localStorage.router_data)[index]["hsrp"]){
+      if (e.group && e.ip && e.priority) {
+        workingvar +=
+          "\n\ninterface " +
+          e.port +
+          "\nstandby " +
+          e.group +
+          " ip " +
+          e.ip +
+          "\nstandby " +
+          e.group +
+          " priority " +
+          e.priority;
+          if (e.preempt){
+            workingvar += "\nstandby " + e.group + " preempt";
+          }
+        //if (e.version == 2) {
+        //  workingvar += " version 2";
+        //}
+        workingvar += "\nexit";
+      }
+    }
+    for (const e of JSON.parse(localStorage.router_data)[index]["vrrp"]){
+      if (e.group && e.ip && e.priority) {
+        workingvar +=
+          "\n\ninterface " +
+          e.port +
+          "\nvrrp " +
+          e.group +
+          " ip " +
+          e.ip +
+          "\nvrrp " +
+          e.group +
+          " priority " +
+          e.priority;
+          if (e.preempt){
+            workingvar += "\nvrrp " + e.group + " preempt";
+          }
+        workingvar += "\nexit";
+      }
+    }
+
+   let workingdata = JSON.parse(localStorage.router_final);
+   workingdata[index]["fhrp"] = workingvar;
+   localStorage.router_final = JSON.stringify(workingdata);
+   return workingvar;
+  } catch (e) {}
 }
 
 export function Staticroute(index) {
@@ -226,6 +322,32 @@ export function OSPF(index) {
           workingvar +=
             "\nauto-cost reference-bandwidth " + e.referencebandwidth;
         }
+        for (const elem of e.networks) {
+          if (elem.ip && elem.subnet) {
+            workingvar +=
+              "\nnetwork " +
+              elem.ip +
+              " " +
+              elem.subnet +
+              " area " +
+              e.area;
+          }
+        }
+        if (e.redistributestatic) {
+          workingvar += "\nredistribute static";
+        }else{
+          workingvar += "\nno redistribute static";
+        }
+        if (e.redistributeconntected) {
+          workingvar += "\nredistribute connected";
+        }else{
+          workingvar += "\nno redistribute connected";
+        }
+        for (const elem of e.redistrubutions) {
+          //
+        }
+        
+
         workingvar += "\nexit";
       }
       if (e.enabled.length) {
@@ -253,6 +375,7 @@ export function OSPF(index) {
           e.pointtopoint.toString() +
           "\nip ospf network point-to-point\nexit";
       }
+
     }
     let workingdata = JSON.parse(localStorage.router_final);
     workingdata[index]["ospf"] = workingvar;
@@ -261,14 +384,23 @@ export function OSPF(index) {
   } catch (e) {}
 }
 
-function ipinverter(data) {
-  let arr = data.split(".");
-  let x = 255 - arr[0] + ".";
-  x += 255 - arr[1] + ".";
-  x += 255 - arr[2] + ".";
-  x += 255 - arr[3];
-  return x;
+export function EIGRP(index) {
+  try {
+    var workingvar = "";
+    for (const e of JSON.parse(localStorage.router_data)[index]["eigrp"]) {
+      if (e.override || e.passive.length || e.enabled.length) {
+        workingvar += "\n\nrouter eigrp " + e.as;
+        
+        
+    }
+  }
+    let workingdata = JSON.parse(localStorage.router_final);
+    workingdata[index]["eigrp"] = workingvar;
+    localStorage.router_final = JSON.stringify(workingdata);
+    return workingvar;
+  } catch (e) {}
 }
+
 
 export function NAT(index) {
   try {
@@ -386,39 +518,6 @@ function Customconfig(index) {
   } catch (error) {}
 }
 
-export function FHRP(index) {
-  try {
-    var workingvar = "";
- //   for (const e of JSON.parse(localStorage.router_data)[index][
- //     "FHRP"
- //   ]) {
- //     if (e.destinationip && e.destinationsubnet) {
- //       workingvar +=
- //         "\n\nip route " + e.destinationip + " " + e.destinationsubnet + " ";
- //       if (e.nexthopip) {
- //         workingvar += e.nexthopip;
- //       } else if (e.nexthopinterface) {
- //         workingvar += e.nexthopinterface;
- //       }
- //       if (e.distance) {
-  //        workingvar += " " + e.distance;
-  //      }
-   //     if (e.permanent) {
-   //       workingvar += " permanent";
-   //     }
-   //   }
-   // }
-   // let workingdata = JSON.parse(localStorage.router_final);
-   // workingdata[index]["staticroute"] = workingvar;
-   // localStorage.router_final = JSON.stringify(workingdata);
-   // return workingvar;
-  } catch (e) {}
-}
-
-export function EIGRP(index) {
-  try {return "\n!! EIGRP config generation is not yet implemented."
-  } catch (e) {}
-}
 
 export function VPN(index) {
   try {return "\n!! VPN config generation is not yet implemented."

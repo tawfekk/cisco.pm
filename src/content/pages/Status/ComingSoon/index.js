@@ -18,14 +18,14 @@ export function StatusComingSoon() {
   return (
     <>
       <Helmet>
-        <title>Kommer snart</title>
+        <title>Coming soon</title>
       </Helmet>
       <MainContent>
         <Container maxWidth="md">
           <Box textAlign="center" mb={3}>
             <Container maxWidth="xs">
               <Typography variant="h1" sx={{ mt: 4, mb: 2 }}>
-                Kommer snart
+                Coming soon!
               </Typography>
               <Typography
                 variant="h3"
@@ -33,7 +33,7 @@ export function StatusComingSoon() {
                 fontWeight="normal"
                 sx={{ mb: 4 }}
               >
-                Denne funktion er ikke helt klar endnu
+                This function is almost ready
               </Typography>
             </Container>
             <img

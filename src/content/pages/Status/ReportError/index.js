@@ -31,7 +31,7 @@ export function StatusReportError() {
   return (
     <>
       <Helmet>
-        <title>Fejlrapporting</title>
+        <title>Experincing errors?</title>
       </Helmet>
       <MainContent>
         <Container maxWidth="md">
@@ -43,19 +43,19 @@ export function StatusReportError() {
             component={NavLink}
             to="/components/oversigt"
           >
-            Gå tilbage
+            Go back
           </Button>
           <Box textAlign="center" mb={3}>
             <Container maxWidth="xs">
               <Typography variant="h1" sx={{ mt: 4, mb: 2 }}>
-                Oplever du en fejl?
+              Experincing an error?
               </Typography>
               <Typography
                 variant="h4"
                 color="text.secondary"
                 fontWeight="normal"
               >
-                1: Prøv først at nulstille al data på siden
+                1: Try to reset all data
               </Typography>
               <Tooltip
                 arrow
@@ -80,7 +80,7 @@ export function StatusReportError() {
                   component={NavLink}
                   to="/components/oversigt"
                 >
-                  Nulstil al data
+                  Reset all data
                 </Button>
               </Tooltip>
               <Divider />
@@ -90,8 +90,8 @@ export function StatusReportError() {
                 fontWeight="normal"
                 sx={{ mt: 2 }}
               >
-                2: Hvis det ikke virker, så opret et issue på GitHub eller send
-                en mail til{" "}
+                2: If the error is still present, create an issue on GitHub or send
+                an mail to{" "}
                 <Link
                   href="mailto:cisco.pm"
                   target="_blank"
@@ -114,7 +114,7 @@ export function StatusReportError() {
                   );
                 }}
               >
-                Gå til GitHub
+                Go to GitHub
               </Button>
             </Container>
             <img alt="Bug" height={300} src="/static/images/status/bug.svg" />

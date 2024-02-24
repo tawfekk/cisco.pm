@@ -18,7 +18,7 @@ const menuItems = [
     heading: "Menu",
     items: [
       {
-        name: "Oversigt",
+        name: "Overview",
         icon: ListAltIcon,
         link: "/components/oversigt",
       },

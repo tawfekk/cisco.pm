@@ -31,21 +31,21 @@ export function StatusError(type) {
   return (
     <>
       <Helmet>
-        <title>Fejl</title>
+        <title>Error</title>
       </Helmet>
       <MainContent>
         <Container maxWidth="md">
           <Box textAlign="center">
             <Container maxWidth="xs">
               <Typography variant="h1" sx={{ mb: 2 }}>
-                Der skete en fejl i visningen
+                An error occured
               </Typography>
               <Typography
                 variant="h4"
                 color="text.secondary"
                 fontWeight="normal"
               >
-                1: Prøv først at nulstille al {type} data
+                1: Try to reset all {type} data
               </Typography>
               <Tooltip
                 arrow
@@ -72,7 +72,7 @@ export function StatusError(type) {
                     }, 500);
                   }}
                 >
-                  Nulstil al {type} data
+                  Reset all {type} data
                 </Button>
               </Tooltip>
               <Divider />
@@ -82,8 +82,8 @@ export function StatusError(type) {
                 fontWeight="normal"
                 sx={{ mt: 2 }}
               >
-                2: Hvis denne side stadig dukker op, så opret et issue på GitHub
-                eller send en mail til{" "}
+                2: If this error is still present, then create an issue on GitHub
+                or send an mail to{" "}
                 <Link
                   href="mailto:cisco.pm"
                   target="_blank"
@@ -106,7 +106,7 @@ export function StatusError(type) {
                   );
                 }}
               >
-                Gå til GitHub
+                Go to GitHub
               </Button>
             </Container>
             <img alt="Bug" height={300} src="/static/images/status/bug.svg" />

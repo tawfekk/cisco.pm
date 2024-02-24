@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet-async";
 import PageTitle from "src/components/PageTitle";
 import PageTitleWrapper from "src/components/PageTitleWrapper";
 import Footer from "src/components/Footer";
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import * as React from "react";
 import SyncIcon from "@mui/icons-material/Sync";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -86,6 +86,7 @@ let alertsev = "info";
 
 sessionStorage.router_tabid = 0;
 
+
 if (
   JSON.parse(localStorage.router_final).length !=
   JSON.parse(localStorage.router_data).length
@@ -159,7 +160,7 @@ function Router() {
             sshv2: true,
             genereatersa: true,
             lldp: true,
-            motd: "Må din dag være fyldt med Cisco",
+            motd: "May your day be filled with Cisco",
             domæne: "network.internal",
             secret: "class",
             con0pass: "cisco",
@@ -268,6 +269,7 @@ function Router() {
     JSON.parse(localStorage.router_data)
   );
 
+  
   const handleFormChange = (event, index, value) => {
     let data = [...formFields];
     console.log(event.target.type)
@@ -432,6 +434,8 @@ window.onload = (event) => {
   if (sessionStorage.sessionid){ setTimeout(() => {setformFields(JSON.parse(localStorage.router_data))}, 400)}
 };
 
+
+
   function porte(sort) {
     try {
       let workingvar = RouterInterfaces(
@@ -519,7 +523,7 @@ window.onload = (event) => {
     return (
       <Box sx={style}>
         <Typography variant="h4" component="h2">
-          Konfig genereret
+          Config generated
         </Typography>
         <TextField
           multiline
@@ -542,14 +546,14 @@ window.onload = (event) => {
                 "\nend"
             );
             handleClose();
-            handleClick("success", "Konfig kopieret til udklipsholder");
+            handleClick("success", "Config copied to clipboard");
           }}
           variant="contained"
           sx={{ right: "20%", left: "20%", mt: 3, ml: 1 }}
           size="small"
           color="secondary"
         >
-          Kopier til udklipsholder
+          Copy to clipboard
         </Button>
       </Box>
     );
@@ -577,6 +581,7 @@ window.onload = (event) => {
       handleClick("error", errrormessage);
     }
   }
+
 
   function Content() {
     return (
@@ -670,7 +675,7 @@ window.onload = (event) => {
                         />
                         <TextField
                           id="initial"
-                          label="Domæne"
+                          label="Domain"
                           name="domæne"
                           value={form.domæne || ''}
                           placeholder="domain.internal"
@@ -827,7 +832,7 @@ window.onload = (event) => {
                                   validhandleFormChange(
                                     form.genereatersa,
                                     false,
-                                    "SSHv2 kræver RSA",
+                                    "SSHv2 requires RSA",
                                     event,
                                     index
                                   );
@@ -847,14 +852,14 @@ window.onload = (event) => {
                                   validhandleFormChange(
                                     form.domæne,
                                     "",
-                                    "RSA kræver domæne",
+                                    "RSA requires domain",
                                     event,
                                     index
                                   )
                                 }
                               />
                             }
-                            label="Genereate RSA"
+                            label="Generate RSA"
                           />
                           <FormControlLabel
                             sx={{ m: 1.5 }}
@@ -918,7 +923,7 @@ window.onload = (event) => {
                     run3();
                   }}
                 >
-                  Ryd felter
+                  Clear fields
                 </Button>
                 <Button
                   onClick={() => {
@@ -929,7 +934,7 @@ window.onload = (event) => {
                   size="medium"
                   color="primary"
                 >
-                  Vis config
+                  Show config
                 </Button>
                 <Modal open={open} onClose={handleClose}>
                   {ModalContent(Initial, "initial")}
@@ -985,7 +990,7 @@ window.onload = (event) => {
                         name="description"
                         id="interfaces"
                         label="Description"
-                        placeholder="portbeskrivelse"
+                        placeholder="LAN"
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.description || ''}
                       />
@@ -1154,7 +1159,7 @@ window.onload = (event) => {
                           addNestedFields("interfaces", index, "subinterfaces")
                         }
                       >
-                        Tilføj sub-interface
+                        Add sub-interface
                       </Button>
                     </Box>
                   </div>
@@ -1196,7 +1201,7 @@ window.onload = (event) => {
                         id="linterfaces"
                         error={!form.ip}
                         label="IP"
-                        helperText="må ikke være i 127.x.x.x"
+                        helperText="Must not be 127.x.x.x"
                         placeholder="192.168.99.1"
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.ip || ''}
@@ -1223,7 +1228,7 @@ window.onload = (event) => {
             color="primary"
             onClick={() => addFields("interfaces")}
           >
-            Tilføj interface
+            Add interface
           </Button>
           <Button
             variant="contained"
@@ -1232,7 +1237,7 @@ window.onload = (event) => {
             color="primary"
             onClick={() => addFields("linterfaces")}
           >
-            Tilføj loopback
+            Add loopback
           </Button>
           <Button
             sx={{ margin: 1 }}
@@ -1241,7 +1246,7 @@ window.onload = (event) => {
               handleOpen();
             }}
           >
-            Vis config
+            Show config
           </Button>
           <Modal open={open} onClose={handleClose}>
             {ModalContent(Interfaces, "interfaces")}
@@ -1269,15 +1274,15 @@ window.onload = (event) => {
                         <DeleteIcon color="secondary" />
                       </IconButton>
                       <TextField
-                        name="navn"
+                        name="name"
                         id="dhcp"
-                        error={!form.navn}
-                        label="Pool navn"
+                        error={!form.name}
+                        label="Pool name"
                         placeholder="pool1"
                         onChange={(event) => handleFormChange(event, index)}
-                        value={form.navn || ''}
+                        value={form.name || ''}
                       />
-                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                      <FormControl sx={{ mr: 1, width: 220 }}>
                       <Autocomplete
                         required
                         freeSolo
@@ -1286,10 +1291,10 @@ window.onload = (event) => {
                         value={form.ip || ''}
                         onChange={(event, value) => handleFormChange(event, index, value)}
                         options={networks("netid")}
-                        renderInput={(params) => <TextField {...params} error={!form.ip} required={true} label="Netværk" placeholder="192.168.1.0" />}
+                        renderInput={(params) => <TextField {...params} error={!form.ip} required={true} label="Network" placeholder="192.168.1.0" />}
                       />
                       </FormControl>
-                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                      <FormControl sx={{ mr: 1, ml: 1.2,  width: 220 }}>
                       <Autocomplete
                         required
                         freeSolo
@@ -1301,7 +1306,7 @@ window.onload = (event) => {
                         renderInput={(params) => <TextField {...params} error={!form.subnet} required={true} label="Subnet" placeholder="255.255.255.0" />}
                       />
                       </FormControl>
-                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
+                      <FormControl sx={{ mr: 1, ml: 1.2,  width: 220 }}>
                       <Autocomplete
                         required
                         freeSolo
@@ -1310,12 +1315,12 @@ window.onload = (event) => {
                         value={form.gateway || ''}
                         onChange={(event, value) => handleFormChange(event, index, value)}
                         options={networks("gateway")}
-                        renderInput={(params) => <TextField {...params} error={!form.gateway} required={true} label="Subnet" placeholder="192.168.1.1" />}
+                        renderInput={(params) => <TextField {...params} error={!form.gateway} required={true} label="Gateway" placeholder="192.168.1.1" />}
                       />
                       </FormControl>
                       <TextField
                         name="domæne"
-                        label="Domæne"
+                        label="Domain"
                         id="dhcp"
                         placeholder="domain.internal"
                         onChange={(event) => handleFormChange(event, index)}
@@ -1365,8 +1370,8 @@ window.onload = (event) => {
                       />
                       <TextField
                         name="to"
-                        id="lintdhcpexclusionerfaces"
-                        label="Subnet"
+                        id="dhcpexclusion"
+                        label="To"
                         placeholder="192.168.1.254"
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.to || ''}
@@ -1432,7 +1437,7 @@ window.onload = (event) => {
             color="primary"
             onClick={() => addFields("dhcp")}
           >
-            Tilføj pool
+            Add pool
           </Button>
           <Button
             variant="contained"
@@ -1441,7 +1446,7 @@ window.onload = (event) => {
             color="primary"
             onClick={() => addFields("dhcpexclusion")}
           >
-            Tilføj exclusion
+            Add exclusion
           </Button>
           <Button
             variant="contained"
@@ -1450,7 +1455,7 @@ window.onload = (event) => {
             color="primary"
             onClick={() => addFields("dhcphelper")}
           >
-            Tilføj helper
+            Add helper
           </Button>
           <Button
             variant="outlined"
@@ -1458,7 +1463,7 @@ window.onload = (event) => {
               handleOpen();
             }}
           >
-            Vis config
+            Show config
           </Button>
           <Modal open={open} onClose={handleClose}>
             {ModalContent(DHCP, "dhcp")}
@@ -1502,8 +1507,9 @@ window.onload = (event) => {
                       </FormControl>
                       <Tooltip arrow title="Den fælles IP-adresse, som HSRP-gruppen bruger som routerens identitet. Denne IP-adresse flyttes mellem routerne afhængigt af, hvilken router der fungerer som master.">
                       <TextField
+                        required
                         name="ip"
-                        //error={!form.ip.length}
+                        error={!form.ip}
                         label="Virtual IP"
                         id="hsrp"
                         placeholder="192.168.1.1"
@@ -1511,12 +1517,12 @@ window.onload = (event) => {
                         value={form.ip || ''}
                       />
                       </Tooltip>
-                      <Tooltip arrow title="Det numeriske ID, der identificerer en specifik HSRP-gruppe. Alle routere i samme VRRP-gruppe deler den virtuelle IP-adresse og arbejder sammen for at opretholde netværksredundans.">
+                      <Tooltip arrow title="Det numeriske ID, der identificerer en specifik HSRP-gruppe. Alle routere i samme VRRP-gruppe deler den virtuelle IP-adresse og arbejder sammen for at opretholde Networksredundans.">
                       <TextField
                         required
                         name="group"
                         id="hsrp"
-                       // error={form.group.length}
+                        error={!form.group}
                         label="Group"
                         placeholder="1"
                         onChange={(event) => handleFormChange(event, index)}
@@ -1525,9 +1531,10 @@ window.onload = (event) => {
                       </Tooltip>
                       <Tooltip arrow title="Det tal, der bestemmer, hvilken router der bliver master. Højere tal betyder højere prioritet.">
                       <TextField
+                      required
                         name="priority"
                         id="hsrp"
-                       // error={form.priority.length}
+                        error={!form.priority}
                         label="Priority"
                         placeholder="100"
                         onChange={(event) => handleFormChange(event, index)}
@@ -1581,7 +1588,7 @@ window.onload = (event) => {
                         <Select
                           required
                           defaultValue=""
-                         // error={!form.port}
+                          error={!form.port}
                           name="vrrp.port"
                           value={form.port || ''}
                           onChange={(event) => handleFormChange(event, index)}
@@ -1593,8 +1600,9 @@ window.onload = (event) => {
                       </FormControl>
                       <Tooltip arrow title="Den fælles IP-adresse, som VRRP-gruppen bruger som routerens identitet. Denne IP-adresse flyttes mellem routerne afhængigt af, hvilken router der fungerer som master.">
                       <TextField
+                        required
                         name="ip"
-                        //error={!form.ip.length}
+                        error={!form.ip}
                         label="Virtual IP"
                         id="vrrp"
                         placeholder="192.168.1.1"
@@ -1602,12 +1610,12 @@ window.onload = (event) => {
                         value={form.ip || ''}
                       />
                       </Tooltip>
-                      <Tooltip arrow title="Det numeriske ID, der identificerer en specifik VRRP-gruppe. Alle routere i samme VRRP-gruppe deler den virtuelle IP-adresse og arbejder sammen for at opretholde netværksredundans.">
+                      <Tooltip arrow title="Det numeriske ID, der identificerer en specifik VRRP-gruppe. Alle routere i samme VRRP-gruppe deler den virtuelle IP-adresse og arbejder sammen for at opretholde Networksredundans.">
                       <TextField
                         required
                         name="group"
                         id="vrrp"
-                       // error={form.group.length}
+                        error={!form.group}
                         label="Group"
                         placeholder="1"
                         onChange={(event) => handleFormChange(event, index)}
@@ -1616,9 +1624,10 @@ window.onload = (event) => {
                       </Tooltip>
                       <Tooltip arrow title="Det tal, der bestemmer, hvilken router der bliver master. Højere tal betyder højere prioritet.">
                       <TextField
+                      required
                         name="priority"
                         id="vrrp"
-                       // error={form.priority.length}
+                        error={!form.priority}
                         label="Priority"
                         placeholder="100"
                         onChange={(event) => handleFormChange(event, index)}
@@ -1656,7 +1665,7 @@ window.onload = (event) => {
             color="primary"
             onClick={() => addFields("hsrp")}
           >
-            Tilføj HSRP
+            Add HSRP
           </Button>
           </Tooltip>
           <Tooltip arrow title="VRRP (Virtual Router Redundancy Protocol): Aktiv/standby-router, dynamisk router ID-tildeling, åben standard, understøttet af flere leverandører.">
@@ -1667,7 +1676,7 @@ window.onload = (event) => {
             color="primary"
             onClick={() => addFields("vrrp")}
           >
-            Tilføj VRRP
+            Add VRRP
           </Button>
           </Tooltip>
           <Button
@@ -1677,7 +1686,7 @@ window.onload = (event) => {
               handleOpen();
             }}
           >
-            Vis config
+            Show config
           </Button>
           <Modal open={open} onClose={handleClose}>
             {ModalContent(FHRP, "fhrp")}
@@ -1783,7 +1792,7 @@ window.onload = (event) => {
             color="primary"
             onClick={() => addFields("staticroute")}
           >
-            Tilføj statisk rute
+            Add static route
           </Button>
           <Button
             variant="outlined"
@@ -1791,7 +1800,7 @@ window.onload = (event) => {
               handleOpen();
             }}
           >
-            Vis config
+            Show config
           </Button>
           <Modal open={open} onClose={handleClose}>
             {ModalContent(Staticroute, "staticroute")}
@@ -1910,7 +1919,7 @@ window.onload = (event) => {
                         </Select>
                       </FormControl>
                       </Tooltip>
-                      <Tooltip arrow title="Angivelse af de interfaces, hvor OSPF ikke skal sende 'Hello' / deltage i DR/BDR-valg. Brug dette til netværk, hvor der ikke er forbundet en OSPF router, men som stadig skal annonceres">
+                      <Tooltip arrow title="Angivelse af de interfaces, hvor OSPF ikke skal sende 'Hello' / deltage i DR/BDR-valg. Brug dette til Network, hvor der ikke er forbundet en OSPF router, men som stadig skal annonceres">
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
                         <InputLabel>Passive interfaces</InputLabel>
                         <Select
@@ -1925,7 +1934,7 @@ window.onload = (event) => {
                         </Select>
                       </FormControl>
                       </Tooltip>
-                      <Tooltip arrow title="Interfaces som er direkte forbundet til en anden router uden at passere gennem et netværk.">
+                      <Tooltip arrow title="Interfaces som er direkte forbundet til en anden router uden at passere gennem et Network.">
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
                         <InputLabel>Point-to-point interfaces</InputLabel>
                         <Select
@@ -1942,12 +1951,12 @@ window.onload = (event) => {
                         </Select>
                       </FormControl>
                       </Tooltip>
-                      <Tooltip arrow title="Aktiver kun, hvis denne router skal være gateway til andre netværk.">
+                      <Tooltip arrow title="Bestemmer, om routeren skal annoncere en default route til andre EIGRP-routere. Aktiver kun, hvis denne router skal være gateway til andre Network.">
                       <FormControlLabel
                         labelPlacement="bottom"
+                        sx={{ m: 1.5 }}
                         control={
-                          <Checkbox
-                            color="warning"
+                          <Switch
                             name="defaultroute"
                             id="ospf"
                             checked={form.defaultroute || null}
@@ -1959,6 +1968,41 @@ window.onload = (event) => {
                         label="Advertise default route"
                       />
                       </Tooltip>
+                      <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        sx={{ m: 1.5 }}
+                        control={
+                          <Switch
+                            name="redistributestatic"
+                            id="ospf"
+                            checked={form.redistributestatic || null}
+                            onChange={(event) => {
+                              handleFormChange(event, index);
+                            }}
+                          />
+                        }
+                        label="Redistribute static"
+                      />
+                      </Tooltip>
+                      <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        sx={{ m: 1.5 }}
+                        control={
+                          <Switch
+                            name="redistributeconnected"
+                            id="ospf"
+                            checked={form.redistributeconnected || null}
+                            onChange={(event) => {
+                              handleFormChange(event, index);
+                            }}
+                          />
+                        }
+                        label="Redistribute connected"
+                      />
+                      </Tooltip>
+                      
                       {formFields[tabid]["ospf"][index][
                         "networks"
                       ].map((form2, index2) => {
@@ -2034,27 +2078,7 @@ window.onload = (event) => {
                         renderInput={(params) => <TextField {...params} error={!form2.subnet} required={true} label="Subnet" />}
                       />
                       </FormControl>
-                               <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
-                               <TextField
-                                  disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.bandwidthmetric}
-                                  name="bandwidthmetric"
-                                  id="networks"
-                                  size="small"
-                                  label="Bandwidth metric"
-                                  placeholder="1000000"
-                                  onChange={(event) =>
-                                    handleNestedFormChange(
-                                      "ospf",
-                                      index,
-                                      event,
-                                      index2
-                                    )
-                                  }
-                                  value={form2.bandwidthmetric || ''}
-                                />
-                                </Tooltip>
-                                  </div>
+                            </div>
                             </CardContent>
                           </Card>
                         );
@@ -2091,7 +2115,7 @@ window.onload = (event) => {
                                 <FormControl
                                   sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}
                                 >
-                                  <InputLabel size="small" id="eigrp">
+                                  <InputLabel size="small" id="ospf">
                                     Route
                                   </InputLabel>
                                   <Select
@@ -2256,7 +2280,7 @@ window.onload = (event) => {
                           addNestedFields("ospf", index, "networks")
                         }
                       >
-                        Tilføj netværk advertisment
+                        Add Network advertisment
                       </Button>
                       <Button
                         size="small"
@@ -2265,7 +2289,7 @@ window.onload = (event) => {
                           addNestedFields("ospf", index, "redistributions")
                         }
                       >
-                        Tilføj redistribution
+                        Add redistribution
                       </Button>
                     </Box>
                   </div>
@@ -2280,7 +2304,7 @@ window.onload = (event) => {
             color="primary"
             onClick={() => addFields("ospf")}
           >
-            Tilføj OSPF process
+            Add OSPF process
           </Button>
           <Button
             variant="outlined"
@@ -2288,7 +2312,7 @@ window.onload = (event) => {
               handleOpen();
             }}
           >
-            Vis config
+            Show config
           </Button>
           <Modal open={open} onClose={handleClose}>
             {ModalContent(OSPF, "ospf")}
@@ -2336,7 +2360,7 @@ window.onload = (event) => {
                         value={form.routerid || ''}
                       />
                       </Tooltip>
-                      <Tooltip arrow placement="top" enterDelay={1000} leaveDelay={0}  title="Indtast de netværk, som skal annonceres i EIGRP-routingdomænet.">
+                      <Tooltip arrow placement="top" enterDelay={1000} leaveDelay={0}  title="Indtast de Network, som skal annonceres i EIGRP-routingdomænet.">
                       <TextField
                         required
                         //error={form.area === undefined || form.area === ""}
@@ -2368,7 +2392,7 @@ window.onload = (event) => {
                         value={form.holdinterval || ''}
                       />
                       </Tooltip>
-                      <Tooltip arrow title="Referencebåndbredde, der bruges til at beregne EIGRP-metrisk for interne ruter. Standardværdi er 100 Mbps. Ændr værdien, hvis netværket har højere båndbredde.">
+                      <Tooltip arrow title="Referencebåndbredde, der bruges til at beregne EIGRP-metrisk for interne ruter. Standardværdi er 100 Mbps. Ændr værdien, hvis Networket har højere båndbredde.">
                       <TextField
                         name="kvalues"
                         id="eigrp"
@@ -2420,7 +2444,7 @@ window.onload = (event) => {
                         </Select>
                       </FormControl>
                       </Tooltip>
-                      <Tooltip arrow title="Bestemmer, om routeren skal annoncere en default route til andre EIGRP-routere. Aktiver kun, hvis denne router skal være gateway til andre netværk.">
+                      <Tooltip arrow title="Bestemmer, om routeren skal annoncere en default route til andre EIGRP-routere. Aktiver kun, hvis denne router skal være gateway til andre Network.">
                       <FormControlLabel
                         labelPlacement="bottom"
                         control={
@@ -2791,7 +2815,7 @@ window.onload = (event) => {
                           addNestedFields("eigrp", index, "networks")
                         }
                       >
-                        Tilføj netværk advertisment
+                        Add Network advertisment
                       </Button>
                       <Button
                         size="small"
@@ -2800,7 +2824,7 @@ window.onload = (event) => {
                           addNestedFields("eigrp", index, "redistributions")
                         }
                       >
-                        Tilføj redistribution
+                        Add redistribution
                       </Button>
                     </Box>
                   </div>
@@ -2815,7 +2839,7 @@ window.onload = (event) => {
             color="primary"
             onClick={() => addFields("eigrp")}
           >
-            Tilføj EIGRP process
+            Add EIGRP process
           </Button>
           <Button
             variant="outlined"
@@ -2823,7 +2847,7 @@ window.onload = (event) => {
               handleOpen();
             }}
           >
-            Vis config
+            Show config
           </Button>
           <Modal open={open} onClose={handleClose}>
             {ModalContent(EIGRP, "eigrp")}
@@ -2895,7 +2919,7 @@ window.onload = (event) => {
                         value={form.holdinterval || ''}
                       />
                       </Tooltip>
-                      <Tooltip arrow title="Referencebåndbredde, der bruges til at beregne EIGRP-metrisk for interne ruter. Standardværdi er 100 Mbps. Ændr værdien, hvis netværket har højere båndbredde.">
+                      <Tooltip arrow title="Referencebåndbredde, der bruges til at beregne EIGRP-metrisk for interne ruter. Standardværdi er 100 Mbps. Ændr værdien, hvis Networket har højere båndbredde.">
                       <TextField
                         name="kvalues"
                         id="bgp"
@@ -2947,7 +2971,7 @@ window.onload = (event) => {
                         </Select>
                       </FormControl>
                       </Tooltip>
-                      <Tooltip arrow title="Bestemmer, om routeren skal annoncere en default route til andre EIGRP-routere. Aktiver kun, hvis denne router skal være gateway til andre netværk.">
+                      <Tooltip arrow title="Bestemmer, om routeren skal annoncere en default route til andre EIGRP-routere. Aktiver kun, hvis denne router skal være gateway til andre Network.">
                       <FormControlLabel
                         labelPlacement="bottom"
                         sx={{ m: 1.5 }}
@@ -3431,7 +3455,7 @@ window.onload = (event) => {
                           addNestedFields("bgp", index, "neighbours")
                         }
                       >
-                        Tilføj BGP peer
+                        Add BGP peer
                       </Button>
                       <Button
                         size="small"
@@ -3440,7 +3464,7 @@ window.onload = (event) => {
                           addNestedFields("bgp", index, "networks")
                         }
                       >
-                        Tilføj netværk advertisment
+                        Add Network advertisment
                       </Button>
                       <Button
                         size="small"
@@ -3449,7 +3473,7 @@ window.onload = (event) => {
                           addNestedFields("bgp", index, "redistributions")
                         }
                       >
-                        Tilføj redistribution
+                        Add redistribution
                       </Button>
                     </Box>
                   </div>
@@ -3464,7 +3488,7 @@ window.onload = (event) => {
             color="primary"
             onClick={() => addFields("bgp")}
           >
-            Tilføj BGP process
+            Add BGP process
           </Button>
           <Button
             variant="outlined"
@@ -3472,7 +3496,7 @@ window.onload = (event) => {
               handleOpen();
             }}
           >
-            Vis config
+            Show config
           </Button>
           <Modal open={open} onClose={handleClose}>
             {ModalContent(BGP, "bgp")}
@@ -3636,7 +3660,7 @@ window.onload = (event) => {
                         name="interalip"
                         id="dynamicnatport"
                         error={!form.interalip}
-                        label="Intern netværksadresse"
+                        label="Intern Networksadresse"
                         placeholder="192.168.1.1"
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.interalip || ''}
@@ -3758,7 +3782,7 @@ window.onload = (event) => {
               color="primary"
               onClick={() => addFields("dynamicnat")}
             >
-              Tilføj dynamisk NAT
+              Add dynamisk NAT
             </Button>
           </Tooltip>
           <Tooltip
@@ -3772,7 +3796,7 @@ window.onload = (event) => {
               color="primary"
               onClick={() => addFields("dynamicnatport")}
             >
-              Tilføj portbaseret dynamisk NAT
+              Add portbaseret dynamisk NAT
             </Button>
           </Tooltip>
           <Tooltip
@@ -3786,7 +3810,7 @@ window.onload = (event) => {
               color="primary"
               onClick={() => addFields("staticnat")}
             >
-              Tilføj statisk NAT
+              Add statisk NAT
             </Button>
           </Tooltip>
           <Button
@@ -3796,7 +3820,7 @@ window.onload = (event) => {
               handleOpen();
             }}
           >
-            Vis config
+            Show config
           </Button>
           <Modal open={open} onClose={handleClose}>
             {ModalContent(NAT, "nat")}
@@ -3841,7 +3865,7 @@ window.onload = (event) => {
                         name="description"
                         id="basicsecurity"
                         label="Description"
-                        placeholder="portbeskrivelse"
+                        placeholder="LAN"
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.description || ''}
                       />
@@ -4048,7 +4072,7 @@ window.onload = (event) => {
                           addNestedFields("localaaa", index, "users")
                         }
                       >
-                        Tilføj user
+                        Add user
                       </Button>
                     </Box>
                   </div>
@@ -4317,7 +4341,7 @@ window.onload = (event) => {
             color="primary"
             onClick={() => addFields("localaaa")}
           >
-            Tilføj Local AAA
+            Add Local AAA
           </Button>
           <Button
             variant="contained"
@@ -4326,7 +4350,7 @@ window.onload = (event) => {
             color="primary"
             onClick={() => addFields("advancedaaa")}
           >
-            Tilføj RADIUS/TACACS
+            Add RADIUS/TACACS
           </Button>
           <Button
             variant="contained"
@@ -4335,7 +4359,7 @@ window.onload = (event) => {
             color="primary"
             onClick={() => addFields("urpf")}
           >
-            Tilføj uRPF
+            Add uRPF
           </Button>
           <Button
             sx={{ margin: 1 }}
@@ -4344,7 +4368,7 @@ window.onload = (event) => {
               handleOpen();
             }}
           >
-            Vis config
+            Show config
           </Button>
           <Modal open={open} onClose={handleClose}>
             {ModalContent(Security, "security")}
@@ -4361,7 +4385,7 @@ window.onload = (event) => {
             >
               <Grid item xs="auto">
                 <Card>
-                  <CardHeader title="Custom konfiguration" />
+                  <CardHeader title="Custom configuration" />
                   <Divider />
                   <CardContent sx={{ width: 500, justifyContent: "center" }}>
                     <Box
@@ -4371,9 +4395,9 @@ window.onload = (event) => {
                       autoComplete="off"
                     >
                       <TextField
-                        label="Tilføjes i bunden af den samlede konfiguration"
+                        label="Is added in the bottom of the final configuration"
                         multiline
-                        placeholder='En linje ad gangen - du skal IKKE skrive "configure terminal"'
+                        placeholder='One line at a time - do NOT include "configure terminal"'
                         maxRows={Infinity}
                         minRows={5}
                         inputProps={{ style: { color: "#FFC13D" } }}
@@ -4402,7 +4426,7 @@ window.onload = (event) => {
               </Grid>
               <Grid item xs="auto">
                 <Card>
-                  <CardHeader title="Noter" />
+                  <CardHeader title="Notes" />
                   <Divider />
                   <CardContent sx={{ width: 500, justifyContent: "center" }}>
                     <Box
@@ -4412,7 +4436,7 @@ window.onload = (event) => {
                       autoComplete="off"
                     >
                       <TextField
-                        label="Noter for routeren (medtages ikke i konfiguration)"
+                        label="Noters for the router (is not included in the final configuration)"
                         multiline
                         maxRows={Infinity}
                         minRows={5}
@@ -4451,15 +4475,9 @@ window.onload = (event) => {
         <Helmet>
           <title>Router</title>
         </Helmet>
-        <PageTitleWrapper>
-          <PageTitle
-            sx={{ mb: -2 }}
-            heading="Router"
-            //subHeading="Rouer konfiguration."
-          />
-        </PageTitleWrapper>
         <Container>
           <Grid
+            sx={{ mt: 2 }}
             container
             direction="row"
             justifyContent="center"

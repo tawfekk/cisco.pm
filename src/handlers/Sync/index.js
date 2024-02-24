@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
+import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import { doc, getFirestore, setDoc, getDoc } from "firebase/firestore";
 
 const app = initializeApp({
@@ -11,13 +11,14 @@ const app = initializeApp({
   appId: "1:727036040743:web:a7c5f4382c0f5ab1ada002",
 });
 
+
+if (sessionStorage.sessionid) {
 const appCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaEnterpriseProvider("6Ldwa3IpAAAAAJ_JY7-YCQP-LcFdS84gcqOAPlNb"),
+  provider: new ReCaptchaV3Provider("6LdAWnspAAAAAEj2gUO9au2IIwlArT89fV6ZNbq_"),
   isTokenAutoRefreshEnabled: true // Set to true to allow auto-refresh.
 });
-
 const db = getFirestore(app);
-
+}
 
 export async function syncup(data, type) {
   if (sessionStorage.sessionid) {

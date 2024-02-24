@@ -149,7 +149,7 @@ function Oversigt() {
                   <span>
                     <b>{navn(data, type, index)}</b>
                   </span>
-                  <Tooltip arrow title="Denne handling er permanent">
+                  <Tooltip arrow title="This action is permanent">
                     <IconButton
                       size="small"
                       sx={{ float: "right", ml: 1, mt: -0.8 }}
@@ -176,7 +176,7 @@ function Oversigt() {
               severity="success"
               sx={{ width: "100%" }}
             >
-              Config kopieret til udklipsholder
+              Config copied to clipboard
             </Alert>
           </Snackbar>
         </CardContent>
@@ -188,7 +188,7 @@ function Oversigt() {
     return (
       <Box sx={style}>
         <Typography variant="h4" component="h2">
-          Konfig genereret
+          Config generated
         </Typography>
         <TextField
           multiline
@@ -213,7 +213,7 @@ function Oversigt() {
           size="small"
           color="secondary"
         >
-          Kopier til udklipsholder
+          Copy to clipboard
         </Button>
       </Box>
     );
@@ -230,7 +230,7 @@ function Oversigt() {
             handleOpen0(index);
           }}
         >
-          Vis config
+          Show config
         </Button>
       );
     } else if (type == "switch") {
@@ -243,7 +243,7 @@ function Oversigt() {
             handleOpen(index);
           }}
         >
-          Vis config
+          Show config
         </Button>
       );
     }
@@ -260,13 +260,13 @@ function Oversigt() {
     return (
       <>
         <Helmet>
-          <title>Oversigt</title>
+          <title>Overview</title>
         </Helmet>
         <PageTitleWrapper>
           <PageTitle
             sx={{ mb: -1 }}
-            heading="Oversigt"
-            subHeading="Oversigt over oprettede router, switch & VLAN configs"
+            heading="Overview"
+            subHeading="Overview of created routers, switches & VLAN configs"
           />
           <Button
             sx={{ float: "right", mt: -4 }}
@@ -275,9 +275,9 @@ function Oversigt() {
             variant="outlined"
             size="small"
           >
-            Synk
+            Sync
           </Button>
-          <Tooltip arrow title="Denne handling er permanent">
+          <Tooltip arrow title="This action is permanent">
             <Button
               size="small"
               sx={{ float: "right", mr: 13, mt: -4 }}
@@ -294,7 +294,7 @@ function Oversigt() {
                 }, 600);
               }}
             >
-              Slet al data
+              Delete all data
             </Button>
           </Tooltip>
         </PageTitleWrapper>

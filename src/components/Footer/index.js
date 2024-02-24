@@ -32,7 +32,7 @@ function Footer() {
             </Typography>
           </Box>
           <Typography sx={{ pt: { xs: 2, md: 0 } }} variant="subtitle1">
-            cisco.pm er ikke associeret med Cisco Systems, Inc.
+            cisco.pm is ikke affiliated with Cisco Systems, Inc.
           </Typography>
         </Box>
       </Container>

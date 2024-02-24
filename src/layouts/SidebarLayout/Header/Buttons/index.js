@@ -70,7 +70,7 @@ function HeaderButtons() {
   function issessionshared() {
     if (!sessionStorage.sessionid) {
       return (
-        <Tooltip arrow title="Du deler ikke din session med nogen">
+        <Tooltip arrow title="You're not currently sharing you session">
           <Chip label="Session offline" variant="outlined" />
         </Tooltip>
       );
@@ -86,7 +86,7 @@ function HeaderButtons() {
           >
             Stop session
           </Button>
-          <Tooltip arrow title="Kopier til udklipsholder">
+          <Tooltip arrow title="Copy to clipboard">
             <Chip
               label={sessionStorage.sessionid}
               color="success"
@@ -109,7 +109,7 @@ function HeaderButtons() {
               severity="success"
               sx={{ width: "100%" }}
             >
-              Kode kopieret til udklipsholder
+              Sessioncode copied to clipboard
             </Alert>
           </Snackbar>
         </Box>
@@ -129,19 +129,19 @@ function HeaderButtons() {
           sx={{ ml: 3, mr: 3 }}
           variant="contained"
         >
-          Delt session
+          Shared session
         </Button>
         <Modal open={open} onClose={handleClose}>
           <Box sx={style}>
-            <Typography variant="h4" sx={{ mb: 1 }}>
-              Indtast en sessionskode her for at deltage
+            <Typography variant="h4" sx={{ mb: 1, ml: 2 }}>
+              Enter a sessionskode to join a session
             </Typography>
             <Typography
               variant="h6"
               style={{ color: "#DD4B34" }}
-              sx={{ ml: 1.2, mb: 2 }}
+              sx={{ ml: 5, mb: 2 }}
             >
-              Eksisterende configs vil blive overskrevet
+              Existing configs will be overwritten
             </Typography>
             <TextField
               size="small"
@@ -159,9 +159,9 @@ function HeaderButtons() {
               color="primary"
               onClick={() => handleFormChange4()}
             >
-              Deltag i session
+              Join session
             </Button>
-            <Divider sx={{ m: 4, bgcolor: "#FFC13D" }}> Eller </Divider>
+            <Divider sx={{ m: 4, bgcolor: "#FFC13D" }}> Or </Divider>
             <Button
               onClick={(event) => handleFormChange(event)}
               variant="contained"
@@ -169,7 +169,7 @@ function HeaderButtons() {
               size="medium"
               color="success"
             >
-              Del min session
+              Share my session
             </Button>
           </Box>
         </Modal>
