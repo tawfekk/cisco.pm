@@ -11,7 +11,7 @@ syncdown("router");
 syncdown("vlan");
 syncdown("switch");
 
-sessionStorage.version = "v0.02.1-beta";
+sessionStorage.version = "v0.02.2-beta";
 
 
 if (!localStorage.router_data) {
@@ -29,7 +29,7 @@ if (!localStorage.router_data) {
       initial: [
         {
           hostname: "R1",
-          motd: "Må din dag være fyldt med Cisco",
+          motd: "May you're day be filled with Cisco",
           domæne: "network.internal",
           secret: "class",
           con0pass: "cisco",

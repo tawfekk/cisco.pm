@@ -15,7 +15,7 @@ const MenuWrapper = styled(List)(
     padding: 0;
 
     & > .MuiList-root {
-      padding: 0 ${theme.spacing(1)} ${theme.spacing(3)};
+      padding: 0 ${theme.spacing(0)} ${theme.spacing(3)};
     }
 
     .MuiButton-root {
