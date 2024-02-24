@@ -8,7 +8,6 @@ import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
 
 import HeaderMenu from "./Menu";
 import HeaderButtons from "./Buttons";
-import { Logo } from "src/components/Logo";
 
 const HeaderWrapper = styled(Box)(
   ({ theme }) => `
@@ -35,9 +34,6 @@ function Header() {
   return (
     <HeaderWrapper display="flex" alignItems="center">
       <Box display="flex" alignItems="center">
-        <Hidden lgUp>
-          <Logo />
-        </Hidden>
         <Hidden mdDown>
           <HeaderMenu />
         </Hidden>
@@ -45,7 +41,7 @@ function Header() {
       <Box display="flex" alignItems="center">
         <HeaderButtons />
         <Hidden lgUp>
-          <Tooltip arrow title="Åben menu">
+          <Tooltip arrow title="Open menu">
             <IconButton color="primary" onClick={toggleSidebar}>
               {!sidebarToggle ? <MenuTwoToneIcon /> : <CloseTwoToneIcon />}
             </IconButton>

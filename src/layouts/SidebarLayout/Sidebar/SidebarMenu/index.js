@@ -15,11 +15,11 @@ const MenuWrapper = styled(List)(
     padding: 0;
 
     & > .MuiList-root {
-      padding: 0 ${theme.spacing(2)} ${theme.spacing(2)};
+      padding: 0 ${theme.spacing(1)} ${theme.spacing(3)};
     }
 
-    .MuiListSubheader-root {
-      text-transform: uppercase;
+    .MuiButton-root {
+      width: 100%;
       font-weight: bold;
       font-size: ${theme.typography.pxToRem(14)};
       color: ${theme.sidebar.menuItemHeadingColor};
@@ -31,9 +31,9 @@ const MenuWrapper = styled(List)(
 
 function buttonStyles(key) {
   if (key === localStorage.getItem("activeButton")) {
-    return { backgroundColor: 'white' };
+    return {justifyContent: "flex-start", backgroundColor: "#1c2444"};
   } else {
-    return {};
+    return {justifyContent: "flex-start"};
   }
 }
 
@@ -42,7 +42,7 @@ localStorage.setItem("activeButton", window.location.href.substring(window.locat
 }
 
 function SidebarMenu() {
-  const location = useLocation();
+  //const location = useLocation();
 
   return (
     <>
@@ -51,6 +51,7 @@ function SidebarMenu() {
           <ListItem component="div">
             <Button
               disableRipple
+              size="large"
               component={RouterLink}
               onClick={"2"}
               to="/components/oversigt"
@@ -63,6 +64,7 @@ function SidebarMenu() {
           <ListItem component="div">
             <Button
               disableRipple
+              size="large"
               component={RouterLink}
               onClick={"2"}
               to="/components/vlan"
@@ -75,6 +77,7 @@ function SidebarMenu() {
           <ListItem component="div">
             <Button
               disableRipple
+              size="large"
               component={RouterLink}
               onClick={"2"}
               to="/components/router"
@@ -87,6 +90,7 @@ function SidebarMenu() {
           <ListItem component="div">
             <Button
               disableRipple
+              size="large"
               component={RouterLink}
               onClick={"2"}
               to="/components/switch"

@@ -4436,7 +4436,7 @@ window.onload = (event) => {
                       autoComplete="off"
                     >
                       <TextField
-                        label="Noters for the router (is not included in the final configuration)"
+                        label="Notes for this router (are not included in the final configuration)"
                         multiline
                         maxRows={Infinity}
                         minRows={5}
@@ -4493,7 +4493,7 @@ window.onload = (event) => {
                   startIcon={<SyncIcon />}
                   variant="outlined"
                 >
-                  Synk
+                  Sync
                 </Button>
               </Box>
               <Box>

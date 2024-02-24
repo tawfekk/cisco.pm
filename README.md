@@ -2,7 +2,7 @@
   <a href="https://cisco.pm"><img width="234" src="public/static/images/logo/logo.png" /></a>
   <br>
    <br>
-   <a>React app to configure Cisco devices - </a>    <a href="https://cisco.pm"> live version</a>
+   <a>React app to configure Cisco devices - </a><a href="https://cisco.pm"> live version</a>
 </p>
 
 ---
@@ -23,7 +23,7 @@ To build and run cisco.om in your local dev environment, follow these steps:
 </ol>
 
 ## Need Help?
-- You can open a support ticket by sending an email here: [info@cisco.pm](mailto:info@cisco.pm)
+- Feel free to reach out on email: [info@cisco.pm](mailto:info@cisco.pm)
 
 ## License
 
