@@ -680,7 +680,6 @@ window.onload = (event) => {
                           value={form.motd || ''}
                           placeholder="Authorized access only!"
                           onChange={(event) => handleFormChange(event, 0)}
-                          style={{ width: '23%' }}
                         />
                         <TextField
                           id="initial"

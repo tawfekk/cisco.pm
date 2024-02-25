@@ -14,7 +14,7 @@
 
 ---
 
-![demo](https://github.com/tawfekk/cisco.pm/assets/82479894/59b5e889-46b6-40e9-91c0-04a023bbfc05)
+![demo](https://github.com/tawfekk/cisco.pm/assets/82479894/496d0379-a70c-410c-b4cf-40a67c5b46ad)
 
 ---
 
@@ -24,7 +24,7 @@
 
 To build and run cisco.om in your local dev environment, follow these steps:
 <ol>
-   <li>Make sure you have the latest stable versions for Node.js and NPM installed</li>
+   <li>Make sure you have the latest stable version of Yarn installed</li>
    <li>Clone this repository: <code>git clone https://github.com/tawfekk/cisco.pm.git</code></li>
    <li>Install dependencies: Run <code>yarn</code> inside the project folder</li>
    <li>Start the dev server: Run <code>yarn run start</code>. A new browser window will open on: http://localhost:3000</li>

@@ -105,17 +105,17 @@ function HeaderMenu() {
           onClick={() =>
             window.open("https://netacad.com/portal/saml_login", "_blank")
           }
-          sx={{ px: 3 }}
+          sx={{ px: 1 }}
         >
           Netacademy
         </MenuItem>
-        <MenuItem sx={{ px: 3 }} component={NavLink} to="/status/coming-soon">
+        <MenuItem sx={{ px: 1 }} component={NavLink} to="/status/coming-soon">
           History
         </MenuItem>
-        <MenuItem sx={{ px: 3 }} component={NavLink} to="/status/coming-soon">
+        <MenuItem sx={{ px: 1 }} component={NavLink} to="/status/coming-soon">
           Documentation
         </MenuItem>
-        <MenuItem sx={{ px: 3 }} component={NavLink} to="/status/report-error">
+        <MenuItem sx={{ px: 1 }} component={NavLink} to="/status/report-error">
           Errors
         </MenuItem>
       </Menu>
