@@ -14,7 +14,7 @@
 
 ---
 
-![demo](https://github.com/tawfekk/cisco.pm/assets/82479894/59b5e889-46b6-40e9-91c0-04a023bbfc05)
+![demo](https://github.com/tawfekk/cisco.pm/assets/82479894/496d0379-a70c-410c-b4cf-40a67c5b46ad)
 
 ---
 
