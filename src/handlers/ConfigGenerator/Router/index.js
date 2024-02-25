@@ -106,13 +106,13 @@ export function Interfaces(index) {
       if (e.port) {
         workingvar += "\n\ninterface " + e.port;
         if (!isIPv6(e.ip)) {
-        if (e.ip && e.subnet && e.interfacedhcp == false) {
+        if (e.ip && e.subnet && e.interfacedhcp != true) {
           workingvar += "\nip address " + e.ip + " " + e.subnet;
         }
         if (e.interfacedhcp){
           workingvar += "\nip address dhcp";
         }}else{
-          if (e.ip && e.subnet && e.interfacedhcp == false) {
+          if (e.ip && e.subnet && e.interfacedhcp != true) {
             workingvar += "\nipv6 address " + e.ip + e.subnet;
           }
           if (e.interfacedhcp){
@@ -158,7 +158,11 @@ export function Interfaces(index) {
     ]) {
       workingvar += "\ninterface Loopback " + e.id;
       if (e.ip && e.subnet) {
+        if (!isIPv6(e.ip)) {
         workingvar += "\nip address " + e.ip + " " + e.subnet;
+        }else{
+          workingvar += "\nipv6 address " + e.ip + e.subnet;
+        }
       }
       workingvar += "\nno shutdown\nexit";
     }
@@ -338,15 +342,14 @@ export function OSPF(index) {
         }else{
           workingvar += "\nno redistribute static";
         }
-        if (e.redistributeconntected) {
+        if (e.redistributeconnected) {
           workingvar += "\nredistribute connected";
         }else{
           workingvar += "\nno redistribute connected";
         }
-        for (const elem of e.redistrubutions) {
+        //for (const elem of e.redistrubutions) {
           //
-        }
-        
+        //}
 
         workingvar += "\nexit";
       }
@@ -524,13 +527,44 @@ export function VPN(index) {
   } catch (e) {}
 }
 
-export function Security(index) {
-  try {return "\n!! Security config generation is not yet implemented."
-  } catch (e) {}
-}
+
 export function BGP(index) {
   try {return "\n!! BGP config generation is not yet implemented."
   } catch (e) {}
+}
+
+export function Security(index) {
+  try {
+  let workingvar = "";
+  let data = JSON.parse(localStorage.router_data)[index]["basicsecurity"]; 
+  if(data.autosecure){
+    workingvar += "\n\nauto secure";
+  }else{workingvar += "\nno auto secure";}
+  if(data.tcpintercept){
+    workingvar += "\n\nip tcp intercept mode intercept";
+  }else{workingvar += "\nno ip tcp intercept mode intercept";}
+  if(data.ipv6securty){
+    workingvar += "\nipv6 source guard";
+  }else{workingvar += "\nno ipv6 source guard";}
+  
+  for (const e of data.ipsourceguard){
+      workingvar += "\ninterface " + e + "\nip verify source port-security" + "\nexit";
+    }
+  for (const e of data.dai){
+      workingvar += "\n\nip arp inspection vlan " + e;
+  }
+  for (const e of data.dhcpsnooping){
+      workingvar += "\n\nip dhcp snooping vlan " + e;
+  }
+  workingvar = ""
+  for (const e of JSON.parse(localStorage.router_data)[index]["basicsecurity"]["localaaa"]){
+
+  }
+  let workingdata = JSON.parse(localStorage.router_final);
+  workingdata[index]["security"] = workingvar;
+  localStorage.router_final = JSON.stringify(workingdata);
+  return workingvar;
+} catch (e) {}
 }
 
 export function Runner(index) {

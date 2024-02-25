@@ -4,12 +4,13 @@ import {
   Typography,
   TextField,
   Divider,
-  Chip,
   Box,
+  Chip,
   Button,
-  Tooltip,
+  Modal,
+  Hidden,
+  Tooltip
 } from "@mui/material";
-import Modal from "@mui/material/Modal";
 import * as React from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { syncup, syncdown } from "src/handlers/Sync";
@@ -23,6 +24,7 @@ const style = {
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
+  borderRadius: "20px",
 };
 
 function handleFormChange3() {
@@ -70,7 +72,7 @@ function HeaderButtons() {
   function issessionshared() {
     if (!sessionStorage.sessionid) {
       return (
-        <Tooltip arrow title="You're not currently sharing you session">
+        <Tooltip arrow title="You're not currently sharing your session">
           <Chip label="Session offline" variant="outlined" />
         </Tooltip>
       );
@@ -82,7 +84,6 @@ function HeaderButtons() {
             variant="outlined"
             size="small"
             color="error"
-            sx={{ mr: 2 }}
           >
             Stop session
           </Button>
@@ -109,7 +110,7 @@ function HeaderButtons() {
               severity="success"
               sx={{ width: "100%" }}
             >
-              Sessioncode copied to clipboard
+              Session code copied to clipboard
             </Alert>
           </Snackbar>
         </Box>
@@ -119,14 +120,15 @@ function HeaderButtons() {
 
   return (
     <Box sx={{ mr: 1 }}>
-      <Box sx={{ mx: 0.5 }} component="span">
+      <Hidden smDown>
+      <Box sx={{ mx: 0.5}} component="span">
         {issessionshared()}
         <Button
           startIcon={<GroupsIcon />}
           onClick={() => {
             handleOpen();
           }}
-          sx={{ ml: 3, mr: 3 }}
+          sx={{ ml: 3 }}
           variant="contained"
         >
           Shared session
@@ -150,11 +152,11 @@ function HeaderButtons() {
                 sessionStorage.t_sessionid = event.target.value;
               }}
               inputProps={{ style: { color: "#FFC13D" } }}
-              sx={{ left: "10%" }}
+              sx={{ left: "11%" }}
             ></TextField>
             <Button
               variant="contained"
-              sx={{ ml: 2, left: "10%" }}
+              sx={{ ml: 2, left: "12%" }}
               size="medium"
               color="primary"
               onClick={() => handleFormChange4()}
@@ -165,7 +167,7 @@ function HeaderButtons() {
             <Button
               onClick={(event) => handleFormChange(event)}
               variant="contained"
-              sx={{ left: "30%" }}
+              sx={{ left: "28%" }}
               size="medium"
               color="success"
             >
@@ -174,6 +176,7 @@ function HeaderButtons() {
           </Box>
         </Modal>
       </Box>
+      </Hidden>
     </Box>
   );
 }

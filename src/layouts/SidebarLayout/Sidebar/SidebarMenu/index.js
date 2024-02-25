@@ -9,6 +9,7 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 import DeviceHubIcon from "@mui/icons-material/DeviceHub";
 
 
+
 const MenuWrapper = styled(List)(
   ({ theme }) => `
     margin-bottom: ${theme.spacing(1)};
@@ -58,7 +59,7 @@ function SidebarMenu() {
               startIcon={<ListAltIcon />}
               style={buttonStyles("oversigt")}
             >
-              Oversigt
+              Overview
             </Button>
           </ListItem>
           <ListItem component="div">

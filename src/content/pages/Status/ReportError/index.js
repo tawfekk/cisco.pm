@@ -60,7 +60,7 @@ export function StatusReportError() {
               <Tooltip
                 arrow
                 placement="right"
-                title="Denne handling er permanent"
+                title="This acion is permanent"
               >
                 <Button
                   size="small"

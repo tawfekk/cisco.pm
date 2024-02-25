@@ -55,6 +55,13 @@ import {
   Autocomplete
 } from "@mui/material";
 
+//import {
+//  Button,
+//  Divider
+//} from "@mui/material-next";
+
+//import Divider from '@mui/material-next/Divider';
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -263,6 +270,7 @@ function Router() {
     bgcolor: "background.paper",
     boxShadow: 24,
     p: 4,
+    borderRadius: "20px",
   };
 
   const [formFields, setformFields] = useState(
@@ -272,7 +280,6 @@ function Router() {
   
   const handleFormChange = (event, index, value) => {
     let data = [...formFields];
-    console.log(event.target.type)
     //if (data[0][event.target.id][index] == undefined) {data[0][event.target.id] = {}}
     if (event.target.type == "checkbox") {
       data[sessionStorage.router_tabid][event.target.id][index][
@@ -546,7 +553,7 @@ window.onload = (event) => {
                 "\nend"
             );
             handleClose();
-            handleClick("success", "Config copied to clipboard");
+            handleClick("success", "Copied to clipboard");
           }}
           variant="contained"
           sx={{ right: "20%", left: "20%", mt: 3, ml: 1 }}
@@ -666,6 +673,7 @@ window.onload = (event) => {
                           InputLabelProps={{ shrink: true }}
                         />
                         <TextField
+                        fullWidth
                           id="initial"
                           name="motd"
                           label="MOTD"
@@ -1770,10 +1778,10 @@ window.onload = (event) => {
                             checked={form.permanent || null}
                             onChange={(event) => {
                               handleFormChange(event, index);
-                              handleClick(
+                              if(form.permanent){handleClick(
                                 "warning",
-                                "Permanente ruter er typisk en dårlig ide, slå kun til hvis du ved hvad du laver"
-                              );
+                                "Permanent routes are typically a bad idea, only enable if you know what you're doing"
+                              );}
                             }}
                           />
                         }
@@ -1919,7 +1927,7 @@ window.onload = (event) => {
                         </Select>
                       </FormControl>
                       </Tooltip>
-                      <Tooltip arrow title="Angivelse af de interfaces, hvor OSPF ikke skal sende 'Hello' / deltage i DR/BDR-valg. Brug dette til Network, hvor der ikke er forbundet en OSPF router, men som stadig skal annonceres">
+                      <Tooltip arrow placement="top" enterDelay={1000} title="Angivelse af de interfaces, hvor OSPF ikke skal sende 'Hello' / deltage i DR/BDR-valg. Brug dette til Network, hvor der ikke er forbundet en OSPF router, men som stadig skal annonceres">
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
                         <InputLabel>Passive interfaces</InputLabel>
                         <Select
@@ -1934,7 +1942,7 @@ window.onload = (event) => {
                         </Select>
                       </FormControl>
                       </Tooltip>
-                      <Tooltip arrow title="Interfaces som er direkte forbundet til en anden router uden at passere gennem et Network.">
+                      <Tooltip arrow placement="top" enterDelay={1000} title="Interfaces som er direkte forbundet til en anden router uden at passere gennem et Network.">
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
                         <InputLabel>Point-to-point interfaces</InputLabel>
                         <Select
@@ -3529,7 +3537,7 @@ window.onload = (event) => {
                         <DeleteIcon color="secondary" />
                       </IconButton>
                       <Typography sx={{ ml: "1%" }} color="secondary">
-                        Intern IP pool
+                        Internal IP pool
                       </Typography>
                       <TextField
                         name="interalip"
@@ -3553,7 +3561,7 @@ window.onload = (event) => {
                       />
                       <Divider sx={{ m: 3 }} />
                       <Typography sx={{ ml: "1%" }} color="secondary">
-                        Ekstern IP pool
+                        External IP pool
                       </Typography>
                       <TextField
                         name="externalstartip"
@@ -3568,7 +3576,7 @@ window.onload = (event) => {
                         name="externalendip"
                         id="dynamicnat"
                         error={!form.externalendip}
-                        label="Slut IP"
+                        label="End IP"
                         placeholder="209.165.200.10"
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.externalendip || ''}
@@ -3600,7 +3608,7 @@ window.onload = (event) => {
                       />
                       <Divider sx={{ m: 3 }} />
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
-                        <InputLabel>Internt interface</InputLabel>
+                        <InputLabel>Internal interface</InputLabel>
                         <Select
                           error={!form.internalinterface.length}
                           multiple
@@ -3610,13 +3618,13 @@ window.onload = (event) => {
                           onChange={(event) => {
                             handleFormChange(event, index);
                           }}
-                          input={<OutlinedInput label="Internt interface" />}
+                          input={<OutlinedInput label="Internal interface" />}
                         >
                           {porte()}
                         </Select>
                       </FormControl>
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
-                        <InputLabel>Eksternt interface</InputLabel>
+                        <InputLabel>External interface</InputLabel>
                         <Select
                           error={!form.externalinterface.length}
                           multiple
@@ -3626,7 +3634,7 @@ window.onload = (event) => {
                           onChange={(event) => {
                             handleFormChange(event, index);
                           }}
-                          input={<OutlinedInput label="Eksternt interface" />}
+                          input={<OutlinedInput label="External interface" />}
                         >
                           {porte()}
                         </Select>
@@ -3660,7 +3668,7 @@ window.onload = (event) => {
                         name="interalip"
                         id="dynamicnatport"
                         error={!form.interalip}
-                        label="Intern Networksadresse"
+                        label="Internal networkaddress"
                         placeholder="192.168.1.1"
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.interalip || ''}
@@ -3677,7 +3685,7 @@ window.onload = (event) => {
                         value={form.internalsubnet || ''}
                       />
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
-                        <InputLabel>Internt interface</InputLabel>
+                        <InputLabel>Internal interface</InputLabel>
                         <Select
                           error={!form.internalinterface.length}
                           name="dynamicnatport.internalinterface"
@@ -3687,13 +3695,13 @@ window.onload = (event) => {
                           onChange={(event) => {
                             handleFormChange(event, index);
                           }}
-                          input={<OutlinedInput label="Internt interface" />}
+                          input={<OutlinedInput label="Internal interface" />}
                         >
                           {porte()}
                         </Select>
                       </FormControl>
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
-                        <InputLabel>Eksternt interface</InputLabel>
+                        <InputLabel>External interface</InputLabel>
                         <Select
                           defaultValue=""
                           error={!form.externalinterface_}
@@ -3702,7 +3710,7 @@ window.onload = (event) => {
                           onChange={(event) => {
                             handleFormChange(event, index);
                           }}
-                          input={<OutlinedInput label="Eksternt interface" />}
+                          input={<OutlinedInput label="External interface" />}
                         >
                           {porte()}
                         </Select>
@@ -3713,7 +3721,7 @@ window.onload = (event) => {
                           <Tooltip
                             arrow
                             placement="top"
-                            title="Overload er påkrævet"
+                            title="Overload is requried"
                           >
                             <Checkbox color="primary" checked={true} />
                           </Tooltip>
@@ -3749,7 +3757,7 @@ window.onload = (event) => {
                         name="interalip"
                         id="staticnat"
                         error={!form.interalip}
-                        label="Intern IP"
+                        label="Internal IP"
                         placeholder="192.168.1.10"
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.interalip || ''}
@@ -3758,7 +3766,7 @@ window.onload = (event) => {
                         name="externalip"
                         id="staticnat"
                         error={!form.externalip}
-                        label="Ekstern IP"
+                        label="External IP"
                         placeholder="209.165.200.10"
                         onChange={(event) => {
                           handleFormChange(event, index);
@@ -3773,7 +3781,7 @@ window.onload = (event) => {
           })}
           <Tooltip
             arrow
-            title="NAT sker mellem af en pool af interne IP'er og en pool eksterne IP'er"
+            title="NAT is between a pool of internal IPs and a pool external IPs"
           >
             <Button
               variant="contained"
@@ -3782,12 +3790,12 @@ window.onload = (event) => {
               color="primary"
               onClick={() => addFields("dynamicnat")}
             >
-              Add dynamisk NAT
+              Add dynamic NAT
             </Button>
           </Tooltip>
           <Tooltip
             arrow
-            title="NAT sker mellem en pool af interne IP'er og IP'en på en enkel ekstern port"
+            title="NAT is between a pool af internal IPs and the IP of a single external interface"
           >
             <Button
               variant="contained"
@@ -3796,12 +3804,12 @@ window.onload = (event) => {
               color="primary"
               onClick={() => addFields("dynamicnatport")}
             >
-              Add portbaseret dynamisk NAT
+              Add portbased dynamic NAT
             </Button>
           </Tooltip>
           <Tooltip
             arrow
-            title="NAT sker mellem en enkel intern IP & en enkel ekstern IP"
+            title="NAT is between a single internal IP & a single external IP"
           >
             <Button
               variant="contained"
@@ -3810,7 +3818,7 @@ window.onload = (event) => {
               color="primary"
               onClick={() => addFields("staticnat")}
             >
-              Add statisk NAT
+              Add static NAT
             </Button>
           </Tooltip>
           <Button
@@ -3830,7 +3838,7 @@ window.onload = (event) => {
         {formFields[tabid]["basicsecurity"].map((form, index) => {
             return (
               <Card sx={{ width: "100%", mb: 3 }}>
-                <CardHeader title={"Interface " + index} />
+                <CardHeader title={"Basic security (not enabled) "} />
                 <Divider />
                 <CardContent>
                   <div key={index}>
@@ -3841,61 +3849,104 @@ window.onload = (event) => {
                       }}
                       autoComplete="off"
                     >
-                      <TextField
-                        name="ip"
-                        error={form.subnet && !form.ip}
-                        label="IP"
-                        id="basicsecurity"
-                        placeholder="192.168.1.1"
-                        onChange={(event) => handleFormChange(event, index)}
-                        value={form.ip || ''}
-                      />
-                      <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >
-                      <TextField
-                        name="subnet"
-                        id="basicsecurity"
-                        error={form.ip && !form.subnet}
-                        label="Subnet"
-                        placeholder="255.0.0.0 (ipv4), /64(ipv6)"
-                        onChange={(event) => handleFormChange(event, index)}
-                        value={form.subnet || ''}
-                      />
-                      </Tooltip>
-                      <TextField
-                        name="description"
-                        id="basicsecurity"
-                        label="Description"
-                        placeholder="LAN"
-                        onChange={(event) => handleFormChange(event, index)}
-                        value={form.description || ''}
-                      />
-                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
-                      <Autocomplete
-                        sx={{ mr: -1, ml: -1.2, mt: -1, width: 220 }}
-                        required
-                        freeSolo
-                        autoSelect
-                        name="basicsecurity.port"
-                        id="basicsecurity.port"
-                        value={form.port || ''} 
-                        onChange={(event, value) => handleFormChange(event, index, value)}
-                        options={porte("custom")}
-                        renderInput={(params) => <TextField {...params} required={true} error={!form.port} label="Port" />}
-                      />
-                      </FormControl>
-                      <FormControlLabel
-                        labelPlacement="bottom"
-                        control={
-                          <Checkbox
-                            color="warning"
-                            name="shutdown"
-                            id="basicsecurity"
-                            checked={form.shutdown || null}
-                            onChange={(event) => handleFormChange(event, index)}
-                          />
-                        }
-                        label="Shutdown"
-                      />
+                  <Tooltip arrow title="Automates the process of securing the router by applying recommended settings.">
+                    <FormControlLabel
+                      labelPlacement="bottom"
+                      sx={{ m: 1.5 }}
+                      control={
+                        <Switch
+                        disabled
+                          name="autosecure"
+                          id="basicsecurity"
+                          checked={form.autosecure}
+                          onChange={(event) => handleFormChange(event, index)}
+                        />
+                      }
+                      label="Cisco AutoSecure"
+                    />
+                  </Tooltip>
+                <Tooltip arrow title="Protects against TCP SYN-flooding attacks by intercepting and validating TCP connection requests.">
+                <FormControlLabel
+                  labelPlacement="bottom"
+                  sx={{ m: 1.5 }}
+                  control={
+                    <Switch
+                    disabled
+                      name="tcpintercept"
+                      id="basicsecurity"
+                      checked={form.tcpintercept}
+                      onChange={(event) => handleFormChange(event, index)}
+                    />
+                  }
+                  label="TCP Intercept"
+                />
+              </Tooltip>
+              <Tooltip arrow title="Configures security features for IPv6 networks.">
+              <FormControlLabel
+                labelPlacement="bottom"
+                sx={{ m: 1.5 }}
+                control={
+                  <Switch
+                  disabled
+                    name="ipv6security"
+                    id="basicsecurity"
+                    checked={form.ipv6security}
+                    onChange={(event) => handleFormChange(event, index)}
+                  />
+                }
+                label="IPv6 First Hop Security"
+              />
+            </Tooltip>
+            <Tooltip arrow placement="top" title="Restricts IP traffic on untrusted Layer 2 interfaces by filtering based on IP source addresses.">
+            <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
+            <InputLabel>IP Source Guard</InputLabel>
+              <Select
+                  disabled
+                  multiple
+                  defaultValue=""
+                  name="basicsecurity.ipsourceguard"
+                  value={form.ipsourceguard || []}
+                  onChange={(event) => {
+                      handleFormChange(event, index);
+                  }}
+                  input={<OutlinedInput label="IP Source Guard" />}
+               >
+              {porte()}
+              </Select>
+            </FormControl>
+            </Tooltip>
+            <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
+            <InputLabel>Dynamic ARP Inspection</InputLabel>
+              <Select
+                                     disabled
+                  multiple
+                  defaultValue=""
+                  name="basicsecurity.dai"
+                  value={form.dai || []}
+                  onChange={(event) => {
+                      handleFormChange(event, index);
+                  }}
+                  input={<OutlinedInput label="Dynamic ARP Inspection" />}
+               >
+              {JSON.parse(localStorage.vlan_data).map(({ id }) => id).map((id) => (<MenuItem key={id} value={id}>VLAN {id}</MenuItem>))}
+              </Select>
+            </FormControl>
+            <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 180 }}>
+            <InputLabel>DHCP snooping</InputLabel>
+              <Select
+                                  disabled
+                  multiple
+                  defaultValue=""
+                  name="basicsecurity.dhcpsnooping"
+                  value={form.dhcpsnooping || []}
+                  onChange={(event) => {
+                      handleFormChange(event, index);
+                  }}
+                  input={<OutlinedInput label="DHCP snooping" />}
+               >
+              {JSON.parse(localStorage.vlan_data).map(({ id }) => id).map((id) => (<MenuItem key={id} value={id}>VLAN {id}</MenuItem>))}
+              </Select>
+            </FormControl>
                     </Box>
                   </div>
                 </CardContent>
@@ -3905,7 +3956,7 @@ window.onload = (event) => {
           {formFields[tabid]["localaaa"].map((form, index) => {
             return (
               <Card sx={{ width: "100%", mb: 3 }}>
-                <CardHeader title={"Local AAA " + index} />
+                <CardHeader title={"Local AAA"} />
                 <Divider />
                 <CardContent>
                   <div key={index}>
@@ -3916,21 +3967,6 @@ window.onload = (event) => {
                       }}
                       autoComplete="off"
                     >
-                      <IconButton
-                        sx={{ float: "right", mt: 1.5 }}
-                        onClick={() => removeFields("localaaa", index)}
-                      >
-                        <DeleteIcon color="secondary" />
-                      </IconButton>
-                      <TextField
-                        name="id"
-                        id="localaaa"
-                        error={!form.id && form.id != 0}
-                        label="Process name"
-                        placeholder="pro1"
-                        onChange={(event) => handleFormChange(event, index)}
-                        value={form.id || ''}
-                      />
                         <FormControlLabel
                         labelPlacement="bottom"
                         sx={{ m: 1.5 }}
@@ -4162,6 +4198,7 @@ window.onload = (event) => {
                       <TextField
                       label="Timeouts (seconds)"
                       type="number"
+                      name="timeout"
                       id="advancedaaa"
                       InputProps={{ inputProps: { min: 0 } }}
                       value={form.timeout || ''}
@@ -4339,15 +4376,6 @@ window.onload = (event) => {
             sx={{ margin: 1 }}
             size="medium"
             color="primary"
-            onClick={() => addFields("localaaa")}
-          >
-            Add Local AAA
-          </Button>
-          <Button
-            variant="contained"
-            sx={{ margin: 1 }}
-            size="medium"
-            color="primary"
             onClick={() => addFields("advancedaaa")}
           >
             Add RADIUS/TACACS
@@ -4395,7 +4423,7 @@ window.onload = (event) => {
                       autoComplete="off"
                     >
                       <TextField
-                        label="Is added in the bottom of the final configuration"
+                        label="Will be added in the bottom of the final configuration"
                         multiline
                         placeholder='One line at a time - do NOT include "configure terminal"'
                         maxRows={Infinity}
@@ -4436,7 +4464,7 @@ window.onload = (event) => {
                       autoComplete="off"
                     >
                       <TextField
-                        label="Notes for this router (are not included in the final configuration)"
+                        label="Notes for this router (notes are not included in the final configuration)"
                         multiline
                         maxRows={Infinity}
                         minRows={5}

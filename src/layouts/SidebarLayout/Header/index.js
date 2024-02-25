@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 import MenuTwoToneIcon from "@mui/icons-material/MenuTwoTone";
 import { SidebarContext } from "src/contexts/SidebarContext";
 import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
+import {Logo} from "src/components/Logo";
 
 import HeaderMenu from "./Menu";
 import HeaderButtons from "./Buttons";
@@ -32,7 +33,11 @@ function Header() {
   const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
 
   return (
+    
     <HeaderWrapper display="flex" alignItems="center">
+       <Hidden smUp>
+          <Logo/>
+      </Hidden>
       <Box display="flex" alignItems="center">
         <Hidden mdDown>
           <HeaderMenu />
