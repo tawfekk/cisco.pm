@@ -4,12 +4,12 @@ import {
   Typography,
   TextField,
   Divider,
-  Chip,
   Box,
+  Chip,
   Button,
+  Modal,
   Tooltip,
 } from "@mui/material";
-import Modal from "@mui/material/Modal";
 import * as React from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { syncup, syncdown } from "src/handlers/Sync";

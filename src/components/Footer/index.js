@@ -21,7 +21,7 @@ function Footer() {
         >
           <Box>
             <Typography variant="subtitle1">
-              © cisco.pm -‎‎‏‏‎ ‎
+              © cisco.pm {new Date().getFullYear()} —{' '}
               <Link
                 href="mailto:cisco.pm"
                 target="_blank"
@@ -32,7 +32,7 @@ function Footer() {
             </Typography>
           </Box>
           <Typography sx={{ pt: { xs: 2, md: 0 } }} variant="subtitle1">
-            cisco.pm is ikke affiliated with Cisco Systems, Inc.
+            cisco.pm is not affiliated with Cisco Systems, Inc.
           </Typography>
         </Box>
       </Container>

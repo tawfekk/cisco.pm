@@ -338,15 +338,14 @@ export function OSPF(index) {
         }else{
           workingvar += "\nno redistribute static";
         }
-        if (e.redistributeconntected) {
+        if (e.redistributeconnected) {
           workingvar += "\nredistribute connected";
         }else{
           workingvar += "\nno redistribute connected";
         }
-        for (const elem of e.redistrubutions) {
+        //for (const elem of e.redistrubutions) {
           //
-        }
-        
+        //}
 
         workingvar += "\nexit";
       }

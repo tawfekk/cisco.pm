@@ -55,6 +55,13 @@ import {
   Autocomplete
 } from "@mui/material";
 
+//import {
+//  Button,
+//  Divider
+//} from "@mui/material-next";
+
+//import Divider from '@mui/material-next/Divider';
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -666,12 +673,14 @@ window.onload = (event) => {
                           InputLabelProps={{ shrink: true }}
                         />
                         <TextField
+                        fullWidth
                           id="initial"
                           name="motd"
                           label="MOTD"
                           value={form.motd || ''}
                           placeholder="Authorized access only!"
                           onChange={(event) => handleFormChange(event, 0)}
+                          style={{ width: '23%' }}
                         />
                         <TextField
                           id="initial"
@@ -1919,7 +1928,7 @@ window.onload = (event) => {
                         </Select>
                       </FormControl>
                       </Tooltip>
-                      <Tooltip arrow title="Angivelse af de interfaces, hvor OSPF ikke skal sende 'Hello' / deltage i DR/BDR-valg. Brug dette til Network, hvor der ikke er forbundet en OSPF router, men som stadig skal annonceres">
+                      <Tooltip arrow placement="top" enterDelay={1000} title="Angivelse af de interfaces, hvor OSPF ikke skal sende 'Hello' / deltage i DR/BDR-valg. Brug dette til Network, hvor der ikke er forbundet en OSPF router, men som stadig skal annonceres">
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
                         <InputLabel>Passive interfaces</InputLabel>
                         <Select
@@ -1934,7 +1943,7 @@ window.onload = (event) => {
                         </Select>
                       </FormControl>
                       </Tooltip>
-                      <Tooltip arrow title="Interfaces som er direkte forbundet til en anden router uden at passere gennem et Network.">
+                      <Tooltip arrow placement="top" enterDelay={1000} title="Interfaces som er direkte forbundet til en anden router uden at passere gennem et Network.">
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
                         <InputLabel>Point-to-point interfaces</InputLabel>
                         <Select
@@ -4395,7 +4404,7 @@ window.onload = (event) => {
                       autoComplete="off"
                     >
                       <TextField
-                        label="Is added in the bottom of the final configuration"
+                        label="Are added in the bottom of the final configuration"
                         multiline
                         placeholder='One line at a time - do NOT include "configure terminal"'
                         maxRows={Infinity}
@@ -4436,7 +4445,7 @@ window.onload = (event) => {
                       autoComplete="off"
                     >
                       <TextField
-                        label="Notes for this router (are not included in the final configuration)"
+                        label="Notes for this router (Notes are not included in the final configuration)"
                         multiline
                         maxRows={Infinity}
                         minRows={5}

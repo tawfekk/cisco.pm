@@ -90,7 +90,7 @@ export function Logo() {
 export function LogoAlone() {
   return (
     <LogoSign>
-      <img src="/static/images/logo/main.svg" />
+      <img alt="Site logo" src="/static/images/logo/main.svg" />
     </LogoSign>
   );
 }

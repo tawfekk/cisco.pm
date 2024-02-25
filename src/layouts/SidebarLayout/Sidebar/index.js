@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { Scrollbars } from "react-custom-scrollbars-2";
 import { SidebarContext } from "src/contexts/SidebarContext";
 import { Logo } from "src/components/Logo";
 
@@ -44,12 +43,10 @@ function Sidebar() {
     <>
       <Hidden lgDown>
         <SidebarWrapper>
-          <Scrollbars autoHide>
             <TopSection>
               <Logo />
             </TopSection>
             <SidebarMenu />
-          </Scrollbars>
         </SidebarWrapper>
       </Hidden>
       <Hidden lgUp>
@@ -61,12 +58,10 @@ function Sidebar() {
           elevation={9}
         >
           <SidebarWrapper>
-            <Scrollbars autoHide>
               <TopSection>
                 <Logo />
               </TopSection>
               <SidebarMenu />
-            </Scrollbars>
           </SidebarWrapper>
         </Drawer>
       </Hidden>
