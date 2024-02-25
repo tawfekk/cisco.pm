@@ -65,6 +65,7 @@ function Oversigt() {
     bgcolor: "background.paper",
     boxShadow: 24,
     p: 4,
+    borderRadius: "20px",
   };
 
   const [open0, setOpen0] = React.useState(false);
@@ -176,7 +177,7 @@ function Oversigt() {
               severity="success"
               sx={{ width: "100%" }}
             >
-              Config copied to clipboard
+              Copied to clipboard
             </Alert>
           </Snackbar>
         </CardContent>
