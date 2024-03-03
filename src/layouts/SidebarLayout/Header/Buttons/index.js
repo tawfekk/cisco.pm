@@ -84,6 +84,7 @@ function HeaderButtons() {
             variant="outlined"
             size="small"
             color="error"
+            sx={{ mr: 2 }}
           >
             Stop session
           </Button>

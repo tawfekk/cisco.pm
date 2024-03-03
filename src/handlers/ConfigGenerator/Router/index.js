@@ -112,6 +112,8 @@ export function Interfaces(index) {
         if (e.interfacedhcp){
           workingvar += "\nip address dhcp";
         }}else{
+          workingvar += "\nno ip address"
+          workingvar += "\nipv6 enable"; ;
           if (e.ip && e.subnet && e.interfacedhcp != true) {
             workingvar += "\nipv6 address " + e.ip + e.subnet;
           }
@@ -147,6 +149,8 @@ export function Interfaces(index) {
           workingvar += "\nip address " + elem.ip + " " + elem.subnet;
         }}else{
           if (elem.ip && elem.subnet) {
+            workingvar += "\nno ip address"
+            workingvar += "\nipv6 enable";
             workingvar += "\nipv6 address " + elem.ip + elem.subnet;
           }
         }
@@ -161,6 +165,8 @@ export function Interfaces(index) {
         if (!isIPv6(e.ip)) {
         workingvar += "\nip address " + e.ip + " " + e.subnet;
         }else{
+          workingvar += "\nno ip address"
+          workingvar += "\nipv6 enable";
           workingvar += "\nipv6 address " + e.ip + e.subnet;
         }
       }
@@ -177,10 +183,10 @@ export function DHCP(index) {
   try {
     var workingvar = "";
     for (const e of JSON.parse(localStorage.router_data)[index]["dhcp"]) {
-      if (e.navn && e.ip && e.subnet && e.gateway) {
+      if (e.name && e.ip && e.subnet && e.gateway) {
         workingvar +=
           "\n\nservice dhcp \nip dhcp pool " +
-          e.navn +
+          e.name +
           "\nnetwork " +
           e.ip +
           " " +
@@ -300,12 +306,7 @@ export function OSPF(index) {
   try {
     var workingvar = "";
     for (const e of JSON.parse(localStorage.router_data)[index]["ospf"]) {
-      if (
-        e.override ||
-        e.passive.length ||
-        e.enabled.length ||
-        e.defaultroute
-      ) {
+      if (e.enabled && !e.ospfv3 ) {
         workingvar += "\n\nrouter ospf " + e.processid;
         if (e.defaultroute) {
           workingvar += "\ndefault-information originate";
@@ -326,6 +327,7 @@ export function OSPF(index) {
           workingvar +=
             "\nauto-cost reference-bandwidth " + e.referencebandwidth;
         }
+        if(e.networks){
         for (const elem of e.networks) {
           if (elem.ip && elem.subnet) {
             workingvar +=
@@ -337,6 +339,7 @@ export function OSPF(index) {
               e.area;
           }
         }
+      }
         if (e.redistributestatic) {
           workingvar += "\nredistribute static";
         }else{
@@ -347,22 +350,29 @@ export function OSPF(index) {
         }else{
           workingvar += "\nno redistribute connected";
         }
-        //for (const elem of e.redistrubutions) {
-          //
-        //}
+        if(e.redistributions){
+        for (const elem of e.redistributions) {
+          if(elem.defaultmetric){
+          workingvar += "\nredistribute " + elem.id + " subnets";
+          }else{
+            workingvar += "\nredistribute " + elem.id + " subnets metric " + elem.bandwidthmetric + " " + elem.delaymetric + " " + elem.reliabilitymetric + " " + elem.loadmetric + " " + elem.mtumetric;
+          }
+        }
+      }
 
         workingvar += "\nexit";
-      }
+      
       if (e.enabled.length) {
+       for (const elem of e.enabled) {
         workingvar +=
-          "\ninterface range " +
-          e.enabled.toString() +
+          "\ninterface " +
+          elem.toString() +
           "\nip ospf " +
           e.processid +
           " area " +
           e.area;
         if (e.hellointerval) {
-          workingvar += "\nip ospf hello-interval " + e.hellointerval;
+          workingvar += "\nip  ospf hello-interval " + e.hellointerval;
         }
         if (e.deadinterval) {
           workingvar += "\nip ospf dead-interval " + e.deadinterval;
@@ -371,12 +381,93 @@ export function OSPF(index) {
           workingvar += "\nip ospf priority " + e.priority;
         }
         workingvar += "\nexit";
+        }
       }
+
+
       if (e.pointtopoint.length) {
-        workingvar +=
-          "\ninterface range " +
-          e.pointtopoint.toString() +
+        for(const elem of e.pointtopoint){
+          workingvar +=
+          "\ninterface " +
+          elem.toString() +
           "\nip ospf network point-to-point\nexit";
+
+        }
+      }
+    }
+
+      if (e.ospfv3 && e.enabled.length) {
+        workingvar += "\n\nipv6 router ospf " + e.processid;
+        if (e.defaultroute) {
+          workingvar += "\ndefault-information originate";
+        } else {
+          workingvar += "\nno default-information originate";
+        }
+        if (e.override) {
+          workingvar += "\nrouter-id " + e.override;
+        } else {
+          workingvar += "\nno router-id";
+        }
+        if (e.passive.length) {
+          for (const elem of e.passive) {
+            workingvar += "\npassive-interface " + elem;
+          }
+        }
+        if (e.referencebandwidth) {
+          workingvar +=
+            "\nauto-cost reference-bandwidth " + e.referencebandwidth;
+        }
+
+        if (e.redistributestatic) {
+          workingvar += "\nredistribute static";
+        }else{
+          workingvar += "\nno redistribute static";
+        }
+        if (e.redistributeconnected) {
+          workingvar += "\nredistribute connected";
+        }else{
+          workingvar += "\nno redistribute connected";
+        }
+        if(e.redistributions){
+        for (const elem of e.redistributions) {
+          if(elem.defaultmetric){
+          workingvar += "\nredistribute " + elem.id + " subnets";
+          }else{
+            workingvar += "\nredistribute " + elem.id + " subnets metric " + elem.bandwidthmetric + " " + elem.delaymetric + " " + elem.reliabilitymetric + " " + elem.loadmetric + " " + elem.mtumetric;
+          }
+        }
+      }
+       for (const elem of e.enabled) {
+        workingvar +=
+          "\ninterface " +
+          elem.toString() +
+          "\nipv6 ospf " +
+          e.processid +
+          " area " +
+          e.area;
+        if (e.hellointerval) {
+          workingvar += "\nipv6  ospf hello-interval " + e.hellointerval;
+        }
+        if (e.deadinterval) {
+          workingvar += "\nipv6 ospf dead-interval " + e.deadinterval;
+        }
+        if (e.priority) {
+          workingvar += "\nipv6 ospf priority " + e.priority;
+        }
+        workingvar += "\nexit";
+        }
+
+
+      if (e.pointtopoint.length) {
+        for(const elem of e.pointtopoint){
+          workingvar +=
+          "\ninterface " +
+          elem.toString() +
+          "\nipv6 ospf network point-to-point\nexit";
+          workingvar += "\nexit";
+
+        }
+      }
       }
 
     }
@@ -391,11 +482,149 @@ export function EIGRP(index) {
   try {
     var workingvar = "";
     for (const e of JSON.parse(localStorage.router_data)[index]["eigrp"]) {
-      if (e.override || e.passive.length || e.enabled.length) {
+      if (e.as && !e.ipv6) {
         workingvar += "\n\nrouter eigrp " + e.as;
+        if(e.autosummary){
+          workingvar += "\nauto-summary";
+        }else{
+          workingvar += "\nno auto-summary";
+        }
+        if (e.routerid) {
+          workingvar += "\neigrp router-id " + e.routerid;
+        } else {
+          workingvar += "\nno eigrp router-id";
+        }
+        if(e.redistributestatic){
+          workingvar += "\nredistribute static";
+        }else{
+          workingvar += "\nno redistribute static";
+        }
+        if(e.redistributeconnected){
+          workingvar += "\nredistribute connected";
+        }else{
+          workingvar += "\nno redistribute connected";
+        }
+        if(e.defaultpassive){
+          workingvar += "\npassive-interface default";
+        }else{
+          workingvar += "\nno passive-interface default";
+        }
+        if(e.passive && !e.defaultpassive){
+          for (const elem of e.passive) {
+            workingvar += "\npassive-interface " + elem;
+          }
+        }
+        if(e.enabled && e.defaultpassive){
+          for (const elem of e.enabled) {
+            workingvar += "\nno passive-interface " + elem;
+          }
+        }
+
+        if(e.defaultroute){
+          workingvar += "\nnetwork 0.0.0.0";
+        }else{
+          workingvar += "\nno network 0.0.0.0"
+        }
+        if(e.networks){
+        for(const n of e.networks){
+          if(!n.subnet){
+            workingvar += "\nnetwork " + n.ip;
+          }else{
+            workingvar += "\nnetwork " + n.ip + " " + n.subnet;}
+        }
         
+         }
+         workingvar += "\nexit";
+
+        if(e.key){
+          workingvar += "\n\nkey chain eigrp_as_" + e.as;
+          workingvar += "\nkey 1"
+          workingvar += "\nkey-string " + e.key;
+          workingvar += "\naccept-lifetime 00:00:00 Jan 1 1993 infinite";
+          workingvar += "\nsend-lifetime 00:00:00 Jan 1 1993 infinite";
+          workingvar += "\nexit\nexit";
+
+          for(const i of e.authenabled){
+            workingvar += "\ninterface " + i;
+            workingvar += "\nip authentication mode eigrp "+ e.as + " md5";
+            workingvar += "\nip authentication key-chain eigrp "+ e.as + " eigrp_as_" + e.as;
+            workingvar += "\nexit";
+
+          }
+        }
+
+      }
+
+        if (e.as && e.ipv6) {
+          workingvar += "\n\nrouter eigrp " + e.as;
+          workingvar += "\nno shutdown";
+          if(e.autosummary){
+            workingvar += "\nauto-summary";
+          }else{
+            workingvar += "\nno auto-summary";
+          }
+          if (e.routerid) {
+            workingvar += "\neigrp router-id " + e.routerid;
+          } else {
+            workingvar += "\nno eigrp router-id";
+          }
+          if(e.redistributestatic){
+            workingvar += "\nredistribute static";
+          }else{
+            workingvar += "\nno redistribute static";
+          }
+          if(e.redistributeconnected){
+            workingvar += "\nredistribute connected";
+          }else{
+            workingvar += "\nno redistribute connected";
+          }
+          if(e.defaultpassive){
+            workingvar += "\npassive-interface default";
+          }else{
+            workingvar += "\nno passive-interface default";
+          }
+          if(e.passive && !e.defaultpassive){
+            for (const elem of e.passive) {
+              workingvar += "\npassive-interface " + elem;
+            }
+          }
+          if(e.enabled && e.defaultpassive){
+            for (const elem of e.enabled) {
+              workingvar += "\nno passive-interface " + elem;
+            }
+          }
+           workingvar += "\nexit";
+  
+          if(e.key){
+            workingvar += "\n\nkey chain eigrp_as_" + e.as;
+            workingvar += "\nkey 1"
+            workingvar += "\nkey-string " + e.key;
+            workingvar += "\naccept-lifetime 00:00:00 Jan 1 1993 infinite";
+            workingvar += "\nsend-lifetime 00:00:00 Jan 1 1993 infinite";
+            workingvar += "\nexit\nexit";
+  
+            for(const i of e.authenabled){
+              workingvar += "\ninterface " + i;
+              workingvar += "\nipv6 authentication mode eigrp "+ e.as + " md5";
+              workingvar += "\nipv6 authentication key-chain eigrp "+ e.as + " eigrp_as_" + e.as;
+              workingvar += "\nexit";
+  
+            }
+
+            for(const i of e.enabled){
+              workingvar += "\ninterface " + i;
+              workingvar += "\nipv6 eigrp " + e.as;
+              workingvar += "\nexit";
+            }
+
+          }
+
+        }
+
+
+      
+
         
-    }
   }
     let workingdata = JSON.parse(localStorage.router_final);
     workingdata[index]["eigrp"] = workingvar;
@@ -536,6 +765,7 @@ export function BGP(index) {
 export function Security(index) {
   try {
   let workingvar = "";
+  /*
   let data = JSON.parse(localStorage.router_data)[index]["basicsecurity"]; 
   if(data.autosecure){
     workingvar += "\n\nauto secure";
@@ -556,10 +786,53 @@ export function Security(index) {
   for (const e of data.dhcpsnooping){
       workingvar += "\n\nip dhcp snooping vlan " + e;
   }
-  workingvar = ""
-  for (const e of JSON.parse(localStorage.router_data)[index]["basicsecurity"]["localaaa"]){
+  */
+
+
+  if(JSON.parse(localStorage.router_data)[index]["localaaa"][0]["users"]){
+    let data = JSON.parse(localStorage.router_data)[index]["localaaa"][0]
+    workingvar += "\n\naaa new-model"
+    for (const e of JSON.parse(localStorage.router_data)[index]["localaaa"][0]["users"]){
+      if(!e.privilege){
+      workingvar += "\n\nusername " + e.username + " secret " + e.password}else{
+        workingvar += "\n\nusername " + e.username + " secret " + e.password + "\nprivilege " + e.privilege;
+      }
+    }
+    if(data.defaultauthentication){
+      workingvar += "\n\naaa authentication login default local";
+    }
+    if(data.defaultauthorization){
+      workingvar += "\n\naaa authorization exec default local";
+    }
+    if(data.defaultaccounting){
+      workingvar += "\n\naaa accounting exec default start-stop local";
+    }
+    if(data.defaultaux0){
+      workingvar += "\n\nline aux 0\nlogin authentication default\nexit";
+    }
+    if(data.defaultcon0){
+      workingvar += "\n\nline con 0\nlogin authentication default\nexit";
+    }
+    if(data.defaultvty){
+      workingvar += "\n\nline vty 0 15\nlogin authentication default\nexit";
+    }
 
   }
+
+  for (const e of JSON.parse(localStorage.router_data)[index]["advancedaaa"]){
+   if (e.protocol == "radius"){
+    if (JSON.parse(localStorage.router_data)[index]["basicsettings"][0]["model" === "1931"]){
+      workingvar += "\n\naaa new-model\nradius-server host" + e.ip + " auth-port " + e.port + " acct-port " + e.port2
+      if(e.key){
+        workingvar += " key " + e.key;
+      }
+    }else if(e.protocol == "tacacs"){
+      workingvar += "\n\naaa new-model"+
+      ""
+    }
+   }
+  }
+
   let workingdata = JSON.parse(localStorage.router_final);
   workingdata[index]["security"] = workingvar;
   localStorage.router_final = JSON.stringify(workingdata);
