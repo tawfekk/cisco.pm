@@ -1,6 +1,6 @@
 {
   "name": "cisco.pm",
-  "version": "0.2.2",
+  "version": "0.2.4",
   "title": "Cisco configuration generator",
   "description": "Cisco configuration generator",
   "author": {

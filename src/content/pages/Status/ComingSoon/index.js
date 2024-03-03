@@ -33,7 +33,7 @@ export function StatusComingSoon() {
                 fontWeight="normal"
                 sx={{ mb: 4 }}
               >
-                This function is almost ready
+                This feature is still in the works
               </Typography>
             </Container>
             <img

@@ -7,11 +7,13 @@ import ThemeProvider from "./theme/ThemeProvider";
 import { CssBaseline } from "@mui/material";
 import { syncdown } from "src/handlers/Sync";
 
+if(sessionStorage.getItem("sessionid")) {
 syncdown("router");
 syncdown("vlan");
 syncdown("switch");
+}
 
-sessionStorage.version = "v0.02.3-beta";
+sessionStorage.version = "v0.02.5-beta";
 
 
 if (!localStorage.router_data) {
@@ -29,7 +31,7 @@ if (!localStorage.router_data) {
       initial: [
         {
           hostname: "R1",
-          motd: "May you're day be filled with Cisco",
+          motd: "May your day be filled with Cisco",
           domæne: "network.internal",
           secret: "class",
           con0pass: "cisco",
@@ -42,7 +44,7 @@ if (!localStorage.router_data) {
           disabledomainlookup: true,
           enablessh: true,
           cdp: true,
-          lldp: true,
+          lldp: false,
           sshv2: true,
           genereatersa: true,
         },
@@ -86,12 +88,12 @@ if (!localStorage.router_data) {
   ]);
 }
 
-if (!localStorage.router_final) {
-  var times = 20;
+if (!localStorage.getItem("router_final")) {
+  var times = 15;
   let array = [];
   var element = {};
   for (var i = 0; i < times; i++) array.push(element);
-  localStorage.router_final = JSON.stringify(array);
+  localStorage.setItem("router_final", JSON.stringify(array));
 }
 
 if (!localStorage.switch_data) {

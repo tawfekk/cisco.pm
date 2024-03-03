@@ -18,12 +18,12 @@ function Status404() {
   return (
     <>
       <Helmet>
-        <title>Status - 404</title>
+        <title>404 - not found</title>
       </Helmet>
       <MainContent>
         <Container maxWidth="md">
           <Box textAlign="center">
-            <img alt="404" height={180} src="/static/images/status/404.svg" />
+            <img alt="404" height={300} src="/static/images/status/404.svg" />
             <Typography variant="h2" sx={{ my: 2 }}>
               This page does not exist.
             </Typography>

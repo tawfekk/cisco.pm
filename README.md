@@ -36,4 +36,4 @@ Feel free to reach out on email: [info@cisco.pm](mailto:info@cisco.pm)
 
 ## License
 
-cisco.pm is licensed under the terms of [MIT License](https://github.com/tawfekk/cisco.pm/blob/main/LICENSE).
+cisco.pm is licensed under the terms of the [MIT License](https://github.com/tawfekk/cisco.pm/blob/main/LICENSE).

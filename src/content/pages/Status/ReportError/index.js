@@ -117,7 +117,7 @@ export function StatusReportError() {
                 Go to GitHub
               </Button>
             </Container>
-            <img alt="Bug" height={300} src="/static/images/status/bug.svg" />
+            <img alt="Bug" height={300} src="/static/images/status/bug.svg"  />
           </Box>
         </Container>
       </MainContent>
