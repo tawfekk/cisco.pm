@@ -89,9 +89,7 @@ export function Initial(index) {
     }
     if (form.lldp) {
       workingvar += "\nlldp run";
-    } else {
-      workingvar += "\nno lldp run";
-    }
+    } 
     let workingdata = JSON.parse(localStorage.router_final);
     workingdata[index]["initial"] = workingvar;
     localStorage.router_final = JSON.stringify(workingdata);
@@ -112,7 +110,6 @@ export function Interfaces(index) {
         if (e.interfacedhcp){
           workingvar += "\nip address dhcp";
         }}else{
-          workingvar += "\nno ip address"
           workingvar += "\nipv6 enable"; ;
           if (e.ip && e.subnet && e.interfacedhcp != true) {
             workingvar += "\nipv6 address " + e.ip + e.subnet;
@@ -149,7 +146,6 @@ export function Interfaces(index) {
           workingvar += "\nip address " + elem.ip + " " + elem.subnet;
         }}else{
           if (elem.ip && elem.subnet) {
-            workingvar += "\nno ip address"
             workingvar += "\nipv6 enable";
             workingvar += "\nipv6 address " + elem.ip + elem.subnet;
           }
@@ -165,7 +161,6 @@ export function Interfaces(index) {
         if (!isIPv6(e.ip)) {
         workingvar += "\nip address " + e.ip + " " + e.subnet;
         }else{
-          workingvar += "\nno ip address"
           workingvar += "\nipv6 enable";
           workingvar += "\nipv6 address " + e.ip + e.subnet;
         }
@@ -795,7 +790,7 @@ export function Security(index) {
     for (const e of JSON.parse(localStorage.router_data)[index]["localaaa"][0]["users"]){
       if(!e.privilege){
       workingvar += "\n\nusername " + e.username + " secret " + e.password}else{
-        workingvar += "\n\nusername " + e.username + " secret " + e.password + "\nprivilege " + e.privilege;
+        workingvar += "\n\nusername " + e.username + " secret " + e.password + " privilege " + e.privilege;
       }
     }
     if(data.defaultauthentication){

@@ -167,7 +167,7 @@ function Router() {
             cdp: true,
             sshv2: true,
             genereatersa: true,
-            lldp: true,
+            lldp: false,
             motd: "May your day be filled with Cisco",
             domæne: "network.internal",
             secret: "class",
@@ -626,7 +626,7 @@ window.onload = (event) => {
           open={open2}
           anchorOrigin={{ vertical, horizontal }}
           onClose={handleClose2}
-          autoHideDuration={2000}
+          autoHideDuration={5000}
         >
           <Alert
             variant="filled"
@@ -769,7 +769,7 @@ window.onload = (event) => {
                           container
                           justifyContent="center"
                         >
-                          <Tooltip arrow title="Angiver den aktuelle systemtid på enheden.">
+                          <Tooltip arrow title="Applies current time to the device">
                           <FormControlLabel
                             sx={{ m: 1.5 }}
                             control={
@@ -800,7 +800,7 @@ window.onload = (event) => {
                             }
                             label="Synchronus logging  (con0)"
                           />
-                          <Tooltip arrow title="Tillader enheden at videresende IPv6-pakker.">
+                          <Tooltip arrow title="Enable IPv6 routing">
                           <FormControlLabel
                             sx={{ m: 1.5 }}
                             control={
@@ -912,7 +912,7 @@ window.onload = (event) => {
                             }
                             label="Telnet"
                           />
-                          <Tooltip arrow title="Aktiverer Cisco Discovery Protocol (CDP) for at opdage og dele information om naboenheder.">
+                          <Tooltip arrow title="Activates Cisco Discovery Protocol, which allows devices on a network to share information about themselves.">
                           <FormControlLabel
                             sx={{ m: 1.5 }}
                             control={
@@ -928,7 +928,7 @@ window.onload = (event) => {
                             label="CDP"
                           />
                           </Tooltip>
-                          <Tooltip arrow title="Aktiverer Link Layer Discovery Protocol (LLDP) for at opdage og dele information om naboenheder.">
+                          <Tooltip arrow title="Activates Link Layer Discovery Protocol (LLDP), which allows devices on a network to share information about themselves.">
                           <FormControlLabel
                             sx={{ m: 1.5 }}
                             control={
@@ -936,8 +936,10 @@ window.onload = (event) => {
                                 name="lldp"
                                 id="initial"
                                 checked={form.lldp || null}
-                                onChange={(event) =>
-                                  handleFormChange(event, index)
+                                onChange={(event) => {
+                                  handleFormChange(event, index);
+                                  if(form.lldp){handleClick("warning", "Please be aware that LLDP is not supported on all IOS versions")}
+                                }
                                 }
                               />
                             }
@@ -1011,7 +1013,7 @@ window.onload = (event) => {
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.ip || ''}
                       />
-                      <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >
+                      <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, use mask (e.g. 255.255.255.0) \n\n For ipv6, use prefix (e.g. /64)"}</span>} >
                       <TextField
                         name="subnet"
                         id="interfaces"
@@ -1165,7 +1167,7 @@ window.onload = (event) => {
                                   }
                                   value={form2.ip || ''}
                                 /> 
-                               <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, use mask (e.g. 255.255.255.0) \n\n For ipv6, use prefix (e.g. /64)"}</span>} >                      
                                <TextField
                                   name="subnet"
                                   id="subinterfaces"
@@ -1711,7 +1713,10 @@ window.onload = (event) => {
             sx={{ margin: 0.2 }}
             size="medium"
             color="primary"
-            onClick={() => addFields("vrrp")}
+            onClick={() => {addFields("vrrp");handleClick(
+              "warning",
+              "Please be aware that VRRP is not supported on older Cisco IOS versions"
+            );}}
           >
             Add VRRP
           </Button>
@@ -1971,7 +1976,7 @@ window.onload = (event) => {
                         </Select>
                       </FormControl>
                       </Tooltip>
-                      <Tooltip arrow placement="top" enterDelay={1000} title="Interfaces som er direkte forbundet til en anden router uden at passere gennem et Network.">
+                      <Tooltip arrow placement="top" enterDelay={1000} title="Enable on interfaces that are directly connected to another router without passing thorugh any networks.">
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
                         <InputLabel>Point-to-point interfaces</InputLabel>
                         <Select
@@ -1988,7 +1993,7 @@ window.onload = (event) => {
                         </Select>
                       </FormControl>
                       </Tooltip>
-                      <Tooltip arrow title="Switch to OSPFv3 instead of v2, please be aware that this will only work with IPv6 enabled interfaces">
+                      <Tooltip arrow title="Switch to classic OSPFv3 instead of v2, please be aware that this will only work with IPv6 enabled interfaces">
                       <FormControlLabel
                         labelPlacement="bottom"
                         sx={{ m: 1.5 }}
@@ -2196,7 +2201,7 @@ window.onload = (event) => {
 
                                   </Select>
                                 </FormControl>
-                               <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, use mask (e.g. 255.255.255.0) \n\n For ipv6, use prefix (e.g. /64)"}</span>} >                      
                                <TextField
                                   disabled={form2.defaultmetric}
                                   error={form2.defaultmetric && form2.bandwidthmetric}
@@ -2216,7 +2221,7 @@ window.onload = (event) => {
                                   value={form2.bandwidthmetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, use mask (e.g. 255.255.255.0) \n\n For ipv6, use prefix (e.g. /64)"}</span>} >                      
                                <TextField
                                   disabled={form2.defaultmetric}
                                   error={form2.defaultmetric && form2.delaymetric}
@@ -2236,7 +2241,7 @@ window.onload = (event) => {
                                   value={form2.delaymetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, use mask (e.g. 255.255.255.0) \n\n For ipv6, use prefix (e.g. /64)"}</span>} >                      
                                <TextField
                                   disabled={form2.defaultmetric}
                                   error={form2.defaultmetric && form2.reliabilitymetric}
@@ -2256,7 +2261,7 @@ window.onload = (event) => {
                                   value={form2.reliabilitymetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, use mask (e.g. 255.255.255.0) \n\n For ipv6, use prefix (e.g. /64)"}</span>} >                      
                                <TextField
                                   disabled={form2.defaultmetric}
                                   error={form2.defaultmetric && form2.loadmetric}
@@ -2357,7 +2362,16 @@ window.onload = (event) => {
             color="primary"
             onClick={() => addFields("ospf")}
           >
-            Add OSPF process
+            Add OSPFv2 process
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ margin: 1 }}
+            size="medium"
+            color="primary"
+            onClick={() => handleClick("warning","OSPFv3 is not yet supported, please use OSPFv2 for now")}
+          >
+            Add OSPFv3 process
           </Button>
           <Button
             variant="outlined"
@@ -2920,6 +2934,15 @@ window.onload = (event) => {
             onClick={() => addFields("eigrp")}
           >
             Add EIGRP process
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ margin: 1 }}
+            size="medium"
+            color="primary"
+            onClick={() => handleClick("warning","Named EIGRP is not yet supported, please use classic EIGRP for now")}
+          >
+            Add named EIGRP process
           </Button>
           <Button
             variant="outlined"

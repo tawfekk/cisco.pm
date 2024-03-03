@@ -44,7 +44,7 @@ if (!localStorage.router_data) {
           disabledomainlookup: true,
           enablessh: true,
           cdp: true,
-          lldp: true,
+          lldp: false,
           sshv2: true,
           genereatersa: true,
         },
