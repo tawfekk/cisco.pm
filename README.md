@@ -18,11 +18,13 @@
 
 ---
 
+## Selfhosting
 
+Refer to the [docker-compose.yml](https://github.com/tawfekk/cisco.pm/blob/main/docker-compose.yml) (please note that shared sessions won't work when selfhosting)
 
 ## Development
 
-To build and run cisco.om in your local dev environment, follow these steps:
+To build and run cisco.pm in your local dev environment, follow these steps:
 <ol>
    <li>Make sure you have the latest stable version of Yarn installed</li>
    <li>Clone this repository: <code>git clone https://github.com/tawfekk/cisco.pm.git</code></li>
@@ -36,4 +38,4 @@ Feel free to reach out on email: [info@cisco.pm](mailto:info@cisco.pm)
 
 ## License
 
-cisco.pm is licensed under the terms of the [MIT License](https://github.com/tawfekk/cisco.pm/blob/main/LICENSE).
+cisco.pm is licensed under the terms of the [MIT License](https://github.com/tawfekk/cisco.pm/blob/main/LICENSE)
