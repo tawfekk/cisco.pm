@@ -467,6 +467,12 @@ window.onload = (event) => {
     } catch (e) {}
   }
 
+  function isIPv6(address) {
+    // Regular expression to match IPv6 address
+    const ipv6Regex = /^(?:(?:[a-fA-F\d]{1,4}:){7}(?:[a-fA-F\d]{1,4}|:)|(?:[a-fA-F\d]{1,4}:){6}(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|:[a-fA-F\d]{1,4}|:)|(?:[a-fA-F\d]{1,4}:){5}(?::(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,2}|:)|(?:[a-fA-F\d]{1,4}:){4}(?:(?::[a-fA-F\d]{1,4}){0,1}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,3}|:)|(?:[a-fA-F\d]{1,4}:){3}(?:(?::[a-fA-F\d]{1,4}){0,2}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,4}|:)|(?:[a-fA-F\d]{1,4}:){2}(?:(?::[a-fA-F\d]{1,4}){0,3}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,5}|:)|(?:[a-fA-F\d]{1,4}:){1}(?:(?::[a-fA-F\d]{1,4}){0,4}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,6}|:)|(?::(?:(?::[a-fA-F\d]{1,4}){0,5}:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}|(?::[a-fA-F\d]{1,4}){1,7}|:)))(?:%[0-9a-zA-Z]{1,})?$/gm;  
+      return ipv6Regex.test(address);
+  }
+
 
 
   function networks(sort) {
@@ -560,7 +566,7 @@ window.onload = (event) => {
       }
 
       for (const e of formFields[tabid]["v3ospf"]){
-        if (e.processid){workingvar.push(String("OSPFv3" + e.processid));}
+        if (e.processid){workingvar.push(String("OSPFv3 " + e.processid));}
       }
 
       for (const e of formFields[tabid]["eigrp"]){
@@ -1047,8 +1053,9 @@ window.onload = (event) => {
                         id="interfaces"
                         disabled={form.interfacedhcp}
                         error={form.ip && !form.subnet}
-                        label="Subnet"
-                        placeholder="255.0.0.0 (ipv4), /64(ipv6)"
+                        label={isIPv6(form.ip) ? "Prefix": "Subnet"}
+                        //sx={{display: isIPv6(form.ip) ? "none": ""}}
+                        placeholder={isIPv6(form.ip) ? "/64": "255.0.0.0"}
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.subnet || ''}
                       />
@@ -1075,6 +1082,34 @@ window.onload = (event) => {
                         renderInput={(params) => <TextField {...params} required={true} error={!form.port} label="Interface" />}
                       />
                       </FormControl>
+                     <Tooltip sx={{display: isIPv6(form.ip) ? "": "none"}} arrow title="Use the MAC address for automatic IPv6 address creation">
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        control={
+                          <Checkbox
+                            name="eui64"
+                            id="interfaces"
+                            checked={form.eui64 || null}
+                            onChange={(event) => handleFormChange(event, index)}
+                          />
+                        }
+                        label="EUI-64"
+                      />
+                      </Tooltip>
+                       <Tooltip  arrow title="Let this interface get a dynamic IP from a DHCP server">
+                      <FormControlLabel
+                        labelPlacement="bottom"
+                        control={
+                          <Checkbox
+                            name="interfacedhcp"
+                            id="interfaces"
+                            checked={form.interfacedhcp || null}
+                            onChange={(event) => handleFormChange(event, index)}
+                          />
+                        }
+                        label="Dynamic IP assignment"
+                      />
+                      </Tooltip>
                       <FormControlLabel
                         labelPlacement="bottom"
                         control={
@@ -1088,21 +1123,6 @@ window.onload = (event) => {
                         }
                         label="Shutdown"
                       />
-                       <Tooltip arrow title="Lad interfacet få en dynamisk IP fra en DHCP server">
-                      <FormControlLabel
-                        labelPlacement="bottom"
-                        control={
-                          <Checkbox
-                            color="warning"
-                            name="interfacedhcp"
-                            id="interfaces"
-                            checked={form.interfacedhcp || null}
-                            onChange={(event) => handleFormChange(event, index)}
-                          />
-                        }
-                        label="Dynamic IP assignment"
-                      />
-                      </Tooltip>
                       {formFields[tabid]["interfaces"][index][
                         "subinterfaces"
                       ].map((form2, index2) => {
@@ -4040,12 +4060,6 @@ window.onload = (event) => {
                       }}
                       autoComplete="off"
                     >
-                      <IconButton
-                        sx={{ float: "right", mt: 1.5 }}
-                        onClick={() => removeFields("bgp", index)}
-                      >
-                        <DeleteIcon color="secondary" />
-                      </IconButton>
                       <Tooltip arrow placement="left" enterDelay={100} leaveDelay={0} title="Det autonome systemnummer, der identificerer BGP-routingdomænet">
                       <TextField
                         name="as"
@@ -4068,41 +4082,6 @@ window.onload = (event) => {
                         value={form.routerid || ''}
                       />
                       </Tooltip>
-                      <Tooltip arrow placement="top" enterDelay={1000} leaveDelay={0}  title="Tidsinterval mellem udsendelse af EIGRP 'Hello' beskeder for at opdage naboer. Standardværdi er 10 sekunder. Øg intervallet forsigtigt for at mindske belastningen.">
-                      <TextField
-                        error={form.holdinterval && !form.keepaliveinterval }
-                        name="keepaliveinterval"
-                        id="bgp"
-                        type="number"
-                        placeholder="60"
-                        label="Keepalive interval"
-                        onChange={(event) => handleFormChange(event, index)}
-                        value={form.keepaliveinterval || ''}
-                      />
-                       </Tooltip>
-                       <Tooltip arrow placement="left" enterDelay={100} leaveDelay={0}  title="Tidsinterval, hvor en EIGRP-nabo ikke har udsendt 'Hello' besked, før den betragtes som nede. Anvend en værdi, der er større end Hello-interval for at undgå unødvendige nedetidsproblemer.">
-                      <TextField
-                        error={!form.holdinterval && form.keepaliveinterval }
-                        name="holdinterval"
-                        id="bgp"
-                        type="number"
-                        placeholder="180"
-                        label="Hold interval"
-                        onChange={(event) => handleFormChange(event, index)}
-                        value={form.holdinterval || ''}
-                      />
-                      </Tooltip>
-                      <Tooltip arrow title="Referencebåndbredde, der bruges til at beregne EIGRP-metrisk for interne ruter. Standardværdi er 100 Mbps. Ændr værdien, hvis Networket har højere båndbredde.">
-                      <TextField
-                        name="kvalues"
-                        id="bgp"
-                        type="number"
-                        placeholder="1000"
-                        label="K-values (Metric Weights)"
-                        onChange={(event) => handleFormChange(event, index)}
-                        value={form.kvalues || ''}
-                      />
-                      </Tooltip>
                       <Tooltip arrow title="Defines a MD5 hased key to use - this needs to be the same across all BGP routers">
                       <TextField
                         name="key"
@@ -4112,37 +4091,6 @@ window.onload = (event) => {
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.key || ''}
                       />
-                      </Tooltip>
-                      <Tooltip arrow placement="top" enterDelay={1000} leaveDelay={0} title="Vælg eller angiv de interfaces, hvor EIGRP skal aktiveres.">
-                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
-                        <InputLabel>Enabled interfaces</InputLabel>
-                        <Select
-                          name="bgp.enabled"
-                          multiple
-                          //error={!form.enabled.length}
-                          value={form.enabled || ''}
-                          onChange={(event) => handleFormChange(event, index)}
-                          input={<OutlinedInput label="Enabled interfaces" />}
-                          MenuProps={MenuProps}
-                        >
-                          {porte()}
-                        </Select>
-                      </FormControl>
-                      </Tooltip>
-                      <Tooltip arrow placement="top" enterDelay={5000} leaveDelay={0} title="Aktiver for at lade BGP fungere i passiv tilstand på de valgte grænseflader. Passive grænseflader deltager ikke aktivt i ruteberegninger men lytter stadig til annoncerede ruter fra naboer. Nyttigt for at begrænse trafik uden at deaktivere EIGRP helt.">
-                      <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
-                        <InputLabel>Passive interfaces</InputLabel>
-                        <Select
-                          name="bgp.passive"
-                          multiple
-                          value={form.passive || ''}
-                          onChange={(event) => handleFormChange(event, index)}
-                          input={<OutlinedInput label="Passive interfaces" />}
-                          MenuProps={MenuProps}
-                        >
-                          {porte()}
-                        </Select>
-                      </FormControl>
                       </Tooltip>
                       <Tooltip arrow title="Bestemmer, om routeren skal annoncere en default route til andre EIGRP-routere. Aktiver kun, hvis denne router skal være gateway til andre Network.">
                       <FormControlLabel
@@ -4283,7 +4231,7 @@ window.onload = (event) => {
                                   value={form2.peeras || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title="BGP neighbor prefix limit is a restriction on the maximum number of IP prefixes a BGP neighbor is allowed to advertise." >                      
                                <TextField
                                   name="peerprefixlimit"
                                   type="number"
@@ -4302,7 +4250,7 @@ window.onload = (event) => {
                                   value={form2.peerprefixlimit || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                                <Tooltip arrow title="If the configured prefix limit is reached, a warning will be issued instead of blocking new advertisements.">
                                     <FormControlLabel
                                       sx={{ m: 0.5 }}
                                       labelPlacement="left"
@@ -4400,7 +4348,7 @@ window.onload = (event) => {
                                   value={form2.peeras || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title="BGP neighbor prefix limit is a restriction on the maximum number of IP prefixes a BGP neighbor is allowed to advertise." >                      
                                <TextField
                                   name="peerprefixlimit"
                                   type="number"
@@ -4419,7 +4367,7 @@ window.onload = (event) => {
                                   value={form2.peerprefixlimit || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                                <Tooltip arrow title="If the configured prefix limit is reached, a warning will be issued instead of blocking new advertisements.">
                                     <FormControlLabel
                                       sx={{ m: 0.5 }}
                                       labelPlacement="left"
@@ -4615,8 +4563,8 @@ window.onload = (event) => {
                         autoSelect
                         size="small"
                         //name="networks.ip"
-                        id="v6networks.subnet"
-                        value={form2.subnet || ''}
+                        id="v6networks.prefix"
+                        value={form2.prefix || ''}
                         onChange={(event, value) =>
                           handleNestedFormChange(
                             "bgp",
@@ -4627,7 +4575,7 @@ window.onload = (event) => {
                           )
                         }
                         options={networks("subnet")}
-                        renderInput={(params) => <TextField {...params} error={!form2.subnet} required={true} label="Subnet" />}
+                        renderInput={(params) => <TextField {...params} error={!form2.prefix} required={true} label="Prefix" />}
                       />
                       </FormControl>
                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
@@ -4892,15 +4840,6 @@ window.onload = (event) => {
               </Card>
             );
           })}
-          <Button
-            variant="contained"
-            sx={{ margin: 1 }}
-            size="medium"
-            color="primary"
-            onClick={() => addFields("bgp")}
-          >
-            Add BGP process
-          </Button>
           <Button
             variant="outlined"
             onClick={() => {

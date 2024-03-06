@@ -1020,19 +1020,125 @@ export function BGP(index) {
         workingvar += "\nbgp router-id " + e.routerid;
       }else{
         workingvar += "\nno bgp router-id";
-      
+      }
+      if(e.v6neighbours || e.v6networks){
+        workingvar += "\nno bgp default ipv4-unicast"
       }
 
+      for (const elem of e.neighbours) {
+        workingvar += "\nneighbor " + elem.peerip + " remote-as " + elem.peeras
+      }
+
+      for (const elem of e.v6neighbours) {
+        workingvar += "\nneighbor " + elem.peerip + " remote-as " + elem.peeras
+      }
+
+      if(e.autosummary){
+        workingvar += "\nauto-summary"
+      }else{
+        workingvar += "\nno auto-summary"
+      }
+
+      if(e.neighbours || e.v6neighbours){
+
+        if(e.neighbours){
+          workingvar += "\naddress-family ipv4 unicast"
+
+          if(e.redistributeconnected){
+            workingvar += "\nredistribute connected"
+          }else{
+            workingvar += "\nno redistribute connected"
+          }
+
+          if(e.redistributestatic){
+            workingvar += "\nredistribute static"
+          }else{
+            workingvar += "\nno redistribute static"
+          }
+
+          if(e.redistributions){
+            for (const elem of e.redistributions) {
+              if(elem.defaultmetric){
+              workingvar += "\nredistribute " + elem.id 
+              }else{
+                workingvar += "\nredistribute " + elem.id + " metric " + elem.bandwidthmetric + " " + elem.delaymetric + " " + elem.reliabilitymetric + " " + elem.loadmetric + " " + elem.mtumetric;
+              }
+            }
+          }
+
+          for (const n of e.neighbours){
+            workingvar += "\nneighbor "+n.peerip + " activate"
+            if(n.peerprefixlimit){
+              workingvar += "\nneighbor " + n.peerip + " maximum-prefix " + n.peerprefixlimit
+              if(n.warningonly){workingvar += " warning-only" }
+              }
+          }
+
+          for (const n of e.networks){
+            if(!n.subnet){
+            workingvar += "\nnetwork "+ n.ip
+            }else{
+            workingvar += "\nnetwork "+ n.ip + " mask " +n.subnet
+            }
+          }
+
+          if(e.defaultroute){
+            workingvar += "\nnetwork 0.0.0.0"
+          }else{
+            workingvar += "\nno network 0.0.0.0"
+          }
+
+        }
+
+        if(e.v6neighbours){
+          workingvar += "\naddress-family ipv6 unicast"
+
+          if(e.redistributeconnected){
+            workingvar += "\nredistribute connected"
+          }else{
+            workingvar += "\nno redistribute connected"
+          }
+
+          if(e.redistributestatic){
+            workingvar += "\nredistribute static"
+          }else{
+            workingvar += "\nno redistribute static"
+          }
+
+          if(e.redistributions){
+            for (const elem of e.redistributions) {
+              if(elem.defaultmetric){
+              workingvar += "\nredistribute " + elem.id 
+              }else{
+                workingvar += "\nredistribute " + elem.id + " metric " + elem.bandwidthmetric + " " + elem.delaymetric + " " + elem.reliabilitymetric + " " + elem.loadmetric + " " + elem.mtumetric;
+              }
+            }
+          }
+
+          for (const n of e.v6neighbours){
+            workingvar += "\nneighbor "+n.peerip + " activate"
+            if(n.peerprefixlimit){
+              workingvar += "\nneighbor " + n.peerip + " maximum-prefix " + n.peerprefixlimit
+              if(n.warningonly){workingvar += " warning-only" }
+              }
+          }
+
+          for (const n of e.v6networks){
+            workingvar += "\nnetwork "+ n.ip + n.prefix
+          }
+        }
+
+      }
 
 
     }
 
 
     let workingdata = JSON.parse(localStorage.router_final);
-    workingdata[index]["nat"] = workingvar;
+    workingdata[index]["bgp"] = workingvar;
     localStorage.router_final = JSON.stringify(workingdata);
     return workingvar;
-  } catch (e) {}
+  } catch (e) {console.log(e)}
 }
 
 export function Security(index) {
