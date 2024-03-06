@@ -13,7 +13,7 @@ syncdown("vlan");
 syncdown("switch");
 }
 
-sessionStorage.version = "v0.02.5-beta";
+sessionStorage.version = "v0.02.8-beta";
 
 
 if (!localStorage.router_data) {
@@ -27,6 +27,7 @@ if (!localStorage.router_data) {
       linterfaces: [],
       hsrp: [],
       vrrp: [],
+      namedeigrp: [], 
       dhcp: [{ ip: "" }],
       initial: [
         {
@@ -50,32 +51,18 @@ if (!localStorage.router_data) {
         },
       ],
       staticroute: [{}],
-      ospf: [
-        {
-          processid: Math.floor(Math.random() * (65535 - 1 + 1)) + 1,
-          enabled: [],
-          passive: [],
-          area: 0,
-          pointtopoint: [],
-          redistributions: [],
-          networks: []
-        },
-      ],
-      eigrp: [
-        {
-          enabled: [],
-          passive: [],
-          redistributions: [],
-          networks: [] 
-        },
-      ],
+      ospf: [],
+      v3ospf: [],
+      eigrp: [],
       bgp: [
         {
           enabled: [],
           passive: [],
           redistributions: [],
           networks: [],
-          neighbours: []
+          neighbours: [],
+          v6networks: [],
+          v6neighbours: [],
         },
       ],
       basicsecurity: [{}],
@@ -136,10 +123,3 @@ const App = () => {
   );
 };
 export default App;
-
-
-//før:
-//<LocalizationProvider dateAdapter={AdapterDateFns}>
-//<CssBaseline />
-//{content}
-//</LocalizationProvider>
