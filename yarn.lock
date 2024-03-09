@@ -1808,6 +1808,11 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.1.tgz#16308cea045f0fc777b6ff20a9f25474dd8293d2"
   integrity sha512-9TANp6GPoMtYzQdt54kfAyMmz1+osLlXdg2ENroU7zzrtflTLrrC/lgrIfaSe+Wu0b89GKccT7vxXA0MoAIO+Q==
 
+"@fontsource-variable/manrope@^5.0.19":
+  version "5.0.19"
+  resolved "https://registry.yarnpkg.com/@fontsource-variable/manrope/-/manrope-5.0.19.tgz#34949aee173ab250d380412ef6150d56249883a0"
+  integrity sha512-1WQ1NFnS3tfZ+ZQ3nNJ6sQGpIr6RWhq/wTovlcTlmvVrd53lnmITSolq6vBSEgVef6DWNFUehEvodDcyL3O6EA==
+
 "@grpc/grpc-js@~1.9.0":
   version "1.9.14"
   resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.9.14.tgz#236378822876cbf7903f9d61a0330410e8dcc5a1"

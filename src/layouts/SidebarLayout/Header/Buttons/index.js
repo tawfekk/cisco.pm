@@ -137,7 +137,7 @@ function HeaderButtons() {
         <Modal open={open} onClose={handleClose}>
           <Box sx={style}>
             <Typography variant="h4" sx={{ mb: 1, ml: 2 }}>
-              Enter a sessionskode to join a session
+              Enter a sessioncode to join a session
             </Typography>
             <Typography
               variant="h6"

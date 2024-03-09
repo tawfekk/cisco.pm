@@ -27,7 +27,7 @@ const SidebarWrapper = styled(Box)(
 const TopSection = styled(Box)(
   ({ theme }) => `
         display: flex;
-        height: 100px;
+        height: 88px;
         align-items: center;
         margin: 0 ${theme.spacing(2)} ${theme.spacing(2)};
         border-bottom: ${theme.sidebar.dividerBg} solid 1px;

@@ -1,4 +1,4 @@
-import { Box, Hidden, Tooltip } from "@mui/material";
+import { Box, Hidden, Tooltip, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 
@@ -15,11 +15,21 @@ const LogoWrapper = styled(Link)(
 
 const LogoSignWrapper = styled(Box)(
   () => `
-        width: 52px;
-        height: 38px;
-        transform:scale(0.6)
+        width: 30px;
+        height: 40px;
+        transform:scale(0.8)
 `
 );
+
+
+const linkStyle = {
+  fontSize: '1.5rem', // equivalent to text-lg
+  fontWeight: '600', // equivalent to font-semibold
+  fontFamily: 'Manrope, sans-serif', // Use the Manrope font
+  letterSpacing: '0.12em', // equivalent to tracking-widest
+  color: '#8C7CF0', // equivalent to text-gray-900
+  textTransform: 'uppercase',
+};
 
 const LogoSign = styled(Box)(
   ({ theme }) => `
@@ -34,9 +44,8 @@ const LogoSign = styled(Box)(
       height: 100%;
       display: block;
     }
-    background: #8C7CF0;
-    width: 215px;
-    height: 60px;
+    width: 200px;
+    height: 40px;;
 
 `
 );
@@ -77,10 +86,11 @@ return (<VersionBadge sx={{ mt: 1.3}} >{sessionStorage.version}</VersionBadge>)
 
 export function Logo() {
   return (
-    <LogoWrapper to="/components/oversigt">
+    <LogoWrapper to="https://cisco.pm">
       <LogoSignWrapper>
-        <LogoSign sx={{ mt: -1, ml: 2 }}>
+        <LogoSign>
           <img src="/static/images/logo/main.svg" />
+          <Typography  sx={{ml:1.5}}  style={linkStyle}>cisco.pm</Typography>
         </LogoSign>
       </LogoSignWrapper>
     </LogoWrapper>
@@ -91,6 +101,7 @@ export function LogoAlone() {
   return (
     <LogoSign>
       <img alt="Site logo" src="/static/images/logo/main.svg" />
+      <Typography sx={{ml:1.5}} style={linkStyle}>cisco.pm</Typography>
     </LogoSign>
   );
 }

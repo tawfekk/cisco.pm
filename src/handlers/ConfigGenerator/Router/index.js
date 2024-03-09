@@ -344,19 +344,19 @@ export function OSPF(index) {
         }
       }
         if (e.redistributestatic) {
-          workingvar += "\nredistribute static";
+          workingvar += "\nredistribute static subnets";
         }else{
-          workingvar += "\nno redistribute static";
+          workingvar += "\nno redistribute static subnets";
         }
         if (e.redistributeconnected) {
-          workingvar += "\nredistribute connected";
+          workingvar += "\nredistribute connected subnets";
         }else{
-          workingvar += "\nno redistribute connected";
+          workingvar += "\nno redistribute connected subnets";
         }
         if(e.redistributions){
         for (const elem of e.redistributions) {
           if(elem.defaultmetric){
-          workingvar += "\nredistribute " + elem.id 
+          workingvar += "\nredistribute " + elem.id + " subnets"
           }else{
             workingvar += "\nredistribute " + elem.id + " metric " + elem.bandwidthmetric + " " + elem.delaymetric + " " + elem.reliabilitymetric + " " + elem.loadmetric + " " + elem.mtumetric;
           }
@@ -511,7 +511,6 @@ export function OSPF(index) {
               workingvar += "\nredistribute " + r.id + " metric " + r.bandwidthmetric + " " + r.delaymetric + " " + r.reliabilitymetric + " " + r.loadmetric + " " + r.mtumetric
             }
           }
-
         }
         workingvar += "\nexit"
       }
@@ -541,7 +540,7 @@ export function OSPF(index) {
         if(e.redistributions){
           for (const r of e.redistributions){
             if(r.defaultmetric){
-              workingvar += "\nredistribute " + r.id
+              workingvar += "\nredistribute " + r.id 
             }else{
               workingvar += "\nredistribute " + r.id + " metric " + r.bandwidthmetric + " " + r.delaymetric + " " + r.reliabilitymetric + " " + r.loadmetric + " " + r.mtumetric
             }
@@ -621,6 +620,18 @@ export function EIGRP(index) {
         }else{
           workingvar += "\nno redistribute connected";
         }
+
+        if(e.redistributions){
+          for (const r of e.redistributions){
+            if(r.defaultmetric){
+              workingvar += "\nredistribute " + r.id
+              workingvar += "\ndefault-metric 1000 100 255 1 1500"
+            }else{
+              workingvar += "\nredistribute " + r.id + " metric " + r.bandwidthmetric + " " + r.delaymetric + " " + r.reliabilitymetric + " " + r.loadmetric + " " + r.mtumetric
+            }
+          }
+        }
+
         if(e.defaultpassive){
           workingvar += "\npassive-interface default";
         }else{
@@ -695,6 +706,18 @@ export function EIGRP(index) {
           }else{
             workingvar += "\nno redistribute connected";
           }
+
+
+        if(e.redistributions){
+          for (const r of e.redistributions){
+            if(r.defaultmetric){
+              workingvar += "\nredistribute " + r.id
+              workingvar += "\ndefault-metric 1000 100 255 1 1500"
+            }else{
+              workingvar += "\nredistribute " + r.id + " metric " + r.bandwidthmetric + " " + r.delaymetric + " " + r.reliabilitymetric + " " + r.loadmetric + " " + r.mtumetric
+            }
+          }
+        }
           if(e.defaultpassive){
             workingvar += "\npassive-interface default";
           }else{
@@ -805,6 +828,7 @@ export function EIGRP(index) {
           for (const elem of e.redistributions) {
             if(elem.defaultmetric){
             workingvar += "\nredistribute " + elem.id ;
+            workingvar += "\ndefault-metric 1000 100 255 1 1500"
             }else{
               workingvar += "\nredistribute " + elem.id + " metric " + elem.bandwidthmetric + " " + elem.delaymetric + " " + elem.reliabilitymetric + " " + elem.loadmetric + " " + elem.mtumetric;
             }
@@ -844,6 +868,7 @@ export function EIGRP(index) {
           for (const elem of e.redistributions) {
             if(elem.defaultmetric){
             workingvar += "\nredistribute " + elem.id 
+            workingvar += "\ndefault-metric 1000 100 255 1 1500"
             }else{
               workingvar += "\nredistribute " + elem.id + " metric " + elem.bandwidthmetric + " " + elem.delaymetric + " " + elem.reliabilitymetric + " " + elem.loadmetric + " " + elem.mtumetric;
             }
@@ -1170,6 +1195,7 @@ export function Security(index) {
 
   if(JSON.parse(localStorage.router_data)[index]["localaaa"][0]["users"]){
     let data = JSON.parse(localStorage.router_data)[index]["localaaa"][0]
+    if(JSON.parse(localStorage.router_data)[index]["localaaa"][0]["users"]){
     workingvar += "\n\naaa new-model"
     for (const e of JSON.parse(localStorage.router_data)[index]["localaaa"][0]["users"]){
       if(!e.privilege){
@@ -1197,11 +1223,12 @@ export function Security(index) {
     }
 
   }
+}
 
   for (const e of JSON.parse(localStorage.router_data)[index]["advancedaaa"]){
    if (e.protocol == "radius"){
     if (JSON.parse(localStorage.router_data)[index]["basicsettings"][0]["model" === "1931"]){
-      workingvar += "\n\naaa new-model\nradius-server host" + e.ip + " auth-port " + e.port + " acct-port " + e.port2
+      workingvar += "\n\naaa new-model\nradius-server host " + e.ip + " auth-port " + e.port + " acct-port " + e.port2
       if(e.key){
         workingvar += " key " + e.key;
       }
