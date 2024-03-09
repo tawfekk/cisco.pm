@@ -1,5 +1,7 @@
 <p align="center">
-  <a href="https://cisco.pm"><img width="234" src="public/static/images/logo/logo.png" /></a>
+  <a href="https://cisco.pm"><img width="50" src="public/static/images/logo/main.svg" /></a>
+  <a>&nbsp</a>
+  <a href="https://cisco.pm"><img width="150" height="45" src="public/static/images/logo/logotext.svg" /></a>
   <br>
    <br>
    <a>React app to configure Cisco devices - </a><a href="https://cisco.pm">live version</a>
