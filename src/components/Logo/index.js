@@ -1,4 +1,4 @@
-import { Box, Hidden, Tooltip, Typography } from "@mui/material";
+import { Box, Typography, Image } from "@mui/material";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 
@@ -8,28 +8,17 @@ const LogoWrapper = styled(Link)(
         padding: ${theme.spacing(0, 1, 0, 0)};
         display: flex;
         text-decoration: none;
-        font-weight: ${theme.typography.fontWeightBold};
         border-radius: 16px;
 `
 );
 
 const LogoSignWrapper = styled(Box)(
   () => `
-        width: 30px;
-        height: 40px;
-        transform:scale(0.8)
+        width: 170px;
+        height: 45px;
+        transform:scale(0.6)
 `
 );
-
-
-const linkStyle = {
-  fontSize: '1.5rem', // equivalent to text-lg
-  fontWeight: '600', // equivalent to font-semibold
-  fontFamily: 'Manrope, sans-serif', // Use the Manrope font
-  letterSpacing: '0.12em', // equivalent to tracking-widest
-  color: '#8C7CF0', // equivalent to text-gray-900
-  textTransform: 'uppercase',
-};
 
 const LogoSign = styled(Box)(
   ({ theme }) => `
@@ -39,13 +28,7 @@ const LogoSign = styled(Box)(
     justify-content: center;
     margin: 0 auto ${theme.spacing(2)};
 
-    img {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-    width: 200px;
-    height: 40px;;
+    
 
 `
 );
@@ -89,8 +72,8 @@ export function Logo() {
     <LogoWrapper to="https://cisco.pm">
       <LogoSignWrapper>
         <LogoSign>
-          <img src="/static/images/logo/main.svg" />
-          <Typography  sx={{ml:1.5}}  style={linkStyle}>cisco.pm</Typography>
+        <img alt="Site logo" src="/static/images/logo/main.svg" style={{ width: '50px', height: '50px' }} />
+      <img alt="Site logotext" src="/static/images/logo/logotext.svg" style={{ width: '200px', marginLeft: "20px" }}  />
         </LogoSign>
       </LogoSignWrapper>
     </LogoWrapper>
@@ -100,8 +83,8 @@ export function Logo() {
 export function LogoAlone() {
   return (
     <LogoSign>
-      <img alt="Site logo" src="/static/images/logo/main.svg" />
-      <Typography sx={{ml:1.5}} style={linkStyle}>cisco.pm</Typography>
+      <img alt="Site logo" src="/static/images/logo/main.svg" style={{ width: '50px', height: '50px' }} />
+      <img alt="Site logotext" src="/static/images/logo/logotext.svg" style={{ width: '200px', marginLeft: "20px" }}  />
     </LogoSign>
   );
 }
