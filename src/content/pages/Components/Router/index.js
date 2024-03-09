@@ -42,6 +42,8 @@ import {
   CardContent,
   Divider,
   Tabs,
+  Radio,
+  RadioGroup,
   Tooltip,
   Tab,
   Typography,
@@ -273,6 +275,7 @@ function Router() {
   
   const handleFormChange = (event, index, value) => {
     let data = [...formFields];
+    console.log(event.target.id)
     //if (data[0][event.target.id][index] == undefined) {data[0][event.target.id] = {}}
     if (event.target.type == "checkbox") {
       data[sessionStorage.router_tabid][event.target.id][index][
@@ -296,6 +299,9 @@ function Router() {
 
       var valuecandidate = event.target.value;
       if (!valuecandidate){valuecandidate = value}
+
+      if(valuecandidate === "true"){valuecandidate = true}
+      if (valuecandidate === "false"){valuecandidate = false}
 
       var parsed = splitcandidate.split("."),
         id = parsed[0],
@@ -370,6 +376,7 @@ function Router() {
       hostname: "",
       enabled: [],
       enabledv6: [],
+      ipv6: false,
       passive: [],
       v6networks: [],
       pointtopoint: [],
@@ -398,6 +405,7 @@ function Router() {
       hostname: "",
       enabled: [],
       passive: [],
+      defaultmetric: true
     };
     data[sessionStorage.router_tabid][nest][index][id].push(object);
     //workingarray = formFields[tabid]
@@ -458,7 +466,9 @@ window.onload = (event) => {
       }
       if(sort == "custom"){
         return workingvar
+        workingvar = [...new Set(workingvar)];
       }else{
+        workingvar = [...new Set(workingvar)];
       return workingvar.map((name) => (
         <MenuItem key={name} value={name}>
           {name}
@@ -2245,7 +2255,7 @@ window.onload = (event) => {
                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, use mask (e.g. 255.255.255.0) \n\n For ipv6, use prefix (e.g. /64)"}</span>} >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.bandwidthmetric}
+                                  error={!form2.defaultmetric && !form2.bandwidthmetric}
                                   name="bandwidthmetric"
                                   id="redistributions"
                                   size="small"
@@ -2265,7 +2275,7 @@ window.onload = (event) => {
                                 <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, use mask (e.g. 255.255.255.0) \n\n For ipv6, use prefix (e.g. /64)"}</span>} >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.delaymetric}
+                                  error={!form2.defaultmetric && !form2.delaymetric}
                                   name="delaymetric"
                                   id="redistributions"
                                   size="small"
@@ -2285,7 +2295,7 @@ window.onload = (event) => {
                                 <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, use mask (e.g. 255.255.255.0) \n\n For ipv6, use prefix (e.g. /64)"}</span>} >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.reliabilitymetric}
+                                  error={!form2.defaultmetric && !form2.reliabilitymetric}
                                   name="reliabilitymetric"
                                   id="redistributions"
                                   size="small"
@@ -2305,7 +2315,7 @@ window.onload = (event) => {
                                 <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, use mask (e.g. 255.255.255.0) \n\n For ipv6, use prefix (e.g. /64)"}</span>} >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.loadmetric}
+                                  error={!form2.defaultmetric && !form2.loadmetric}
                                   name="loadmetric"
                                   id="redistributions"
                                   size="small"
@@ -2325,7 +2335,7 @@ window.onload = (event) => {
                                 <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.mtumetric}
+                                  error={!form2.defaultmetric && !form2.mtumetric}
                                   name="mtumetric"
                                   id="redistributions"
                                   size="small"
@@ -2342,13 +2352,12 @@ window.onload = (event) => {
                                   value={form2.mtumetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                                <Tooltip arrow title="Use default metric">
                                   <FormControlLabel
                                     sx = {{mt: 0}}
                                     labelPlacement="bottom"
                                     control={
                                       <Checkbox
-                                        color="warning"
                                         name="defaultmetric"
                                         id="redistributions"
                                         checked={form2.defaultmetric || null}
@@ -2531,7 +2540,7 @@ window.onload = (event) => {
                         </Select>
                       </FormControl>
                       </Tooltip>
-                      <Tooltip arrow placement="top" enterDelay={1000} title="Angivelse af de interfaces, hvor OSPF ikke skal sende 'Hello' / deltage i DR/BDR-valg. Brug dette til Network, hvor der ikke er forbundet en OSPF router, men som stadig skal annonceres">
+                      <Tooltip arrow placement="top" enterDelay={1000} title="Angivelse af de interfaces, hvor OSPF ikke skal sende 'Hello' / deltage i DR/BDR-valg. Brug dette til netværk, hvor der ikke er forbundet en OSPF router, men som stadig skal annonceres">
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
                         <InputLabel>Passive interfaces</InputLabel>
                         <Select
@@ -2614,7 +2623,7 @@ window.onload = (event) => {
                         label="Advertise default route"
                       />
                       </Tooltip>
-                      <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                      <Tooltip arrow title="Inject manually configured (static) routes into the list of advertised networks">
                       <FormControlLabel
                         labelPlacement="bottom"
                         sx={{ m: 1.5 }}
@@ -2631,7 +2640,7 @@ window.onload = (event) => {
                         label="Redistribute static"
                       />
                       </Tooltip>
-                      <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                      <Tooltip arrow title="Inject directly connected network routes into the list of advertised networks">
                       <FormControlLabel
                         labelPlacement="bottom"
                         sx={{ m: 1.5 }}
@@ -2781,10 +2790,10 @@ window.onload = (event) => {
                                     {redistributionchoices()}
                                   </Select>
                                 </FormControl>
-                               <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, use mask (e.g. 255.255.255.0) \n\n For ipv6, use prefix (e.g. /64)"}</span>} >                      
+                               <Tooltip arrow title="">                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.bandwidthmetric}
+                                  error={!form2.defaultmetric && !form2.bandwidthmetric}
                                   name="bandwidthmetric"
                                   id="redistributions"
                                   size="small"
@@ -2801,10 +2810,10 @@ window.onload = (event) => {
                                   value={form2.bandwidthmetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, use mask (e.g. 255.255.255.0) \n\n For ipv6, use prefix (e.g. /64)"}</span>} >                      
+                                <Tooltip arrow title="">                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.delaymetric}
+                                  error={!form2.defaultmetric && !form2.delaymetric}
                                   name="delaymetric"
                                   id="redistributions"
                                   size="small"
@@ -2821,10 +2830,10 @@ window.onload = (event) => {
                                   value={form2.delaymetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, use mask (e.g. 255.255.255.0) \n\n For ipv6, use prefix (e.g. /64)"}</span>} >                      
+                                <Tooltip arrow title="" >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.reliabilitymetric}
+                                  error={!form2.defaultmetric && !form2.reliabilitymetric}
                                   name="reliabilitymetric"
                                   id="redistributions"
                                   size="small"
@@ -2841,10 +2850,10 @@ window.onload = (event) => {
                                   value={form2.reliabilitymetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, use mask (e.g. 255.255.255.0) \n\n For ipv6, use prefix (e.g. /64)"}</span>} >                      
+                                <Tooltip arrow title="">                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.loadmetric}
+                                  error={!form2.defaultmetric && !form2.loadmetric}
                                   name="loadmetric"
                                   id="redistributions"
                                   size="small"
@@ -2861,10 +2870,10 @@ window.onload = (event) => {
                                   value={form2.loadmetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title="" >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.mtumetric}
+                                  error={!form2.defaultmetric && !form2.mtumetric}
                                   name="mtumetric"
                                   id="redistributions"
                                   size="small"
@@ -2881,7 +2890,7 @@ window.onload = (event) => {
                                   value={form2.mtumetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                                <Tooltip arrow title="Use the default metric for OSPF: typically either 10, 20 or 25">
                                   <FormControlLabel
                                     sx = {{mt: 0}}
                                     labelPlacement="bottom"
@@ -3047,9 +3056,21 @@ window.onload = (event) => {
                         </Select>
                       </FormControl>
                       </Tooltip>
-                        <Tooltip arrow placement="top" enterDelay={1000} leaveDelay={0} title={form.defaultpassive ? "Explitly choose what interfaces should be enabled - no neighbourships can be established if this is not defined" : "This does not need to adjusted, since interfaces are not passive by default"}>
+                        <Tooltip
+                          arrow
+                          placement="top"
+                          enterDelay={1000}
+                          leaveDelay={0}
+                          title={
+                            form.defaultpassive
+                              ? "Explitly choose what interfaces should be enabled - no neighbourships can be established if this is not defined"
+                              : form.ipv6
+                              ? "Select interfaces where EIGRP should advertise hello packets"
+                              : "This does not need to adjusted, since interfaces are not passive by default"
+                          }
+                        >
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 218 }}>
-                        <InputLabel>Enabled interfaces</InputLabel>
+                        <InputLabel>{form.ipv6 ? "Participating interfaces" : "Enabled interfaces" }</InputLabel>
                         <Select
                           name="eigrp.enabled"
                           multiple
@@ -3082,21 +3103,14 @@ window.onload = (event) => {
                       </FormControl>
                       </Tooltip>
                       <Tooltip arrow title="Defines if this EIGRP process is IPv6">
-                      <FormControlLabel
-                        labelPlacement="bottom"
-                        sx={{ m: 1.5 }}
-                        control={
-                          <Switch
-                            name="ipv6"
-                            id="eigrp"
-                            checked={form.ipv6 || null}
-                            onChange={(event) => {
-                              handleFormChange(event, index);
-                            }}
-                          />
-                        }
-                        label="IPv6"
-                      />
+                      <FormControl>
+                          <RadioGroup defaultValue="false" name="eigrp.ipv6" onChange={(event) => {
+                            handleFormChange(event, index);
+                          }} sx={{ ml: 4, mt: 1, mr: 1}}>
+                          <FormControlLabel value="false" control={<Radio color="info" orientation="horizontal" size="md" variant="soft" checked={form.ipv6 === false || null} />} label="IPv4" />
+                          <FormControlLabel value="true" control={<Radio color="info" orientation="horizontal" size="md" variant="soft" checked={form.ipv6 === true || null} />} label="IPv6" />
+                         </RadioGroup>
+                        </FormControl>
                       </Tooltip>
                       <Tooltip arrow title="All interfaces will be passive by default unless otherwise specified">
                       <FormControlLabel
@@ -3115,7 +3129,7 @@ window.onload = (event) => {
                         label="Default passive interfaces"
                       />
                       </Tooltip>
-                      <Tooltip arrow title={form.ipv6 ? "This is not supported in IPv6 EIGRP, please explicitly select interfaces in the 'Enabled interfaces' dropdown" : "This adds a 0.0.0.0 network statement, thus including all interfaces to be able to participate in the EIGRP routing process"}>
+                      <Tooltip arrow title={form.ipv6 ? "This is not supported in IPv6 EIGRP, please explicitly select interfaces in the 'Participating interfaces' dropdown" : "This adds a 0.0.0.0 network statement, thus including all interfaces to be able to participate in the EIGRP routing process"}>
                       <FormControlLabel
                         labelPlacement="bottom"
                         sx={{ m: 1.5 }}
@@ -3133,7 +3147,7 @@ window.onload = (event) => {
                         label="Include all interfaces"
                       />
                       </Tooltip>
-                      <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                      <Tooltip arrow title="Aggregate contiguous subnets into a single summarized route, simplifying the routing table and reducing its size when advertising networks to other routers">
                       <FormControlLabel
                         labelPlacement="bottom"
                         sx={{ m: 1.5 }}
@@ -3150,7 +3164,7 @@ window.onload = (event) => {
                         label="Auto summarization"
                       />
                       </Tooltip>
-                      <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                      <Tooltip arrow title="Inject directly connected network routes into the list of advertised networks">
                       <FormControlLabel
                         labelPlacement="bottom"
                         sx={{ m: 1.5 }}
@@ -3167,7 +3181,7 @@ window.onload = (event) => {
                         label="Redistribute connected"
                       />
                       </Tooltip>
-                      <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                      <Tooltip arrow title="Inject manually configured (static) routes into the list of advertised networks">
                       <FormControlLabel
                         labelPlacement="bottom"
                         sx={{ m: 1.5 }}
@@ -3265,7 +3279,7 @@ window.onload = (event) => {
                       </FormControl>                    
                                <TextField
                                   disabled={form2.defaultmetric || form.ipv6}
-                                  error={form2.defaultmetric && form2.bandwidthmetric && !form.ipv6}
+                                  error={!form2.defaultmetric && !form2.bandwidthmetric && !form.ipv6}
                                   name="bandwidthmetric"
                                   type="number"
                                   id="networks"
@@ -3340,10 +3354,10 @@ window.onload = (event) => {
                                     {redistributionchoices()}
                                   </Select>
                                 </FormControl>
-                               <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <Tooltip arrow title="" >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.bandwidthmetric}
+                                  error={!form2.defaultmetric && !form2.bandwidthmetric}
                                   name="bandwidthmetric"
                                   id="redistributions"
                                   size="small"
@@ -3360,10 +3374,10 @@ window.onload = (event) => {
                                   value={form2.bandwidthmetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title="" >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.delaymetric}
+                                  error={!form2.defaultmetric && !form2.delaymetric}
                                   name="delaymetric"
                                   id="redistributions"
                                   size="small"
@@ -3381,10 +3395,10 @@ window.onload = (event) => {
                                   value={form2.delaymetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title="" >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.reliabilitymetric}
+                                  error={!form2.defaultmetric && !form2.reliabilitymetric}
                                   name="reliabilitymetric"
                                   id="redistributions"
                                   size="small"
@@ -3402,10 +3416,10 @@ window.onload = (event) => {
                                   value={form2.reliabilitymetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title="" >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.loadmetric}
+                                  error={!form2.defaultmetric && !form2.loadmetric}
                                   name="loadmetric"
                                   id="redistributions"
                                   size="small"
@@ -3423,10 +3437,10 @@ window.onload = (event) => {
                                   value={form2.loadmetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title="" >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.mtumetric}
+                                  error={!form2.defaultmetric && !form2.mtumetric}
                                   name="mtumetric"
                                   id="redistributions"
                                   size="small"
@@ -3444,7 +3458,7 @@ window.onload = (event) => {
                                   value={form2.mtumetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                                <Tooltip arrow title="Use default metric for EIGRP: 1000 100 255 1 1500">
                                   <FormControlLabel
                                     sx = {{mt: 0}}
                                     labelPlacement="bottom"
@@ -3476,6 +3490,7 @@ window.onload = (event) => {
                       <Button
                         size="small"
                         color="primary"
+                        sx={{display: form.ipv6? "none": ""}}
                         disabled={form.ipv6}
                         onClick={() =>
                           addNestedFields("eigrp", index, "networks")
@@ -3668,7 +3683,7 @@ window.onload = (event) => {
                         label="Include all IPv4 interfaces"
                       />
                       </Tooltip>
-                      <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                      <Tooltip arrow title="Inject directly connected network routes into the list of advertised networks">
                       <FormControlLabel
                         labelPlacement="bottom"
                         sx={{ m: 1.5 }}
@@ -3685,7 +3700,7 @@ window.onload = (event) => {
                         label="Redistribute connected"
                       />
                       </Tooltip>
-                      <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                      <Tooltip arrow title="Inject manually configured (static) routes into the list of advertised networks">
                       <FormControlLabel
                         labelPlacement="bottom"
                         sx={{ m: 1.5 }}
@@ -3783,7 +3798,7 @@ window.onload = (event) => {
                       </FormControl>                    
                                <TextField
                                   disabled={form2.defaultmetric || form.ipv6}
-                                  error={form2.defaultmetric && form2.bandwidthmetric && !form.ipv6}
+                                  error={!form2.defaultmetric && !form2.bandwidthmetric && !form.ipv6}
                                   name="bandwidthmetric"
                                   type="number"
                                   id="networks"
@@ -3858,10 +3873,10 @@ window.onload = (event) => {
                                     {redistributionchoices()}
                                   </Select>
                                 </FormControl>
-                               <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <Tooltip arrow title="" >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.bandwidthmetric}
+                                  error={!form2.defaultmetric && !form2.bandwidthmetric}
                                   name="bandwidthmetric"
                                   id="redistributions"
                                   size="small"
@@ -3878,10 +3893,10 @@ window.onload = (event) => {
                                   value={form2.bandwidthmetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title="" >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.delaymetric}
+                                  error={!form2.defaultmetric && !form2.delaymetric}
                                   name="delaymetric"
                                   id="redistributions"
                                   size="small"
@@ -3899,10 +3914,10 @@ window.onload = (event) => {
                                   value={form2.delaymetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title="">                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.reliabilitymetric}
+                                  error={!form2.defaultmetric && !form2.reliabilitymetric}
                                   name="reliabilitymetric"
                                   id="redistributions"
                                   size="small"
@@ -3920,10 +3935,10 @@ window.onload = (event) => {
                                   value={form2.reliabilitymetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title="" >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.loadmetric}
+                                  error={!form2.defaultmetric && !form2.loadmetric}
                                   name="loadmetric"
                                   id="redistributions"
                                   size="small"
@@ -3941,10 +3956,10 @@ window.onload = (event) => {
                                   value={form2.loadmetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title="" >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.mtumetric}
+                                  error={!form2.defaultmetric && !form2.mtumetric}
                                   name="mtumetric"
                                   id="redistributions"
                                   size="small"
@@ -3962,7 +3977,7 @@ window.onload = (event) => {
                                   value={form2.mtumetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                                <Tooltip arrow title="Use the default metric for EIGRP: 1000 100 255 1 1500">
                                   <FormControlLabel
                                     sx = {{mt: 0}}
                                     labelPlacement="bottom"
@@ -4092,7 +4107,7 @@ window.onload = (event) => {
                         value={form.key || ''}
                       />
                       </Tooltip>
-                      <Tooltip arrow title="Bestemmer, om routeren skal annoncere en default route til andre EIGRP-routere. Aktiver kun, hvis denne router skal være gateway til andre Network.">
+                      <Tooltip arrow title="Activate if this router should be the gateway of last resort, e.g. if its connected to the internet">
                       <FormControlLabel
                         labelPlacement="bottom"
                         sx={{ m: 1.5 }}
@@ -4109,7 +4124,7 @@ window.onload = (event) => {
                         label="Advertise default route"
                       />
                       </Tooltip>
-                      <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                      <Tooltip arrow title="Aggregate contiguous subnets into a single summarized route, simplifying the routing table and reducing its size when advertising networks to other routers">
                       <FormControlLabel
                         labelPlacement="bottom"
                         sx={{ m: 1.5 }}
@@ -4126,7 +4141,7 @@ window.onload = (event) => {
                         label="Auto summarization"
                       />
                       </Tooltip>
-                      <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                      <Tooltip arrow title="Inject directly connected network routes into the list of advertised networks">
                       <FormControlLabel
                         labelPlacement="bottom"
                         sx={{ m: 1.5 }}
@@ -4143,7 +4158,7 @@ window.onload = (event) => {
                         label="Redistribute connected"
                       />
                       </Tooltip>
-                      <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                      <Tooltip arrow title="Inject manually configured (static) routes into the list of advertised networks">
                       <FormControlLabel
                         labelPlacement="bottom"
                         sx={{ m: 1.5 }}
@@ -4174,7 +4189,7 @@ window.onload = (event) => {
                               mt: 3,
                             }}
                           >
-                            <CardHeader sx={{mb:-0.5}} title={<Typography fontSize={13} variant="subtitle2">{"IPv4 peer " + index2}</Typography>}  />
+                            <CardHeader sx={{mb:-0.5}} title={<Typography fontSize={13} variant="subtitle2">{"IPv4 peer "  + (index2 + 1)}</Typography>}  />
                             <Divider />
                             <CardContent>
                               <div key={index}>
@@ -4291,7 +4306,7 @@ window.onload = (event) => {
                               mt: 3,
                             }}
                           >
-                            <CardHeader sx={{mb:-0.5}} title={<Typography fontSize={13} variant="subtitle2">{"IPv6 peer " + index2}</Typography>}  />
+                            <CardHeader sx={{mb:-0.5}} title={<Typography fontSize={13} variant="subtitle2">{"IPv6 peer "  + (index2 + 1)}</Typography>}  />
                             <Divider />
                             <CardContent>
                               <div key={index}>
@@ -4410,7 +4425,7 @@ window.onload = (event) => {
                               mt: 3,
                             }}
                           >
-                            <CardHeader sx={{mb:-0.5}} title={<Typography fontSize={13} variant="subtitle2">{"IPv4 network advertisment " + index2}</Typography>}  />
+                            <CardHeader sx={{mb:-0.5}} title={<Typography fontSize={13} variant="subtitle2">{"IPv4 network advertisment "  + (index2 + 1)}</Typography>}  />
                             <Divider />
                             <CardContent>
                               <div key={index}>
@@ -4477,7 +4492,7 @@ window.onload = (event) => {
                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.bandwidthmetric}
+                                  error={!form2.defaultmetric && !form2.bandwidthmetric}
                                   name="bandwidthmetric"
                                   id="networks"
                                   type="number"
@@ -4514,7 +4529,7 @@ window.onload = (event) => {
                               mt: 3,
                             }}
                           >
-                            <CardHeader sx={{mb:-0.5}} title={<Typography fontSize={13} variant="subtitle2">{"IPv6 network advertisment " + index2}</Typography>}  />
+                            <CardHeader sx={{mb:-0.5}} title={<Typography fontSize={13} variant="subtitle2">{"IPv6 network advertisment " + (index2 + 1)}</Typography>}  />
                             <Divider />
                             <CardContent>
                               <div key={index}>
@@ -4581,7 +4596,7 @@ window.onload = (event) => {
                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.bandwidthmetric}
+                                  error={!form2.defaultmetric && !form2.bandwidthmetric}
                                   name="bandwidthmetric"
                                   id="v6networks"
                                   type="number"
@@ -4618,7 +4633,7 @@ window.onload = (event) => {
                               mt: 3,
                             }}
                           >
-                            <CardHeader sx={{mb:-0.5}} title={<Typography fontSize={13} variant="subtitle2">{"Redistribution " + index2}</Typography>}  />
+                            <CardHeader sx={{mb:-0.5}} title={<Typography fontSize={13} variant="subtitle2">{"Redistribution " + (index2 + 1)}</Typography>}  />
                             <Divider />
                             <CardContent>
                               <div key={index}>
@@ -4659,10 +4674,10 @@ window.onload = (event) => {
                                     {redistributionchoices()}
                                   </Select>
                                 </FormControl>
-                               <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                               <Tooltip arrow title="" >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.bandwidthmetric}
+                                  error={!form2.defaultmetric && !form2.bandwidthmetric}
                                   name="bandwidthmetric"
                                   id="redistributions"
                                   size="small"
@@ -4679,10 +4694,10 @@ window.onload = (event) => {
                                   value={form2.bandwidthmetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title="">                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.delaymetric}
+                                  error={!form2.defaultmetric && !form2.delaymetric}
                                   name="delaymetric"
                                   id="redistributions"
                                   size="small"
@@ -4699,10 +4714,10 @@ window.onload = (event) => {
                                   value={form2.delaymetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title="" >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.reliabilitymetric}
+                                  error={!form2.defaultmetric && !form2.reliabilitymetric}
                                   name="reliabilitymetric"
                                   id="redistributions"
                                   size="small"
@@ -4719,10 +4734,10 @@ window.onload = (event) => {
                                   value={form2.reliabilitymetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title="">                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.loadmetric}
+                                  error={!form2.defaultmetric && !form2.loadmetric}
                                   name="loadmetric"
                                   id="redistributions"
                                   size="small"
@@ -4739,10 +4754,10 @@ window.onload = (event) => {
                                   value={form2.loadmetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, benyt subnet maske (ex. 255.255.255.0) \n\n For ipv6, benyt cidr (ex. /64)"}</span>} >                      
+                                <Tooltip arrow title="" >                      
                                <TextField
                                   disabled={form2.defaultmetric}
-                                  error={form2.defaultmetric && form2.mtumetric}
+                                  error={!form2.defaultmetric && !form2.mtumetric}
                                   name="mtumetric"
                                   id="redistributions"
                                   size="small"
@@ -4759,7 +4774,7 @@ window.onload = (event) => {
                                   value={form2.mtumetric || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title="Aktiver for at tillade automatisk summarisering af ruter, hvilket kan forenkle ruteinformationen og reducere størrelsen på routetabellen.">
+                                <Tooltip arrow title="Use the default metric for bgp: 1">
                                   <FormControlLabel
                                     sx = {{mt: 0}}
                                     labelPlacement="bottom"

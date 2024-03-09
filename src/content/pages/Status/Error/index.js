@@ -50,7 +50,7 @@ export function StatusError(type) {
               <Tooltip
                 arrow
                 placement="right"
-                title="Denne handling er permanent"
+                title="Thus action is permanent"
               >
                 <Button
                   size="small"
