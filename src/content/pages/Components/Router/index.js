@@ -1047,6 +1047,7 @@ window.onload = (event) => {
                       >
                         <DeleteIcon color="secondary" />
                       </IconButton>
+                      <Tooltip arrow placement="top" title="Enter a IPv4 or IPv6 address">
                       <TextField
                         name="ip"
                         error={form.subnet && !form.ip}
@@ -1057,7 +1058,8 @@ window.onload = (event) => {
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.ip || ''}
                       />
-                      <Tooltip arrow title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, use mask (e.g. 255.255.255.0) \n\n For ipv6, use prefix (e.g. /64)"}</span>} >
+                      </Tooltip>
+                      <Tooltip arrow placement="top" title={<span style={{ whiteSpace: 'pre-line' }}>{"For ipv4, use mask (e.g. 255.255.255.0) \n\n For ipv6, use prefix (e.g. /64)"}</span>} >
                       <TextField
                         name="subnet"
                         id="interfaces"
@@ -1070,6 +1072,16 @@ window.onload = (event) => {
                         value={form.subnet || ''}
                       />
                       </Tooltip>
+                      <Tooltip sx={{display: isIPv6(form.ip) ? "": "none"}} arrow title="" >
+                      <TextField
+                        name="linklocal"
+                        id="interfaces"
+                        label="Link local"
+                        disabled={form.interfacedhcp}
+                        onChange={(event) => handleFormChange(event, index)}
+                        value={form.linklocal || ''}
+                      />
+                      </Tooltip>
                       <TextField
                         name="description"
                         id="interfaces"
@@ -1078,8 +1090,11 @@ window.onload = (event) => {
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.description || ''}
                       />
+                      <Tooltip arrow placement="top" title="This field accepts manual input">
                       <FormControl sx={{ mr: 1, ml: 1.2, mt: 1, width: 220 }}>
                       <Autocomplete
+                        clearIcon={false}
+                        clearText=""
                         sx={{ mr: -1, ml: -1.2, mt: -1, width: 220 }}
                         required
                         freeSolo
@@ -1092,6 +1107,7 @@ window.onload = (event) => {
                         renderInput={(params) => <TextField {...params} required={true} error={!form.port} label="Interface" />}
                       />
                       </FormControl>
+                      </Tooltip>
                      <Tooltip sx={{display: isIPv6(form.ip) ? "": "none"}} arrow title="Use the MAC address for automatic IPv6 address creation">
                       <FormControlLabel
                         labelPlacement="bottom"

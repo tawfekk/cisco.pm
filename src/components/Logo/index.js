@@ -14,7 +14,7 @@ const LogoWrapper = styled(Link)(
 
 const LogoSignWrapper = styled(Box)(
   () => `
-        width: 170px;
+        width: 165px;
         height: 45px;
         transform:scale(0.6)
 `
@@ -73,7 +73,7 @@ export function Logo() {
       <LogoSignWrapper>
         <LogoSign>
         <img alt="Site logo" src="/static/images/logo/main.svg" style={{ width: '50px', height: '50px' }} />
-      <img alt="Site logotext" src="/static/images/logo/logotext.svg" style={{ width: '200px', marginLeft: "20px" }}  />
+      <img alt="Site logotext" src="/static/images/logo/logotext.svg" style={{ width: '200px', marginLeft: "15px" }}  />
         </LogoSign>
       </LogoSignWrapper>
     </LogoWrapper>
@@ -84,7 +84,7 @@ export function LogoAlone() {
   return (
     <LogoSign>
       <img alt="Site logo" src="/static/images/logo/main.svg" style={{ width: '50px', height: '50px' }} />
-      <img alt="Site logotext" src="/static/images/logo/logotext.svg" style={{ width: '200px', marginLeft: "20px" }}  />
+      <img alt="Site logotext" src="/static/images/logo/logotext.svg" style={{ width: '200px', marginLeft: "15px" }}  />
     </LogoSign>
   );
 }

@@ -121,6 +121,10 @@ export function Interfaces(index) {
           workingvar += "\nipv6 enable"; ;
           if (e.ip && e.subnet && e.interfacedhcp != true) {
             workingvar += "\nipv6 address " + e.ip + e.subnet;
+            if(e.eui64){workingvar += " eui-64"}
+            if(e.linklocal){
+              workingvar += "\nipv6 address "+ e.linklocal +" link-local";
+            }
           }
           if (e.interfacedhcp){
             workingvar += "\nipv6 address dhcp";
