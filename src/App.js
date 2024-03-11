@@ -46,7 +46,7 @@ if (!localStorage.router_data) {
   localStorage.router_data = JSON.stringify([
     {
       dynamicnatport: [],
-      misc: [{},{}],
+      misc: [{},{},{}],
       dynamicnat: [],
       staticnat: [],
       interfaces: [{ subinterfaces: [] }],
