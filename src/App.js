@@ -16,6 +16,32 @@ syncdown("switch");
 sessionStorage.version = "v0.03.1-beta";
 
 
+
+// Assuming localStorage.router_data is a string representation of an array of objects
+if (localStorage.router_data) {
+  // Parse the string into an array of objects
+  let routerDataArray = JSON.parse(localStorage.router_data);
+
+  // Iterate over each object in the array
+  routerDataArray.forEach((item, index) => {
+    // Check if the "misc" property exists
+    if (!item["misc"]) {
+      // If it doesn't exist, create it as an empty array
+      item["misc"] = [];
+    }
+
+    // Check if the third element of the "misc" array exists
+    if (!item["misc"][2]) {
+      // If it doesn't exist, create it as an empty string
+      item["misc"][2] = "";
+    }
+  });
+
+  // Save the updated array back to localStorage
+  localStorage.router_data = JSON.stringify(routerDataArray);
+}
+
+
 if (!localStorage.router_data) {
   localStorage.router_data = JSON.stringify([
     {
