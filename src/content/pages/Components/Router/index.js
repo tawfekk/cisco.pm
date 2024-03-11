@@ -142,7 +142,7 @@ function Router() {
         v6interfaces: [{ v6subinterfaces: [] }],
         dynamicnatport: [],
         dynamicnat: [],
-        misc: [{}, {}],
+        misc: [{}, {}, {}],
         staticnat: [],
         linterfaces: [],
         basicsecurity: [{}],
