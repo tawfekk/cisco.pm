@@ -33,6 +33,11 @@ function Topcustomconfig(index) {
       workingdata[index]["topcustomconfig"] = workingvar;
       localStorage.router_final = JSON.stringify(workingdata);
       return workingvar;
+    }else{
+      let workingdata = JSON.parse(localStorage.router_final);
+      workingdata[index]["topcustomconfig"] = "";
+      localStorage.router_final = JSON.stringify(workingdata);
+      return "";
     }
   } catch (error) {}
 }
