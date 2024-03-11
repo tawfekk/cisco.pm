@@ -21,6 +21,23 @@ function isIPv6(address) {
     return ipv6Regex.test(address);
 }
 
+function Topcustomconfig(index) {
+  try {
+    if (
+      JSON.parse(localStorage.router_data)[index]["misc"][2]["customconfig"]
+    ) {
+      let workingvar =
+        "\n\n" +
+        JSON.parse(localStorage.router_data)[index]["misc"][2]["customconfig"];
+      let workingdata = JSON.parse(localStorage.router_final);
+      workingdata[index]["topcustomconfig"] = workingvar;
+      localStorage.router_final = JSON.stringify(workingdata);
+      return workingvar;
+    }
+  } catch (error) {}
+}
+
+
 export function Initial(index) {
   try {
     var today = new Date();
@@ -1016,13 +1033,14 @@ export function NAT(index) {
   } catch (error) {}
 }
 
+
 function Customconfig(index) {
   try {
     if (
       JSON.parse(localStorage.router_data)[index]["misc"][0]["customconfig"]
     ) {
       let workingvar =
-        "\n\n" +
+        "\n" +
         JSON.parse(localStorage.router_data)[index]["misc"][0]["customconfig"];
       let workingdata = JSON.parse(localStorage.router_final);
       workingdata[index]["customconfig"] = workingvar;
@@ -1044,6 +1062,7 @@ export function BGP(index) {
 
     var workingvar = "";
     for (const e of JSON.parse(localStorage.router_data)[index]["bgp"]) {
+      if(e.as){
       workingvar += "\n\nrouter bgp "+ e.as
       if(e.routerid){
         workingvar += "\nbgp router-id " + e.routerid;
@@ -1162,7 +1181,7 @@ export function BGP(index) {
 
     }
 
-
+  }
     let workingdata = JSON.parse(localStorage.router_final);
     workingdata[index]["bgp"] = workingvar;
     localStorage.router_final = JSON.stringify(workingdata);
@@ -1199,7 +1218,7 @@ export function Security(index) {
 
   if(JSON.parse(localStorage.router_data)[index]["localaaa"][0]["users"]){
     let data = JSON.parse(localStorage.router_data)[index]["localaaa"][0]
-    if(JSON.parse(localStorage.router_data)[index]["localaaa"][0]["users"]){
+    if(JSON.parse(localStorage.router_data)[index]["localaaa"][0]["users"].length > 0){
     workingvar += "\n\naaa new-model"
     for (const e of JSON.parse(localStorage.router_data)[index]["localaaa"][0]["users"]){
       if(!e.privilege){
@@ -1251,6 +1270,7 @@ export function Security(index) {
 }
 
 export function Runner(index) {
+  Topcustomconfig(index);
   Initial(index);
   Interfaces(index);
   FHRP(index);

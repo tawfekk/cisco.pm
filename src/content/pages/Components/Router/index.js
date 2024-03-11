@@ -5845,52 +5845,11 @@ window.onload = (event) => {
               alignItems="stretch"
               spacing={3}
             >
-              <Grid item xs="auto">
-                <Card>
-                  <CardHeader title="Custom configuration" />
-                  <Divider />
-                  <CardContent sx={{ width: 500, justifyContent: "center" }}>
-                    <Box
-                      sx={{
-                        "& .MuiTextField-root": { m: 1, width: "25ch" },
-                      }}
-                      autoComplete="off"
-                    >
-                      <TextField
-                        label="Will be added in the bottom of the final configuration"
-                        multiline
-                        placeholder='One line at a time - do NOT include "configure terminal"'
-                        maxRows={Infinity}
-                        minRows={5}
-                        inputProps={{ style: { color: "#FFC13D" } }}
-                        style={{ width: "97%" }}
-                        onChange={(event) => {
-                          let data = [...formFields];
-                          data[tabid]["misc"][0] = {
-                            customconfig: event.target.value,
-                          };
-                          setformFields(data);
-                          localStorage.router_data = JSON.stringify(data);
-                          if (sessionStorage.sessionid) {
-                            syncupchange(
-                              sessionStorage.router_tabid,
-                              "misc",
-                              data[tabid]["misc"],
-                              "router"
-                            );
-                          }
-                        }}
-                        value={formFields[tabid]["misc"][0]["customconfig"] || ''}
-                      />
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs="auto">
+                            <Grid item xs="auto">
                 <Card>
                   <CardHeader title="Notes" />
                   <Divider />
-                  <CardContent sx={{ width: 500, justifyContent: "center" }}>
+                  <CardContent sx={{ width: 1085, justifyContent: "center" }}>
                     <Box
                       sx={{
                         "& .MuiTextField-root": { m: 1, width: "25ch" },
@@ -5920,6 +5879,88 @@ window.onload = (event) => {
                           }
                         }}
                         value={formFields[tabid]["misc"][1]["noter"] || ''}
+                      />
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs="auto">
+                <Card>
+                  <CardHeader title="Top custom configuration" />
+                  <Divider />
+                  <CardContent sx={{ width: 530, justifyContent: "center" }}>
+                    <Box
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                      }}
+                      autoComplete="off"
+                    >
+                      <TextField
+                        label="Will be added at the top of the final configuration"
+                        multiline
+                        placeholder='One line at a time - do NOT include "configure terminal"'
+                        maxRows={Infinity}
+                        minRows={5}
+                        inputProps={{ style: { color: "#FFC13D" } }}
+                        style={{ width: "97%" }}
+                        onChange={(event) => {
+                          let data = [...formFields];
+                          data[tabid]["misc"][2] = {
+                            customconfig: event.target.value,
+                          };
+                          setformFields(data);
+                          localStorage.router_data = JSON.stringify(data);
+                          if (sessionStorage.sessionid) {
+                            syncupchange(
+                              sessionStorage.router_tabid,
+                              "misc",
+                              data[tabid]["misc"],
+                              "router"
+                            );
+                          }
+                        }}
+                        value={formFields[tabid]["misc"][2]["customconfig"] || ''}
+                      />
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs="auto">
+                <Card>
+                  <CardHeader title="Bottom custom configuration" />
+                  <Divider />
+                  <CardContent sx={{ width: 530, justifyContent: "center" }}>
+                    <Box
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                      }}
+                      autoComplete="off"
+                    >
+                      <TextField
+                        label="Will be added at the bottom of the final configuration"
+                        multiline
+                        placeholder='One line at a time - do NOT include "configure terminal"'
+                        maxRows={Infinity}
+                        minRows={5}
+                        inputProps={{ style: { color: "#FFC13D" } }}
+                        style={{ width: "97%" }}
+                        onChange={(event) => {
+                          let data = [...formFields];
+                          data[tabid]["misc"][0] = {
+                            customconfig: event.target.value,
+                          };
+                          setformFields(data);
+                          localStorage.router_data = JSON.stringify(data);
+                          if (sessionStorage.sessionid) {
+                            syncupchange(
+                              sessionStorage.router_tabid,
+                              "misc",
+                              data[tabid]["misc"],
+                              "router"
+                            );
+                          }
+                        }}
+                        value={formFields[tabid]["misc"][0]["customconfig"] || ''}
                       />
                     </Box>
                   </CardContent>
