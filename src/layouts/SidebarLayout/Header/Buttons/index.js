@@ -79,6 +79,7 @@ function HeaderButtons() {
     }
     syncup(JSON.parse(localStorage.router_data), "router");
     syncup(JSON.parse(localStorage.switch_data), "switch");
+    syncup(JSON.parse(localStorage.vlan_data), "vlan");
     handleClose();
   }
 
