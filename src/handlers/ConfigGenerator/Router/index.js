@@ -21,7 +21,7 @@ function isIPv6(address) {
     return ipv6Regex.test(address);
 }
 
-function Topcustomconfig(index) {
+export function Topcustomconfig(index) {
   try {
     if (
       JSON.parse(localStorage.router_data)[index]["misc"][2]["customconfig"]

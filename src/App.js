@@ -13,11 +13,11 @@ syncdown("vlan");
 syncdown("switch");
 }
 
-sessionStorage.version = "v0.03.2-beta";
+sessionStorage.version = "v0.03.4-beta";
 
 
+if(!localStorage.version){localStorage.version = sessionStorage.version}
 
-// Assuming localStorage.router_data is a string representation of an array of objects
 if (localStorage.router_data) {
   // Parse the string into an array of objects
   let routerDataArray = JSON.parse(localStorage.router_data);
@@ -137,6 +137,7 @@ if (!localStorage.vlan_data) {
     },
   ]);
 }
+
 
 
 const App = () => {

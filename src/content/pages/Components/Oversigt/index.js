@@ -3,6 +3,8 @@ import Footer from "src/components/Footer";
 import { useState } from "react";
 import * as React from "react";
 
+import { Topcustomconfig } from "src/handlers/ConfigGenerator/Router";
+
 import PageTitle from "src/components/PageTitle";
 import PageTitleWrapper from "src/components/PageTitleWrapper";
 import {
@@ -36,13 +38,16 @@ function returner(type) {
   } else if (type == "switch") {
     Runner2(sessionStorage.oversigt_index);
   }
-  let data = "";
+  let data = ""
+  data += Topcustomconfig(sessionStorage.oversigt_index)
   for (var elem in JSON.parse(localStorage.getItem(type + "_final"))[
     sessionStorage.oversigt_index
   ]) {
+    if (elem != "topcustomconfig") {
     data += JSON.parse(localStorage.getItem(type + "_final"))[
       sessionStorage.oversigt_index
     ][elem];
+    }
   }
   return data;
 }
