@@ -9,11 +9,17 @@ import {
   Button,
   Modal,
   Hidden,
-  Tooltip
+  Tooltip,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl
 } from "@mui/material";
 import * as React from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { syncup, syncdown } from "src/handlers/Sync";
+
+let val = ""
 
 const style = {
   position: "absolute",
@@ -35,6 +41,7 @@ function handleFormChange3() {
 function handleFormChange4() {
   if (sessionStorage.t_sessionid) {
     localStorage.clear();
+    localStorage.sharedsessiontype = "peer"
     sessionStorage.sessionid = sessionStorage.t_sessionid;
     syncdown("router");
     syncdown("vlan");
@@ -63,6 +70,12 @@ function HeaderButtons() {
   function handleFormChange(event) {
     if (!sessionStorage.sessionid) {
       sessionStorage.sessionid = Math.floor(Math.random() * 90000) + 10000;
+    }
+    localStorage.sharedsessiontype = "originator"  
+    if (localStorage.accesslevel){
+      if(localStorage.accesslevel == "read only"){
+      sessionStorage.sessionid = sessionStorage.sessionid + "r"
+    }
     }
     syncup(JSON.parse(localStorage.router_data), "router");
     syncup(JSON.parse(localStorage.switch_data), "switch");
@@ -183,3 +196,20 @@ function HeaderButtons() {
 }
 
 export default HeaderButtons;
+
+
+// <FormControl sx={{ minWidth: 100, left: "15%" }} size="small">
+// <InputLabel>Perm</InputLabel>
+// <Select
+//   value={val ||localStorage.accesslevel}
+//   label="Perm"
+//   onChange={ (event) => {
+//     val = event.target.value 
+//     localStorage.accesslevel = event.target.value 
+//   }
+//   }
+// >
+//   <MenuItem value={"Full access"}>Full access</MenuItem>
+//   <MenuItem value={"Read only"}>Read only</MenuItem>
+// </Select>
+// </FormControl>

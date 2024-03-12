@@ -2127,22 +2127,15 @@ if(localStorage.getItem("version") && sessionStorage.getItem("version")) {
                         </Select>
                       </FormControl>
                       </Tooltip>
-                      <Tooltip arrow title="Switch to classic OSPFv3 instead of v2, please be aware that this will only work with IPv6 enabled interfaces">
-                      <FormControlLabel
-                        labelPlacement="bottom"
-                        sx={{ m: 1.5 }}
-                        control={
-                          <Switch
-                            name="ospfv3"
-                            id="ospf"
-                            checked={form.ospfv3 || null}
-                            onChange={(event) => {
-                              handleFormChange(event, index);
-                            }}
-                          />
-                        }
-                        label="IPv6"
-                      />
+                      <Tooltip arrow title="Defines if this OSPF process is IPv6">
+                      <FormControl>
+                          <RadioGroup defaultValue="false" name="ospf.ipv6" onChange={(event) => {
+                            handleFormChange(event, index);
+                          }} sx={{ ml: 4, mt: 1, mr: 1}}>
+                          <FormControlLabel value="false" control={<Radio color="info" orientation="horizontal" size="md" variant="soft" checked={form.ipv6 === false || null} />} label="IPv4" />
+                          <FormControlLabel value="true" control={<Radio color="info" orientation="horizontal" size="md" variant="soft" checked={form.ipv6 === true || null} />} label="IPv6" />
+                         </RadioGroup>
+                        </FormControl>
                       </Tooltip>
                       <Tooltip arrow title="Does router lead to the internet, or should it be the gateway of last resort? If yes, enable this">
                       <FormControlLabel
@@ -4177,11 +4170,26 @@ if(localStorage.getItem("version") && sessionStorage.getItem("version")) {
                       <TextField
                         name="key"
                         id="bgp"
+                        disabled={!form.ipv6}
                         label="Authentication key"
                         placeholder="mysecretkey"
                         onChange={(event) => handleFormChange(event, index)}
                         value={form.key || ''}
                       />
+                      </Tooltip>
+                      <Tooltip arrow title="Use classic on older version of IOS / Packet Tracer - this will disable some features like ipv6 and max-prefix">
+                      <FormControl>
+                          <RadioGroup defaultValue="false" name="bgp.ipv6" onChange={(event) => {
+                            handleFormChange(event, index);
+                            if(form.ipv6){handleClick(
+                              "warning",
+                              "Please be aware that modern BGP is not supported on older Cisco IOS versions"
+                            )};
+                          }} sx={{ ml: 4, mt: 1, mr: 1}}>
+                          <FormControlLabel value="false" control={<Radio color="info" orientation="horizontal" size="md" variant="soft" checked={form.ipv6 === false || null} />} label="Classic" />
+                          <FormControlLabel value="true" control={<Radio color="info" orientation="horizontal" size="md" variant="soft" checked={form.ipv6 === true || null} />} label="Modern" />
+                         </RadioGroup>
+                        </FormControl>
                       </Tooltip>
                       <Tooltip arrow title="Activate if this router should be the gateway of last resort, e.g. if its connected to the internet">
                       <FormControlLabel
@@ -4208,6 +4216,7 @@ if(localStorage.getItem("version") && sessionStorage.getItem("version")) {
                           <Switch
                             name="autosummary"
                             id="bgp"
+                            disabled={!form.ipv6}
                             checked={form.autosummary || null}
                             onChange={(event) => {
                               handleFormChange(event, index);
@@ -4322,11 +4331,12 @@ if(localStorage.getItem("version") && sessionStorage.getItem("version")) {
                                   value={form2.peeras || ''}
                                 />
                                 </Tooltip>
-                                <Tooltip arrow title="BGP neighbor prefix limit is a restriction on the maximum number of IP prefixes a BGP neighbor is allowed to advertise." >                      
+                                <Tooltip arrow title={!form.ipv6 ? "Disabled in classic mode": "BGP neighbor prefix limit is a restriction on the maximum number of IP prefixes a BGP neighbor is allowed to advertise."} >                      
                                <TextField
                                   name="peerprefixlimit"
                                   type="number"
                                   id="neighbours"
+                                  disabled={!form.ipv6}
                                   size="small"
                                   label="Prefix limit"
                                   placeholder="3000"
@@ -4892,6 +4902,7 @@ if(localStorage.getItem("version") && sessionStorage.getItem("version")) {
                       <Button
                         size="small"
                         color="primary"
+                        disabled={!form.ipv6}
                         onClick={() =>
                           addNestedFields("bgp", index, "v6neighbours")
                         }
@@ -4910,6 +4921,7 @@ if(localStorage.getItem("version") && sessionStorage.getItem("version")) {
                       <Button
                         size="small"
                         color="primary"
+                        disabled={!form.ipv6}
                         onClick={() =>
                           addNestedFields("bgp", index, "v6networks")
                         }

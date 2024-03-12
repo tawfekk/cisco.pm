@@ -335,7 +335,7 @@ export function OSPF(index) {
   try {
     var workingvar = "";
     for (const e of JSON.parse(localStorage.router_data)[index]["ospf"]) {
-      if (e.enabled && !e.ospfv3 ) {
+      if (e.enabled && !e.ipv6 ) {
         workingvar += "\n\nrouter ospf " + e.processid;
         if (e.defaultroute) {
           workingvar += "\ndefault-information originate";
@@ -425,7 +425,7 @@ export function OSPF(index) {
       }
     }
 
-      if (e.ospfv3 && e.enabled.length) {
+      if (e.ipv6 && e.enabled.length) {
         workingvar += "\n\nipv6 router ospf " + e.processid;
         if (e.defaultroute) {
           workingvar += "\ndefault-information originate";
@@ -1067,7 +1067,7 @@ export function BGP(index) {
 
     var workingvar = "";
     for (const e of JSON.parse(localStorage.router_data)[index]["bgp"]) {
-      if(e.as){
+      if(e.as && !e.ipv6 ){
       workingvar += "\n\nrouter bgp "+ e.as
       if(e.routerid){
         workingvar += "\nbgp router-id " + e.routerid;
@@ -1183,6 +1183,38 @@ export function BGP(index) {
 
       }
 
+
+    }
+
+
+    if(e.as && e.ipv6){
+      if(e.as && !e.ipv6 ){
+        workingvar += "\n\nrouter bgp "+ e.as
+        if(e.routerid){
+          workingvar += "\nbgp router-id " + e.routerid;
+        }else{
+          workingvar += "\nno bgp router-id";
+        }
+
+      for (const elem of e.neighbours) {
+        workingvar += "\nneighbor " + elem.peerip + " remote-as " + elem.peeras
+      }
+
+      for (const n of e.networks){
+        if(!n.subnet){
+        workingvar += "\nnetwork "+ n.ip
+        }else{
+        workingvar += "\nnetwork "+ n.ip + " mask " +n.subnet
+        }
+      }
+
+      if(e.defaultroute){
+        workingvar += "\nnetwork 0.0.0.0"
+      }else{
+        workingvar += "\nno network 0.0.0.0"
+      }
+
+    }
 
     }
 
