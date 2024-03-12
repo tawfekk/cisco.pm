@@ -13,7 +13,7 @@ syncdown("vlan");
 syncdown("switch");
 }
 
-sessionStorage.version = "v0.03.4-beta";
+sessionStorage.version = "v0.03.5-beta";
 
 
 if(!localStorage.version){localStorage.version = sessionStorage.version}

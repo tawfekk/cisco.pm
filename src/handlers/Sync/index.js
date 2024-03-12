@@ -27,9 +27,6 @@ export async function syncup(data, type) {
       },
       { merge: true }
     );
-    //  } catch (e) {
-    //    console.log(e);
-    //  }
   }
 }
 export async function syncupchange(

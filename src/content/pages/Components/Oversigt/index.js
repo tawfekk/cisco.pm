@@ -39,7 +39,7 @@ function returner(type) {
     Runner2(sessionStorage.oversigt_index);
   }
   let data = ""
-  data += Topcustomconfig(sessionStorage.oversigt_index)
+  if(type === "router"){data += Topcustomconfig(sessionStorage.oversigt_index)}
   for (var elem in JSON.parse(localStorage.getItem(type + "_final"))[
     sessionStorage.oversigt_index
   ]) {
@@ -270,9 +270,9 @@ function Oversigt() {
         </Helmet>
         <PageTitleWrapper>
           <PageTitle
-            sx={{ mb: -1 }}
+            sx={{ mb: window.innerWidth > 600 ? -1 : 6, mt: -1}}
             heading="Overview"
-            subHeading="Overview of created routers, switches & VLAN configs"
+            subHeading={window.innerWidth > 600 ? "Overview of created routers, switches & VLAN configs" : ""}
           />
           <Button
             sx={{ float: "right", mt: -4 }}
