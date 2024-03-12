@@ -56,6 +56,7 @@ import {
   Modal,
   Autocomplete
 } from "@mui/material";
+import { Close } from "@mui/icons-material";
 
 //import {
 //  Button,
@@ -636,9 +637,65 @@ window.onload = (event) => {
         >
           Copy to clipboard
         </Button>
+        </Box>
+    );
+  }
+
+
+
+  function ModalContentVersion() {
+    return (
+      <Box sx={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 400, height: 380, bgcolor: "background.paper", boxShadow: 24, p: 4, borderRadius: "20px"}}>
+
+        <Typography sx={{mb: 3 }} variant="h3" component="h2" >
+          A new version has been applied since last time you visited
+        </Typography>
+        <img
+              alt="Upgrade"
+              height={178}
+              src="/static/images/status/upgrade.svg"
+            />
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center">
+        
+        <Button
+          onClick={() => {
+            handleCloseVersion();
+          }}
+          variant="text"
+          size="large"
+          startIcon={<Close />}
+          sx={{ mt: 1.5}}
+          color="primary"
+        >
+          Close
+        </Button>
+        </Box>
       </Box>
     );
   }
+
+
+const [openVersion, setOpenVersion] = React.useState(false);
+const handleOpenVersion = () => {
+  setOpenVersion(true);
+};
+const handleCloseVersion = () => setOpenVersion(false);
+
+if(localStorage.getItem("version") && sessionStorage.getItem("version")) {
+  if (localStorage.getItem("version") != sessionStorage.getItem("version")) {
+    localStorage.setItem("version", sessionStorage.getItem("version"));
+    handleOpenVersion()
+  }
+
+}
+
+
+
+
+
 
 
   const [open2, setOpen2] = React.useState(false);
@@ -666,6 +723,9 @@ window.onload = (event) => {
   function Content() {
     return (
       <div>
+        <Modal open={openVersion} onClose={handleCloseVersion}>
+        {ModalContentVersion()}
+        </Modal>
         <Snackbar
           open={open2}
           anchorOrigin={{ vertical, horizontal }}
@@ -5845,19 +5905,19 @@ window.onload = (event) => {
               alignItems="stretch"
               spacing={3}
             >
-                            <Grid item xs="auto">
+                <Grid item xs="auto">
                 <Card>
                   <CardHeader title="Notes" />
                   <Divider />
                   <CardContent sx={{ width: 1085, justifyContent: "center" }}>
                     <Box
                       sx={{
-                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                        "& .MuiTextField-root": { m: 1, width: "100%" },
                       }}
                       autoComplete="off"
                     >
                       <TextField
-                        label="Notes for this router (notes are not included in the final configuration)"
+                        label="Notes about this router (will not included in the final configuration)"
                         multiline
                         maxRows={Infinity}
                         minRows={5}
