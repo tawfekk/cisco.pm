@@ -616,7 +616,7 @@ window.onload = (event) => {
           minRows={5}
           style={{ width: "100%" }}
           value={
-            func != "Inital" ? "configure terminal" + func(sessionStorage.router_tabid) + RSA(sessionStorage.router_tabid) + "\nend" : "configure terminal" + func(sessionStorage.router_tabid) + "\nend" 
+            id != "initial" ? "configure terminal" + func(sessionStorage.router_tabid) + "\nend" : "configure terminal" + func(sessionStorage.router_tabid) + RSA(sessionStorage.router_tabid) + "\nend" 
           }
         ></TextField>
         <Button
