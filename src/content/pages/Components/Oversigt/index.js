@@ -3,7 +3,7 @@ import Footer from "src/components/Footer";
 import { useState } from "react";
 import * as React from "react";
 
-import { Topcustomconfig } from "src/handlers/ConfigGenerator/Router";
+import { Topcustomconfig, RSA } from "src/handlers/ConfigGenerator/Router";
 
 import PageTitle from "src/components/PageTitle";
 import PageTitleWrapper from "src/components/PageTitleWrapper";
@@ -49,6 +49,7 @@ function returner(type) {
     ][elem];
     }
   }
+  if(type === "router"){data += RSA(sessionStorage.oversigt_index)}
   return data;
 }
 
@@ -342,6 +343,7 @@ function Oversigt() {
       </>
     );
   } catch (e) {
+    console.log(e)
     return StatusError("");
   }
 }
