@@ -20,7 +20,8 @@ import {
   EIGRP,
   VPN,
   Security,
-  BGP
+  BGP,
+  RSA
   //ACL
 } from "src/handlers/ConfigGenerator/Router";
 import { StatusComingSoon } from "src/content/pages/Status/ComingSoon";
@@ -615,7 +616,7 @@ window.onload = (event) => {
           minRows={5}
           style={{ width: "100%" }}
           value={
-            "configure terminal" + func(sessionStorage.router_tabid) + "\nend"
+            func != "Inital" ? "configure terminal" + func(sessionStorage.router_tabid) + RSA(sessionStorage.router_tabid) + "\nend" : "configure terminal" + func(sessionStorage.router_tabid) + "\nend" 
           }
         ></TextField>
         <Button

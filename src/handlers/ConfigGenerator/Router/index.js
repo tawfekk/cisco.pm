@@ -104,9 +104,6 @@ export function Initial(index) {
     if (form.passwordencryption) {
       workingvar += "\nservice password-encryption";
     }
-    if (form.genereatersa) {
-      workingvar += "\ncrypto key generate rsa general-keys\n2048";
-    }
     if (form.sshv2) {
       workingvar += "\nip ssh version 2";
     } else {
@@ -125,6 +122,19 @@ export function Initial(index) {
     localStorage.router_final = JSON.stringify(workingdata);
     return workingvar;
   } catch (error) {}
+}
+
+export function RSA(index) {
+  try{
+  var form = JSON.parse(localStorage.router_data)[index]["initial"][0];
+  console.log(index)
+  if (form.genereatersa) {
+    var workingvar = "\n\ncrypto key generate rsa general-keys\n2048";
+    return workingvar;
+  }else{
+  return ""
+  }
+  }catch(e){}
 }
 
 export function Interfaces(index) {
@@ -1318,6 +1328,7 @@ export function Runner(index) {
   BGP(index);
   NAT(index);
   VPN(index);
-  Security(index)
+  Security(index);
   Customconfig(index);
+  RSA(index);
 }
