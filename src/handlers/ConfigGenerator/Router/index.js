@@ -1067,7 +1067,7 @@ export function BGP(index) {
 
     var workingvar = "";
     for (const e of JSON.parse(localStorage.router_data)[index]["bgp"]) {
-      if(e.as && !e.ipv6 ){
+      if(e.as && e.ipv6){
       workingvar += "\n\nrouter bgp "+ e.as
       if(e.routerid){
         workingvar += "\nbgp router-id " + e.routerid;
@@ -1187,7 +1187,7 @@ export function BGP(index) {
     }
 
 
-    if(e.as && e.ipv6){
+    if(e.as && !e.ipv6){
       if(e.as && !e.ipv6 ){
         workingvar += "\n\nrouter bgp "+ e.as
         if(e.routerid){
