@@ -127,7 +127,6 @@ export function Initial(index) {
 export function RSA(index) {
   try{
   var form = JSON.parse(localStorage.router_data)[index]["initial"][0];
-  console.log(index)
   if (form.genereatersa) {
     var workingvar = "\n\ncrypto key generate rsa general-keys\n2048";
     return workingvar;

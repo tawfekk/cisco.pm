@@ -323,6 +323,7 @@ function Router() {
     }
   };
 
+  
   const handleNestedFormChange = (nest, nestindex, event, index, value) => {
     let data = [...formFields];
     //if (data[0][event.target.id][index] == undefined) {data[0][event.target.id] = {}}
@@ -363,10 +364,10 @@ function Router() {
       syncupchange(
         sessionStorage.router_tabid,
         id,
-        data[sessionStorage.router_tabid][id],
+        data[sessionStorage.router_tabid][nest][nestindex][id],
         "router",
         nest,
-        nestindex,
+        nestindex
       );
     }
   };
