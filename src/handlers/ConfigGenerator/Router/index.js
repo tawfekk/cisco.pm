@@ -1226,6 +1226,16 @@ export function BGP(index) {
 
     }
 
+    if(e.redistributions){
+      for (const elem of e.redistributions) {
+        if(elem.defaultmetric){
+        workingvar += "\nredistribute " + elem.id 
+        }else{
+          workingvar += "\nredistribute " + elem.id + " metric " + elem.bandwidthmetric + " " + elem.delaymetric + " " + elem.reliabilitymetric + " " + elem.loadmetric + " " + elem.mtumetric;
+        }
+      }
+    }
+
     }
 
   }
