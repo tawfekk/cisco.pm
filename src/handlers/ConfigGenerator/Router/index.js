@@ -1218,12 +1218,26 @@ export function BGP(index) {
         }
       }
 
+      
+
       if(e.defaultroute){
         workingvar += "\nnetwork 0.0.0.0"
       }else{
         workingvar += "\nno network 0.0.0.0"
       }
 
+    }
+
+    if(e.redistributeconnected){
+      workingvar += "\nredistribute connected"
+    }else{
+      workingvar += "\nno redistribute connected"
+    }
+
+    if(e.redistributestatic){
+      workingvar += "\nredistribute static"
+    }else{
+      workingvar += "\nno redistribute static"
     }
 
     if(e.redistributions){
