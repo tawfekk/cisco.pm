@@ -13,7 +13,7 @@ const Loader = (Component) => (props) => (
 
 // Pages
 
-const Overview = Loader(lazy(() => import("src/content/overview")));
+//const Overview = Loader(lazy(() => import("src/content/overview")));
 
 // Components
 const Oversigt = Loader(
@@ -46,7 +46,7 @@ const routes = [
     children: [
       {
         path: "",
-        element: <Overview />,
+        element: <Navigate to="/components/router" replace />,
       },
       {
         path: "overview",

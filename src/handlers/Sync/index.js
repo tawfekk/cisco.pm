@@ -11,10 +11,14 @@ const app = initializeApp({
   appId: "1:727036040743:web:a7c5f4382c0f5ab1ada002",
 });
 
+self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+
 const appCheck = initializeAppCheck(app, {
   provider: new ReCaptchaV3Provider("6LdAWnspAAAAAEj2gUO9au2IIwlArT89fV6ZNbq_"),
   isTokenAutoRefreshEnabled: true
 });
+
+
 
 const db = getFirestore(app);
 
@@ -47,7 +51,7 @@ export async function syncupchange(
       } else if (index != undefined && !nest && !value) {
         workingdata[tabid][id].splice(index, 1);
       } else if (index != undefined && nest) {
-        workingdata[tabid][nest][nestindex][id].splice(index, 1);
+        workingdata[tabid][nest][nestindex][id][index] = value;
       } else {
         workingdata[tabid][id] = value;
       }
