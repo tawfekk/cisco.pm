@@ -5554,7 +5554,6 @@ if(localStorage.getItem("version") && sessionStorage.getItem("version")) {
                                   id="users"
                                   size="small"
                                   label="Privilege"
-                                  error={!form2.privilege}
                                   placeholder="5"
                                   onChange={(event) =>
                                     handleNestedFormChange(
