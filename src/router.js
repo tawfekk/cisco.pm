@@ -13,7 +13,7 @@ const Loader = (Component) => (props) => (
 
 // Pages
 
-//const Overview = Loader(lazy(() => import("src/content/overview")));
+const Overview = Loader(lazy(() => import("src/content/overview")));
 
 // Components
 const Oversigt = Loader(
@@ -50,7 +50,7 @@ const routes = [
       },
       {
         path: "overview",
-        element: <Navigate to="" replace />,
+        element: <Overview />,
       },
       {
         path: "status",

@@ -2,6 +2,8 @@ import { initializeApp } from "firebase/app";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import { doc, getFirestore, setDoc, getDoc } from "firebase/firestore";
 
+
+//firebase
 const app = initializeApp({
   apiKey: "AIzaSyD3npySkxT-_E2ZESGzzftE6JZagBf-UHQ",
   authDomain: "cisco-pm.firebaseapp.com",
@@ -23,7 +25,22 @@ const appCheck = initializeAppCheck(app, {
 const db = getFirestore(app);
 
 export async function syncup(data, type) {
+
   if (sessionStorage.sessionid) {
+
+
+    //try{let existing = databases.getDocument('65fc9b8eced2677d9bcd', '65fc9e97e2608a13da65', 'sessionStorage.sessionid') }catch(e){}
+    //if (!existing){
+    //  const promise = databases.createDocument(
+    //    '65fc9b8eced2677d9bcd',
+    //    '65fc9e97e2608a13da65',
+    //    sessionStorage.sessionid,
+    //    {}
+    //);
+    //}
+
+
+
     await setDoc(
       doc(db, sessionStorage.sessionid, type),
       {
