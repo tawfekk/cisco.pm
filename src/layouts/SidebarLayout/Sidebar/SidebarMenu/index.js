@@ -38,8 +38,10 @@ function buttonStyles(key) {
   }
 }
 
-if(localStorage.getItem("activeButton") !== window.location.href.substring(window.location.href.lastIndexOf("/") + 1)) {
+if(localStorage.getItem("activeButton") && localStorage.getItem("activeButton") !== window.location.href.substring(window.location.href.lastIndexOf("/") + 1)) {
 localStorage.setItem("activeButton", window.location.href.substring(window.location.href.lastIndexOf("/") + 1))
+}else{
+localStorage.setItem("activeButton", "router")
 }
 
 function SidebarMenu() {

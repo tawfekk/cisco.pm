@@ -18,8 +18,11 @@ import {
 import * as React from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { syncup, syncdown } from "src/handlers/Sync";
+import { SignIn } from "src/handlers/Account"
+import HeaderUserbox from "../HeaderUserbox";
 
 let val = ""
+
 
 const style = {
   position: "absolute",
@@ -82,6 +85,31 @@ function HeaderButtons() {
     syncup(JSON.parse(localStorage.vlan_data), "vlan");
     handleClose();
   }
+
+
+  function issignedin() {
+if(!localStorage.providerAccessToken){
+  return(
+  <Button
+  // startIcon={<GroupsIcon />}
+   onClick={() => {
+     SignIn();
+   }}
+   sx={{ ml: 2 }}
+   variant="text"
+ >
+   Sign in
+ </Button>
+  )}else{
+    return(
+      <HeaderUserbox />
+      )
+
+  }
+  }
+
+
+
 
   function issessionshared() {
     if (!sessionStorage.sessionid) {
@@ -148,6 +176,7 @@ function HeaderButtons() {
         >
           Shared session
         </Button>
+        {issignedin()}
         <Modal open={open} onClose={handleClose}>
           <Box sx={style}>
             <Typography variant="h4" sx={{ mb: 1, ml: 2 }}>
