@@ -22,7 +22,7 @@
 
 ## Selfhosting
 
-Refer to the [docker-compose.yml](https://github.com/tawfekk/cisco.pm/blob/main/docker-compose.yml) (please note that shared sessions won't work when selfhosting)
+Refer to the [docker-compose.yml](https://github.com/tawfekk/cisco.pm/blob/main/docker-compose.yml) (please note that - as of now - shared sessions won't work when selfhosting)
 
 ## Development
 
