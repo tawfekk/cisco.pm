@@ -2,13 +2,14 @@
   <a href="https://cisco.pm"><img width="50" src="public/static/images/logo/main.svg" /></a>
   <a>&nbsp</a>
   <a href="https://cisco.pm"><img width="150" height="45" src="public/static/images/logo/logotext.svg" /></a>
-  <br>
    <br>
-   <a>React app to configure Cisco devices - </a><a href="https://cisco.pm">live version</a>
-  <br>
-  <br>
+   <br>
+  <a>React app to configure Cisco devices — ✨</a><a href="https://app.cisco.pm">live version</a><a>✨</a>
+   <br>
+   <br>
   <a href="https://www.codefactor.io/repository/github/tawfekk/cisco.pm"><img src="https://www.codefactor.io/repository/github/tawfekk/cisco.pm/badge" alt="CodeFactor" /></a>
-  <a href="https://cisco.pm"><img alt="Website" src="https://img.shields.io/website?url=https%3A%2F%2Fcisco.pm"></a>
+   <a href="https://app.codacy.com/gh/tawfekk/cisco.pm"><img alt="Codacy grade" src="https://img.shields.io/codacy/grade/838df65757ae4642aac8ec7f1624a860?label=Codacy%20grade"></a>
+  <a href="https://app.cisco.pm"><img alt="Website" src="https://img.shields.io/website?url=https%3A%2F%2Fapp.cisco.pm"></a>
   <a href="https://github.com/tawfekk/cisco.pm/commits"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/tawfekk/cisco.pm"></a>
   <a href="https://github.com/tawfekk/cisco.pm/blob/main/LICENSE"><img alt="GitHub License" src="https://img.shields.io/github/license/tawfekk/cisco.pm"></a>
   <a href="https://hub.docker.com/r/tawfekk/cisco.pm"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/tawfekk/cisco.pm"></a>
