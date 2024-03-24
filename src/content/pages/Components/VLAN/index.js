@@ -82,7 +82,7 @@ function VLAN() {
         const docRef = doc(db, sessionStorage.sessionid, "vlan");
         const docSnap = await getDoc(docRef);
         setformFields(docSnap.data()["data"]);
-        localStorage.router_vlan = JSON.stringify(docSnap.data()["data"]);
+        localStorage.vlan_data = JSON.stringify(docSnap.data()["data"]);
       }
       //else {
       //  setformFields(JSON.parse(localStorage.router_data));

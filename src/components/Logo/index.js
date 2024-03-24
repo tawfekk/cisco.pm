@@ -49,8 +49,8 @@ const LogoText = styled(Box)(
 
 const VersionBadge = styled(Box)(
   ({ theme }) => `
-        background: ${theme.palette.success.main};
-        color: ${theme.palette.success.contrastText};
+        background: ${theme.palette.primaryAlt.main};
+        color: ${theme.palette.primaryAlt.contrastText};
         padding: ${theme.spacing(0.4, 1)};
         border-radius: ${theme.general.borderRadiusSm};
         text-align: center;
@@ -62,7 +62,7 @@ const VersionBadge = styled(Box)(
 );
 
 export function Version() {
-return (<VersionBadge sx={{ mt: 1.3}} >{sessionStorage.version}</VersionBadge>)
+return (<VersionBadge sx={{ mt: 1.3}} >{sessionStorage.version} </VersionBadge>)
 }
 
 

@@ -17,12 +17,10 @@ import {
   Typography
 } from '@mui/material';
 
-import InboxTwoToneIcon from '@mui/icons-material/InboxTwoTone';
 import { styled } from '@mui/material/styles';
-import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
-import BookmarksIcon from '@mui/icons-material/Bookmarks';
+import FolderSpecialIconTwoTone from '@mui/icons-material/FolderSpecialTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
-import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
+import ManageAccountsTwoToneIcon from '@mui/icons-material/ManageAccountsTwoTone';
 
 
 let userinfo = {name: "Unknown User"}
@@ -115,6 +113,7 @@ const UserBoxDescription = styled(Typography)(
 );
 
 function HeaderUserbox() {
+  try{
   const user = {
     name: JSON.parse(localStorage.userinfo).name,
     avatar: stringAvatar(JSON.parse(localStorage.userinfo).name),
@@ -160,7 +159,7 @@ function HeaderUserbox() {
         <Divider sx={{ mb: 0 }} />
         <List sx={{ p: 1 }} component="nav">
           <ListItem button to="/status/coming-soon" component={NavLink}>
-            <BookmarksIcon fontSize="small" />
+            <FolderSpecialIconTwoTone fontSize="small" />
             <ListItemText primary="Saved data" />
           </ListItem>
           <ListItem
@@ -168,14 +167,15 @@ function HeaderUserbox() {
             to="https://login.cisco.pm/if/user/#/settings"
             component={NavLink}
           >
-            <AccountTreeTwoToneIcon fontSize="small" />
-            <ListItemText primary="Account Settings" />
+            <ManageAccountsTwoToneIcon fontSize="small" />
+            <ListItemText primary="Manage account" />
           </ListItem>
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>
         <Button color="primary" fullWidth onClick={() => {
             localStorage.providerAccessToken = "";
+            localStorage.loginrefreshed = false
             window.location.reload();
         }}>
             <LockOpenTwoToneIcon sx={{ mr: 1 }} />
@@ -185,6 +185,14 @@ function HeaderUserbox() {
       </Popover>
     </>
   );
+      } catch (e) {
+        if (!localStorage.loginrefreshed) {
+          localStorage.loginrefreshed = true;
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
+        }
+      }
 }
 
 export default HeaderUserbox;

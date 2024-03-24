@@ -38,7 +38,7 @@ function buttonStyles(key) {
   }
 }
 
-if(localStorage.getItem("activeButton") && localStorage.getItem("activeButton") !== window.location.href.substring(window.location.href.lastIndexOf("/") + 1)) {
+if(localStorage.getItem("activeButton") && localStorage.getItem("activeButton") !== window.location.href.substring(window.location.href.lastIndexOf("/") + 1) && window.location.href.substring(window.location.href.lastIndexOf("/") + 1) !== "") {
 localStorage.setItem("activeButton", window.location.href.substring(window.location.href.lastIndexOf("/") + 1))
 }else{
 localStorage.setItem("activeButton", "router")
@@ -96,7 +96,7 @@ function SidebarMenu() {
               size="large"
               component={RouterLink}
               onClick={"2"}
-              to="/components/switch"
+              to="/status/coming-soon"
               startIcon={<DeviceHubIcon />}
               style={buttonStyles("switch")}
             >
