@@ -103,6 +103,12 @@ const colors = {
     main: themeColors.primary,
     dark: darken(themeColors.primary, 0.2),
   },
+  primaryAlt: {
+    lighter: alpha(themeColors.primaryAlt, 0.85),
+    light: alpha(themeColors.primaryAlt, 0.3),
+    main: themeColors.primaryAlt,
+    dark: darken(themeColors.primaryAlt, 0.2),
+  },
   success: {
     lighter: alpha(themeColors.success, 0.85),
     light: alpha(themeColors.success, 0.3),
@@ -188,6 +194,12 @@ export const MainTheme = createTheme({
       main: themeColors.primary,
       dark: darken(themeColors.primary, 0.2),
     },
+    primaryAlt: {
+      lighter: alpha(themeColors.primaryAlt, 0.1),
+      light: alpha(themeColors.primaryAlt, 0.3),
+      main: themeColors.primaryAlt,
+      dark: darken(themeColors.primaryAlt, 0.2),
+    },
     success: {
       lighter: alpha(themeColors.success, 0.1),
       light: alpha(themeColors.success, 0.3),
@@ -252,6 +264,11 @@ export const MainTheme = createTheme({
       light: colors.primary.light,
       main: colors.primary.main,
       dark: colors.primary.dark,
+    },
+    primaryAlt: {
+      light: colors.primaryAlt.light,
+      main: colors.primaryAlt.main,
+      dark: colors.primaryAlt.dark,
     },
     secondary: {
       light: colors.secondary.light,
@@ -765,9 +782,9 @@ export const MainTheme = createTheme({
           border: "1px solid " + colors.primary.dark,
           boxShadow: "0px 2px 10px " + colors.primary.light,
         },
-        scrollableX: {
-          overflow: "visible !important",
-        },
+        //scrollableX: {
+        //  overflow: "visible !important",
+        //},
       },
     },
     MuiTab: {

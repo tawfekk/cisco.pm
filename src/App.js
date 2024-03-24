@@ -13,7 +13,7 @@ syncdown("vlan");
 syncdown("switch");
 }
 
-sessionStorage.version = "v0.04.1-beta";
+sessionStorage.version = "v0.04.3-beta";
 
 
 if(!localStorage.version){localStorage.version = sessionStorage.version}
@@ -102,31 +102,104 @@ if (!localStorage.router_data) {
 }
 
 if (!localStorage.getItem("router_final")) {
-  var times = 15;
+  var times = 64;
   let array = [];
   var element = {};
   for (var i = 0; i < times; i++) array.push(element);
   localStorage.setItem("router_final", JSON.stringify(array));
 }
 
+
 if (!localStorage.switch_data) {
   localStorage.switch_data = JSON.stringify([
     {
-      interfaces: [{ porte: [] }],
+      dynamicnatport: [],
+      misc: [{},{},{}],
+      dynamicnat: [],
+      staticnat: [],
+      interfaces: [{ subinterfaces: [] }],
+      linterfaces: [],
+      hsrp: [],
+      vrrp: [],
+      namedeigrp: [], 
       dhcp: [{ ip: "" }],
-      initial: [{ hostname: "S1" }],
+      initial: [
+        {
+          hostname: "S1",
+          motd: "May your day be filled with Cisco",
+          domæne: "network.internal",
+          secret: "class",
+          con0pass: "cisco",
+          vtypass: "cisco",
+          clock: true,
+          model: 2960,
+          synchronuslogging: true,
+          ipv6unicastrouting: true,
+          passwordencryption: true,
+          disabledomainlookup: true,
+          enablessh: true,
+          cdp: true,
+          lldp: false,
+          sshv2: true,
+          genereatersa: true,
+        },
+      ],
+      staticroute: [{}],
+      ospf: [],
+      v3ospf: [],
+      eigrp: [],
+      bgp: [
+        {
+          enabled: [],
+          passive: [],
+          redistributions: [],
+          networks: [],
+          neighbours: [],
+          v6networks: [],
+          v6neighbours: [],
+        },
+      ],
+      basicsecurity: [{}],
+      urpf: [],
+      localaaa: [{users: []}],
+      advancedaaa: [],
+      dhcpexclusion: [],
+      dhcphelper: [],
     },
   ]);
 }
 
-if (!localStorage.switch_final) {
-  var times = 20;
+
+if (localStorage.switch_data) {
+  // Parse the string into an array of objects
+  let switchDataArray = JSON.parse(localStorage.switch_data);
+
+  // Iterate over each object in the array
+  switchDataArray.forEach((item, index) => {
+    // Check if the "misc" property exists
+    if (!item["misc"]) {
+      // If it doesn't exist, create it as an empty array
+      item["misc"] = [];
+    }
+
+    // Check if the third element of the "misc" array exists
+    if (!item["misc"][2]) {
+      // If it doesn't exist, create it as an empty string
+      item["misc"][2] = "";
+    }
+  });
+
+  // Save the updated array back to localStorage
+  localStorage.switch_data = JSON.stringify(switchDataArray);
+}
+
+
+if (!localStorage.getItem("switch_final")) {
+  var times = 64;
   let array = [];
-  var element = {
-    initial: "",
-  };
+  var element = {};
   for (var i = 0; i < times; i++) array.push(element);
-  localStorage.switch_final = JSON.stringify(array);
+  localStorage.setItem("switch_final", JSON.stringify(array));
 }
 
 if (!localStorage.vlan_data) {

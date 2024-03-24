@@ -126,9 +126,9 @@ function Router() {
         return workingdata;
       } else {
         let routerid = maxTabIndex + 1;
+        //data[2]["initial"][0]["hostname"] = "R" + routerid;
+        //localStorage.router_data = JSON.stringify(data);
         return "R" + routerid;
-        data[2]["initial"][0]["hostname"] = "R" + routerid;
-        localStorage.router_data = JSON.stringify(data);
       }
     } catch (e) {}
   }
@@ -468,8 +468,8 @@ window.onload = (event) => {
         }
       }
       if(sort == "custom"){
-        return workingvar
         workingvar = [...new Set(workingvar)];
+        return workingvar
       }else{
         workingvar = [...new Set(workingvar)];
       return workingvar.map((name) => (
@@ -612,7 +612,7 @@ window.onload = (event) => {
         <TextField
           multiline
           sx={{ mt: 2 }}
-          inputProps={{ style: { color: "#FFC13D" } }}
+          InputProps={{ style: { color: "#FFC13D" } }}
           maxRows={20}
           minRows={5}
           style={{ width: "100%" }}
@@ -744,14 +744,15 @@ if(localStorage.getItem("version") && sessionStorage.getItem("version")) {
           </Alert>
         </Snackbar>
         <Tabs
-          variant="fullWidth"
-          //variant="scrollable"
-          //scrollButtons
+          //variant="fullWidth"
+          variant="scrollable"
+          scrollButtons={true}
           //allowScrollButtonsMobile
           //scrollButtons="auto"
           textColor="primary"
           indicatorColor="primary"
           value={value}
+          sx={{ml: -2}}
           //style={{ width: '600px', display: "flex" }} 
           onChange={(event, newValue) => {
             setValue(newValue);
@@ -6053,7 +6054,7 @@ if(localStorage.getItem("version") && sessionStorage.getItem("version")) {
         </Helmet>
         <Container>
           <Grid
-            sx={{ mt: 2 }}
+            sx={{ mt: 1.5 }}
             container
             direction="row"
             justifyContent="center"
@@ -6068,6 +6069,7 @@ if(localStorage.getItem("version") && sessionStorage.getItem("version")) {
                   }}
                   startIcon={<SyncIcon />}
                   variant="outlined"
+                  sx={{display: localStorage.sessionid || sessionStorage.sessionid ? "": "none"}}
                 >
                   Sync
                 </Button>
@@ -6078,14 +6080,14 @@ if(localStorage.getItem("version") && sessionStorage.getItem("version")) {
                   onChange={handleTabChange}
                   variant="scrollable"
                   scrollButtons={true}
-                  sx={{ mb: 3}}
+                  sx={{ mb: 3, ml: -3}}
                   //style={{ width: "87%"}}
                 >
                   <Tab label={tablabel(0)} />
                   {tabs.map((child) => child)}
-                  <Tab icon={<AddIcon />} value="tabProperties" disabled={tabs.length > 13} />
+                  <Tab icon={<AddIcon />} value="tabProperties" disabled={tabs.length > 62} />
                 </Tabs>
-                <Divider />
+                <Divider sx={{ bgcolor: "#36356c", ml: 2, mr: 2}}  />
                 <TabPanel tabid={tabid}>{Content()}</TabPanel>
               </Box>
             </Grid>
