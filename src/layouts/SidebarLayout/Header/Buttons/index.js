@@ -179,7 +179,7 @@ if(!localStorage.providerAccessToken){
         {issignedin()}
         <Modal open={open} onClose={handleClose}>
           <Box sx={style}>
-            <Typography variant="h4" sx={{ mb: 1, ml: 2 }}>
+            <Typography variant="h4" sx={{ mb: 1, ml: 3 }}>
               Enter a sessioncode to join a session
             </Typography>
             <Typography
@@ -209,13 +209,15 @@ if(!localStorage.providerAccessToken){
             </Button>
             <Divider sx={{ m: 4, bgcolor: "#FFC13D" }}> Or </Divider>
             <Button
-              onClick={(event) => handleFormChange(event)}
-              variant="contained"
-              sx={{ left: "28%" }}
+              onClick={(event) => {if (sessionStorage.sessionid || localStorage.sessionid ) {handleFormChange3()} else {handleFormChange(event)}}}
+              variant={sessionStorage.sessionid || localStorage.sessionid ? "outlined" : "contained"}
+              sx={(theme) => ({
+                left: sessionStorage.sessionid || localStorage.sessionid ? "24%" : "28%"
+            })}
               size="medium"
-              color="success"
+              color={sessionStorage.sessionid || localStorage.sessionid ? "error" : "success"}
             >
-              Share my session
+              { sessionStorage.sessionid || localStorage.sessionid ? "Stop current session" : "Share my session"}
             </Button>
           </Box>
         </Modal>

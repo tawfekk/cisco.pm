@@ -200,7 +200,7 @@ function Oversigt() {
         <TextField
           multiline
           sx={{ mt: 2 }}
-          inputProps={{ style: { color: "#FFC13D" } }}
+          InputProps={{ style: { color: "#FFC13D" } }}
           maxRows={20}
           minRows={5}
           style={{ width: "100%" }}
@@ -276,7 +276,7 @@ function Oversigt() {
             subHeading={window.innerWidth > 600 ? "Overview of created routers, switches & VLAN configs" : ""}
           />
           <Button
-            sx={{ float: "right", mt: -4 }}
+            sx={{ float: "right", mt: -4, display: localStorage.sessionid || sessionStorage.sessionid ? "": "none"}}
             onClick={() => window.location.reload()}
             startIcon={<SyncIcon />}
             variant="outlined"
@@ -287,7 +287,7 @@ function Oversigt() {
           <Tooltip arrow title="This action is permanent">
             <Button
               size="small"
-              sx={{ float: "right", mr: 13, mt: -4 }}
+              sx={{ float: "right", mr: 13, mt: -4, mr: localStorage.sessionid || sessionStorage.sessionid ? "13": ""}}
               variant="outlined"
               color="error"
               startIcon=<DangerousRoundedIcon />

@@ -612,7 +612,7 @@ window.onload = (event) => {
         <TextField
           multiline
           sx={{ mt: 2 }}
-          inputProps={{ style: { color: "#FFC13D" } }}
+          InputProps={{ style: { color: "#FFC13D" } }}
           maxRows={20}
           minRows={5}
           style={{ width: "100%" }}
@@ -6054,7 +6054,7 @@ if(localStorage.getItem("version") && sessionStorage.getItem("version")) {
         </Helmet>
         <Container>
           <Grid
-            sx={{ mt: 2 }}
+            sx={{ mt: 1.5 }}
             container
             direction="row"
             justifyContent="center"
@@ -6080,14 +6080,14 @@ if(localStorage.getItem("version") && sessionStorage.getItem("version")) {
                   onChange={handleTabChange}
                   variant="scrollable"
                   scrollButtons={true}
-                  sx={{ mb: 3}}
+                  sx={{ mb: 3, ml: -3}}
                   //style={{ width: "87%"}}
                 >
                   <Tab label={tablabel(0)} />
                   {tabs.map((child) => child)}
                   <Tab icon={<AddIcon />} value="tabProperties" disabled={tabs.length > 62} />
                 </Tabs>
-                <Divider />
+                <Divider sx={{ bgcolor: "#36356c", ml: 2, mr: 2}}  />
                 <TabPanel tabid={tabid}>{Content()}</TabPanel>
               </Box>
             </Grid>
