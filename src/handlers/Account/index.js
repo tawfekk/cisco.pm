@@ -12,7 +12,7 @@ const client = new Client()
     
 const account = new Account(client);
 //const promise = account.updateSession('current');
-const session = await account.getSession('current');
+try{const session = await account.getSession('current');}catch(e){}
 
 account.createOAuth2Session('oidc');
 

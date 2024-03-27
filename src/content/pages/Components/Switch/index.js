@@ -5981,7 +5981,7 @@ if(localStorage.getItem("version") && sessionStorage.getItem("version")) {
                   onChange={handleTabChange}
                   variant="scrollable"
                   scrollButtons={true}
-                  sx={{ mb: 3, ml: -3}}
+                  sx={{ mb: 3, ml: window.innerWidth > 600 ? -3 : 2}}
                   //style={{ width: "87%"}}
                 >
                   <Tab label={tablabel(0)} />
