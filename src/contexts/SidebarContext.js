@@ -7,8 +7,8 @@ export const SidebarProvider = ({ children }) => {
   const toggleSidebar = () => {
     setSidebarToggle(!sidebarToggle);
   };
-
   return (
+    
     <SidebarContext.Provider value={{ sidebarToggle, toggleSidebar }}>
       {children}
     </SidebarContext.Provider>

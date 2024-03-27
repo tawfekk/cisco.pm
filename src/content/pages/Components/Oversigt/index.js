@@ -287,7 +287,7 @@ function Oversigt() {
           <Tooltip arrow title="This action is permanent">
             <Button
               size="small"
-              sx={{ float: "right", mr: 13, mt: -4, mr: localStorage.sessionid || sessionStorage.sessionid ? "13": ""}}
+              sx={{ float: "right", mr: 13, mt: -4, mr: localStorage.sessionid || sessionStorage.sessionid ? 13 : ""}}
               variant="outlined"
               color="error"
               startIcon=<DangerousRoundedIcon />
