@@ -64,7 +64,7 @@ fetch('https://login.cisco.pm/application/o/userinfo/', {
 })
 .then(response => {
   if (!response.ok) {
-    throw new Error('Network response was not ok');
+    console.log('Network response was not ok');
   }
   return response.json();
 })
